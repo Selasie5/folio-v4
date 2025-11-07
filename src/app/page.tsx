@@ -1,13 +1,14 @@
 "use client"
 import TechStackCard from "@/components/core/TechStackCard";
-import Image from "next/image";
+// import Image from "next/image";
 import Experience from "@/components/core/Experience";
 import { motion } from "framer-motion";
 import { listVariants } from "@/components/animations";
 import FeaturedWork from "@/components/core/FeaturedWork";
 import Link from "next/link";
 import CertificationBadge from "@/components/core/CertificationBadge";
-import BackgroundAudio from "@/components/core/BackgroundAudio";
+import { CheckBadgeIcon } from "@heroicons/react/24/solid";
+// import BackgroundAudio from "@/components/core/BackgroundAudio";
 
 export default function Home() {
 
@@ -126,7 +127,10 @@ const featuredProjects = [
  whileInView="visible"
  custom={1}
  viewport={{ once: true }}
- className="text-black  text-lg mono">Selasie Sepenu</motion.h1>
+ className="text-black  text-lg mono">Selasie Sepenu
+ 
+ <CheckBadgeIcon className="inline h-4 w-4 text-green-500 ml-1" />
+ </motion.h1>
   <motion.p 
    initial="hidden"
  variants={listVariants}
