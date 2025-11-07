@@ -25,6 +25,7 @@ import {
 
 interface TechStackCardProps {
   title: string;
+  sm: boolean;  
 }
 
 // Map of tech name → icon
@@ -49,13 +50,13 @@ const techIcons: Record<string, IconType> = {
   GitHub: SiGithub,
 };
 
-const TechStackCard: React.FC<TechStackCardProps> = ({ title }) => {
+const TechStackCard: React.FC<TechStackCardProps> = ({ title, sm }) => {
   const Icon = techIcons[title] || null;
   const controls = useAnimation();
 
   return (
     <motion.div
-      className="relative bg-gray-100 group text-black border text-sm px-4 py-3 rounded-lg shadow-[2px_2px_0px_0px] shadow-gray-200 hover:shadow-none transition-shadow duration-300 cursor-pointer flex items-center gap-2 overflow-hidden"
+      className={`relative bg-gray-100 group text-black border rounded-lg shadow-[2px_2px_0px_0px] shadow-gray-200 hover:shadow-none transition-shadow duration-300 cursor-pointer flex items-center gap-2 overflow-hidden ${sm ? "text-xs py-2 px-2" : "text-sm px-4 py-3 "}`}
       whileHover={{ scale: 1.03 }}
       onHoverStart={() => {
         controls.start({ x: 0, opacity: 1 });
