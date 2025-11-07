@@ -7,6 +7,7 @@ import { listVariants } from "@/components/animations";
 import FeaturedWork from "@/components/core/FeaturedWork";
 import Link from "next/link";
 import CertificationBadge from "@/components/core/CertificationBadge";
+import BackgroundAudio from "@/components/core/BackgroundAudio";
 
 export default function Home() {
 
@@ -57,38 +58,37 @@ const certifications = [
 
 const featuredProjects = [
   {
-    title: "Whisper Backend",
-    repo: "https://github.com/selasie/whisper-backend",
-    live: "https://whisperapp.io",
-    description:
-      "A scalable backend API for Whisper — built with Node.js, PostgreSQL, and Docker to power secure messaging and real-time communication.",
+    title: "Explainable AI",
+    repo: "https://github.com/Selasie5/explainable-backend",
+    live: "https://explainable-backend.onrender.com/docs",
+    description:"API and CLI tool for generating interpretable model explanations (SHAP, LIME, Integrated Gradients) for tabular, text, and image data. Built with FastAPI, supports Docker deployment, outputs visual and narrative reports, and is easily extensible for custom models.",
     image: "/assets/pu.jpg",
     logo: "/assets/project.png",
   },
   {
-    title: "Jolt Platform",
-    repo: "https://github.com/selasie/jolt",
-    live: "https://jolt.dev",
+    title: "WhisperBox Engine",
+    repo: "https://github.com/Selasie5/whisper-box-demo-backend",
+    live: "https://whisper-box-demo-backend.onrender.com",
     description:
-      "A full-stack developer platform built on Next.js and Supabase, enabling teams to deploy internal tools lightning fast.",
+      "This backend provides a suggestion system for Turntabl, supporting anonymous suggestions, department management, and role-based access for super admins, department heads, and department admins. Built with TypeScript, Express, and MongoDB.",
     image: "/assets/pu.jpg",
     logo: "/assets/project.png",
   },
   {
-    title: "Integrion",
-    repo: "https://github.com/selasie/integrion",
+    title: "Thanos DNS",
+    repo: "https://github.com/Selasie5/dns-server",
     live: "https://integrion.ai",
     description:
-      "Infra-native AI testing tool that connects directly to your repos, auto-writes tests, and suggests fixes in CI pipelines.",
+      "a high-performance, configurable DNS server that resolves domain names to IP addresses, supports caching for faster lookups, and allows custom domain routing and record management for local or enterprise networks.",
     image: "/assets/pu.jpg",
     logo: "/assets/project.png",
   },
   {
-    title: "The Psalmist Intl",
-    repo: "https://github.com/selasie/psalmist",
-    live: "https://psalmistintl.org",
+    title: "Loki Circuit Breaker",
+    repo: "https://github.com/Selasie5/circuit-breaker",
+    live: "https://github.com/Selasie5/circuit-breaker",
     description:
-      "An apostolic and prophetic community website built with Next.js and Tailwind, blending design and faith for a global audience.",
+      "A lightweight and customizable Circuit Breaker implementation in Node.js, designed to add resilience and fault tolerance to your applications. This tool monitors failures, limits cascading errors, and ensures your services recover gracefully. Ideal for handling unreliable downstream services, APIs, or database connections.",
     image: "/assets/pu.jpg",
     logo: "/assets/project.png",
   },
@@ -96,6 +96,7 @@ const featuredProjects = [
 
   return (
   <main className="flex flex-col justify-start items-start h-screen py-5 md:p-20 relative md:max-w-7xl mx-auto">
+    {/* <BackgroundAudio /> */}
      {/* <div
         className="pointer-events-none fixed left-0 top-0 w-full select-none"
         style={{

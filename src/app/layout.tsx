@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import "./globals.css";
+import BackgroundSoundController from "@/components/core/BackgroundSoundController";
 
 
 
@@ -17,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`antialiased`}>
+        {/* <BackgroundSoundController/> */}
         {children}
       </body>
     </html>
