@@ -95,7 +95,7 @@ const featuredProjects = [
 ];
 
   return (
-  <main className="flex flex-col justify-start items-start h-screen md:p-20 relative md:max-w-7xl mx-auto">
+  <main className="flex flex-col justify-start items-start h-screen py-5 md:p-20 relative md:max-w-7xl mx-auto">
      {/* <div
         className="pointer-events-none fixed left-0 top-0 w-full select-none"
         style={{
@@ -169,7 +169,25 @@ Whether it’s designing smooth web experiences, architecting APIs, or improving
 <br/>
 {" "}
 <br/>
-When I’m not building or debugging, I’m probably mentoring new developers, playing music, or exploring the future of AI and cybersecurity.</motion.p>
+When I’m not building or debugging, I’m probably mentoring new developers, playing music, or talking to my favorite person😊.
+<br/>
+{" "}
+<br/>
+ 
+</motion.p>
+<motion.p 
+initial="hidden"
+ variants={listVariants}
+ whileInView="visible"
+ custom={3}
+ viewport={{ once: true }}
+className="text-gray-500 font- text-[15px] mono">
+ Seest thou a man diligent in his business? he shall stand before kings; he shall not stand before mean men
+ <br/>
+{" "}
+<span className="italic">- Proverbs 22:29</span>
+
+</motion.p>
     </section>
    <section className="py-20 px-10 w-full">
      <motion.h2
