@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'PPEditorial';
+  src: url('/fonts/ppeditorialold-regular.otf') format('opentype');
+}
+@font-face {
+  font-family: 'PPEditorialItalic';
+  src: url('/fonts/ppeditorialold-italic.otf') format('opentype');
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Variable.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Matter';
+  src: url('/fonts/Matter-Light.ttf') format('truetype');
+}
+
+
+body {
+  font-family: 'General Sans', sans-serif;
+}
+
+.mono{
+  font-family: 'PPEditorialItalic', serif;
+}
+
+.matter {
+  font-family: 'Matter', sans-serif;
+}
