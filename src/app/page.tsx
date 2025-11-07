@@ -77,7 +77,7 @@ const featuredProjects = [
   {
     title: "Thanos DNS",
     repo: "https://github.com/Selasie5/dns-server",
-    live: "https://integrion.ai",
+    live: "https://github.com/Selasie5/dns-server",
     description:
       "a high-performance, configurable DNS server that resolves domain names to IP addresses, supports caching for faster lookups, and allows custom domain routing and record management for local or enterprise networks.",
     image: "/assets/pu.jpg",
