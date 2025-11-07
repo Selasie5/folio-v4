@@ -126,7 +126,7 @@ const experiences: ExperienceItem[] = [
     role: "Frontend Engineer",
     company: "Leadmonger",
     logo: "/assets/lm_logo.jpeg",
-    period: "Apr 2023 – Sept 2024",
+    period: "Apr 23 – Sept 24",
     achievements: [
       "Worked extensively and closely with a team of designers to develop visually appealing and highly responsive websites and web apps for clients.",
       "Develop websites and web apps that meet the expectations of clients in both visuals aesthetics and functionality.",
@@ -142,7 +142,7 @@ const experiences: ExperienceItem[] = [
     role: "Frontend Engineer Trainee",
     company: "Andela",
     logo: "/assets/andela_logo.jpeg",
-    period: "August 2023 – Sept 2023",
+    period: "Aug 23 – Sept 23",
     achievements: [
      "I was engaged in intense and extensive collaboration with both new and experienced devs to learn and work with the REACT JS library and Next JS framework. I interacted with a community of learners and technical mentors, completed assessments, and various tasks."
     ],
@@ -206,11 +206,11 @@ const ExperienceCard = ({
             className="rounded-lg bg-gray-200 object-cover h-12 w-12"
           />
           <div className="flex flex-col justify-center items-start">
-            <h3 className="text-black text-lg font-medium">{role}</h3>
+            <h3 className="text-black text-base md:text-lg font-medium">{role}</h3>
             <p className="text-gray-600 text-[15px]">{company}</p>
           </div>
         </div>
-        <p className="text-gray-500 text-sm">{period}</p>
+        <p className="text-gray-500 text-xs md:text-sm">{period}</p>
       </div>
 
      

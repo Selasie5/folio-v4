@@ -47,7 +47,7 @@ const certifications = [
   {
     title: "Grow With Google Scholarship",
     issuer: "Google",
-    issuedDate: "Sept 10, 2023",
+    issuedDate: "Aug 05, 2024",
     logo: "/assets/Google_Logo_1.png",
   },
 ];
@@ -95,7 +95,7 @@ const featuredProjects = [
 ];
 
   return (
-  <main className="flex flex-col justify-start items-start h-screen p-20 relative max-w-7xl mx-auto">
+  <main className="flex flex-col justify-start items-start h-screen md:p-20 relative md:max-w-7xl mx-auto">
      {/* <div
         className="pointer-events-none fixed left-0 top-0 w-full select-none"
         style={{
@@ -197,9 +197,9 @@ When I’m not building or debugging, I’m probably mentoring new developers, p
         ))}
       </div>
    </section>
-   <section className="py-20 px-10">
+   <section className="py-20 px-10 w-full">
      <h2 className="text-black text-lg mono">Certifications</h2>
-     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mt-5">
+     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mt-5 w-full">
         {certifications.map((cert, i) => (
           <CertificationBadge key={i} {...cert} />
         ))}

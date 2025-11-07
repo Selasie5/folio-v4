@@ -25,7 +25,7 @@ const CertificationBadge: React.FC<CertificationBadgeProps> = ({
       whileHover={{ scale: 1.03 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
       viewport={{ once: true }}
-      className="relative w-full min-h-[30vh] sm:w-auto border border-gray-200 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300  rounded-b-full px-5 py-4 flex flex-col justify-center items-center gap-4 cursor-pointer"
+      className="relative w-full  sm:w-auto border border-gray-200 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300  rounded-xl px-5 py-4 flex flex-col justify-center items-center gap-4 cursor-pointer"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 to-gray-50/10 rounded-xl pointer-events-none"></div>
 
