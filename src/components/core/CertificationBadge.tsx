@@ -31,7 +31,7 @@ const CertificationBadge: React.FC<CertificationBadgeProps> = ({
 
       {/* Logo */}
       <div className="relative flex-shrink-0">
-        <div className="h-12 w-12 bg-gray-100 rowunded-full overflow-hidden flex justify-center items-center border border-gray-200">
+        <div className="h-12 w-12 bg-gray-100 rounded-full overflow-hidden flex justify-center items-center border border-gray-200">
           <Image
             src={logo}
             alt={`${issuer} logo`}
@@ -43,7 +43,7 @@ const CertificationBadge: React.FC<CertificationBadgeProps> = ({
       </div>
 
       {/* Text Info */}
-      <div className="flex flex-col justify-center items-center gap-0.5">
+      <div className="flex flex-col justify-center items-center text-center gap-0.5">
         <div className="flex items-center gap-1">
           <h4 className="text-gray-900 text-sm font-semibold">{title}</h4>
           <CheckBadgeIcon className="h-4 w-4 text-yellow-500" />

@@ -19,7 +19,7 @@ const experiences: ExperienceItem[] = [
     role: "Software Engineer",
     company: "Dimax Digital",
     logo: "/assets/dimax_digital_logo.jpeg",
-    period: "Jan 2025 – Present",
+    period: "Jan '25 – Present",
     achievements: [
       "Developed the landing page for the product",
       "Currently leading on the frontend with React but writing Laravel on the backend for a flagship product"
@@ -39,7 +39,7 @@ const experiences: ExperienceItem[] = [
     role: "Software Engineer",
     company: "Polymorph Labs",
     logo: "/assets/polymorph_labs_logo.jpeg",
-    period: "Mar 2025 – Present",
+    period: "Mar '25 – Present",
     achievements: [
       "Implemented UI and logic fixes for the University of Ghana’s Department of Computer Science website, integrating Strapi CMS at some sections for dynamic content management and improved site maintainability",
       "Resolved critical bug fixes across the university admission management console, improving functionality and user experience while maintaining system stability.",
@@ -64,10 +64,10 @@ const experiences: ExperienceItem[] = [
     role: "Software Engineer",
     company: "Turntabl",
     logo: "/assets/turntabl_logo.jpeg",
-    period: "Jun 2025– Sept 2025",
+    period: "Jun '25– Sept '25",
     achievements: [
-      "Developed the landing page for the product",
-      "Currently leading on the frontend with React but writing Laravel on the backend for a flagship product"
+      "Serves as the team lead and fullstack engineer ensuring that all requirement defined for the product WhisperBox were technically met",
+      "Built the entire POC demo backend in less than 12 hours and made key integrations on the frontend ",
     ],
     techStack: [
       "TypeScript",
@@ -83,7 +83,7 @@ const experiences: ExperienceItem[] = [
     role: "Software Engineer Fellow",
     company: "Headstarter AI",
     logo: "/assets/theheadstarter_logo.jpeg",
-    period: "Jun 2024– Sept 2024",
+    period: "Jun '24– Sept '24",
     achievements: [
       "Built 5+ AI apps and APIs using NextJS, Open AI, Pinecone, and Stripe API with 98% accuracy as seen by 1k users.",
       "Developed projects from design to deployment leading 4+ engineering fellows using MVC design patterns",
@@ -102,7 +102,7 @@ const experiences: ExperienceItem[] = [
     role: "Lead Product Engineer",
     company: "Afrovivo",
     logo: "/assets/vivo_logo.jpeg",
-    period: "Apr 2024 – Sept 2024",
+    period: "Apr '24 – Sept '24",
     achievements: [
       "Plan and strategize with the engineering and design team to help achieve set goals in time.",
       "Reviewed initial backend infrastructure and planned redesign to suit product requirements while enhancing optimization and efficiency.",
@@ -126,7 +126,7 @@ const experiences: ExperienceItem[] = [
     role: "Frontend Engineer",
     company: "Leadmonger",
     logo: "/assets/lm_logo.jpeg",
-    period: "Apr 23 – Sept 24",
+    period: "Apr '23 – Sept '24",
     achievements: [
       "Worked extensively and closely with a team of designers to develop visually appealing and highly responsive websites and web apps for clients.",
       "Develop websites and web apps that meet the expectations of clients in both visuals aesthetics and functionality.",
@@ -142,7 +142,7 @@ const experiences: ExperienceItem[] = [
     role: "Frontend Engineer Trainee",
     company: "Andela",
     logo: "/assets/andela_logo.jpeg",
-    period: "Aug 23 – Sept 23",
+    period: "Aug '23 – Sept '23",
     achievements: [
      "I was engaged in intense and extensive collaboration with both new and experienced devs to learn and work with the REACT JS library and Next JS framework. I interacted with a community of learners and technical mentors, completed assessments, and various tasks."
     ],
