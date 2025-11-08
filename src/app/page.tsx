@@ -8,6 +8,9 @@ import FeaturedWork from "@/components/core/FeaturedWork";
 import Link from "next/link";
 import CertificationBadge from "@/components/core/CertificationBadge";
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
+import { ArrowTurnRightUpIcon, ArrowUpRightIcon } from "@heroicons/react/24/outline";
+import ContactLinksList from "@/components/core/ContactItem";
+// import FeaturedArticle from "@/components/core/FeaturedArticles";
 // import BackgroundAudio from "@/components/core/BackgroundAudio";
 
 export default function Home() {
@@ -94,6 +97,11 @@ const featuredProjects = [
     logo: "/assets/project.png",
   },
 ];
+
+
+
+
+
 
   return (
   <main className="flex flex-col justify-start items-start h-screen py-5 md:p-20 relative md:max-w-7xl mx-auto">
@@ -236,8 +244,9 @@ className="text-gray-500 font- text-[15px] mono">
       ))}
      </div>
    </section>
-   <section className="py-20 px-10">
-     <h2 className="text-black text-lg mono">Recognition & Community</h2>
+   <section className="py-20 px-10 w-full">
+     <h2 className="text-black text-lg mono">Let's Connect</h2>
+     <ContactLinksList/>
    </section>
   </main>
   );

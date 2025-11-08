@@ -57,6 +57,8 @@ const experiences: ExperienceItem[] = [
       "MongoDB",
       "RabbitMQ",
       "Docker",
+      "Vitest",
+      "Strapi",
       "AWS",
     ],
   },

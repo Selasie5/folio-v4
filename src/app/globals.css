@@ -27,7 +27,9 @@ body {
 .mono{
   font-family: 'PPEditorialItalic', serif;
 }
-
+.non-mono{
+  font-family: 'PPEditorial', serif;
+}
 .matter {
   font-family: 'Matter', sans-serif;
 }
