@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import "./globals.css";
 import BackgroundSoundController from "@/components/core/BackgroundSoundController";
+import Footer from "@/components/layout/Footer";
 
 
 
@@ -20,9 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased`}>
+      <body className={`antialiased py-5 md:pX-20 md:py-10  md:max-w-7xl mx-auto` }>
         {/* <BackgroundSoundController/> */}
         {children}
+        <Footer/>
       </body>
     </html>
   );

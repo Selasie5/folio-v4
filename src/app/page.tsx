@@ -13,6 +13,8 @@ import ContactLinksList from "@/components/core/ContactItem";
 // import FeaturedArticle from "@/components/core/FeaturedArticles";
 // import BackgroundAudio from "@/components/core/BackgroundAudio";
 
+import Footer from "@/components/layout/Footer";
+
 export default function Home() {
 
 const techStack = [
@@ -104,7 +106,7 @@ const featuredProjects = [
 
 
   return (
-  <main className="flex flex-col justify-start items-start h-screen py-5 md:p-20 relative md:max-w-7xl mx-auto">
+  <main className="flex flex-col justify-start items-start ">
     {/* <BackgroundAudio /> */}
      {/* <div
         className="pointer-events-none fixed left-0 top-0 w-full select-none"
