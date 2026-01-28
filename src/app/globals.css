@@ -18,6 +18,10 @@
   font-family: 'Matter';
   src: url('/fonts/Matter-Light.ttf') format('truetype');
 }
+@font-face {
+  font-family: 'Soria';
+  src: url('/fonts/soria-font.ttf') format('truetype');
+}
 
 
 body {
@@ -32,4 +36,8 @@ body {
 }
 .matter {
   font-family: 'Matter', sans-serif;
+}
+
+.soria {
+  font-family: 'Soria', sans-serif;
 }

@@ -22,7 +22,7 @@ const experiences: ExperienceItem[] = [
     period: "Jan '25 – Present",
     achievements: [
       "Developed the landing page for the product",
-      "Currently leading on the frontend with React but writing Laravel on the backend for a flagship product"
+      "Leading frontend engineering on the project"
     ],
     techStack: [
       "TypeScript",
@@ -35,6 +35,27 @@ const experiences: ExperienceItem[] = [
       "AWS",
     ],
   },
+  // {
+  //   role: "Founding Engineer",
+  //   company: "Kura Bill",
+  //   logo: "/assets/dimax_digital_logo.jpeg",
+  //   period: "Jan '25 – Present",
+  //   achievements: [
+  //     "Was part of the hiring process to bring on board a couple more engineers each frontend and backend onto the project",
+  //     "Lead and managed frontend engineering of the POS and inventory managment for pharmacies",
+  //     "Defined and built out the component structure for the application ensuring there was visual consistency across the app",
+  //     "Reviewed code as the lead frontend engineer on the project",
+  //     "Currently a lead maintainer on the project even as we onboard customers",
+  //   ],
+  //   techStack: [
+  //     "TypeScript",
+  //     "React",
+  //     "Next.js",
+  //     "Shadcn UI",
+  //     "Tailwind CSS",
+  //     "Github Actions"
+  //   ],
+  // },
   {
     role: "Software Engineer",
     company: "Polymorph Labs",

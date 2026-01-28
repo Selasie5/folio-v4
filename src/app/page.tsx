@@ -90,11 +90,11 @@ const featuredProjects = [
     logo: "/assets/project.png",
   },
   {
-    title: "Loki Circuit Breaker",
+    title: "Adorned By Sophia (E-commerce Platform)",
     repo: "https://github.com/Selasie5/circuit-breaker",
     live: "https://github.com/Selasie5/circuit-breaker",
     description:
-      "A lightweight and customizable Circuit Breaker implementation in Node.js, designed to add resilience and fault tolerance to your applications. This tool monitors failures, limits cascading errors, and ensures your services recover gracefully. Ideal for handling unreliable downstream services, APIs, or database connections.",
+      "An online store for a leading and upcoming global fashion brand to help",
     image: "/assets/pu.jpg",
     logo: "/assets/project.png",
   },
