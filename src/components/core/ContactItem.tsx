@@ -4,16 +4,11 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRightIcon } from "@heroicons/react/24/outline";
+import type { ContactContent } from "@/content/types";
 // import { ArrowUpRightIcon } from "@heroicons/react/16/outline";
 
-interface ContactItem {
-  label: string;
-  href: string;
-  display: string; // the pretty name, e.g. / Github
-}
-
 interface ContactLinkProps {
-  item: ContactItem;
+  item: ContactContent;
 }
 
 const ContactLink: React.FC<ContactLinkProps> = ({ item }) => {
@@ -72,40 +67,7 @@ const ContactLink: React.FC<ContactLinkProps> = ({ item }) => {
   );
 };
 
-const ContactLinksList = () => {
-  const contacts: ContactItem[] = [
-    {
-      label: "github",
-      display: "/ Github",
-      href: "https://github.com/Selasie5",
-    },
-    {
-      label: "linkedin",
-      display: "/ Linkedin",
-      href: "https://linkedin.com/in/selasiekofisepenu",
-    },
-    {
-      label: "x",
-      display: "/ X (formerly Twitter)",
-      href: "https://x.com/SelasieSepenu",
-    },
-    {
-      label: "instagram",
-      display: "/ Instagram",
-      href: "https://instagram.com/_dr_seps",
-    },
-    {
-      label: "book",
-      display: "/ Book A Call",
-      href: "https://calendly.com/yourusername",
-    },
-    {
-      label: "mail",
-      display: "/ Send Me A Mail",
-      href: "mailto:selasisepenu5@gmail.com",
-    },
-  ];
-
+const ContactLinksList = ({ contacts }: { contacts: ContactContent[] }) => {
   return (
     <div className="flex flex-col justify-center items-start gap-3 mt-5">
       {contacts.map((item) => (

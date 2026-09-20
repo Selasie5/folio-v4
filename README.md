@@ -1,5 +1,34 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Portfolio content management
+
+The portfolio uses Sanity as its content source and keeps a local fallback in
+`src/content/fallback.ts`. Until Sanity environment variables are configured,
+the site renders the fallback so local development and deployments remain safe.
+
+### Connect Sanity
+
+1. Create a project at [sanity.io/manage](https://sanity.io/manage) with a
+   `production` dataset.
+2. Copy `.env.example` to `.env.local` and add the project ID.
+3. Copy `studio/.env.example` to `studio/.env` and add the same project ID.
+4. Run `npm install` inside `studio/` once.
+5. Start the editor with `npm run cms` from the repository root.
+6. Open the Portfolio document, enter the existing content, and publish it.
+
+The website checks Sanity once per minute and falls back to local content when
+the project is unavailable or the Portfolio document has not been published.
+
+### Deploy the editor
+
+Run `npm run cms:deploy` and follow the Sanity CLI prompt to choose a hosted
+Studio hostname. Content editors can then update the site without repository
+access or code changes.
+
+For production, add `NEXT_PUBLIC_SANITY_PROJECT_ID`,
+`NEXT_PUBLIC_SANITY_DATASET`, and `NEXT_PUBLIC_SANITY_API_VERSION` to the site
+hosting environment.
+
 ## Getting Started
 
 First, run the development server:

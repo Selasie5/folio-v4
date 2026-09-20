@@ -6,10 +6,15 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "cms": "npm --prefix studio run dev",
+    "cms:build": "npm --prefix studio run build",
+    "cms:deploy": "npm --prefix studio run deploy"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@sanity/client": "^7.13.2",
+    "@sanity/image-url": "^2.0.3",
     "framer-motion": "^12.23.24",
     "next": "15.1.11",
     "react": "^19.0.0",
