@@ -10,7 +10,7 @@ export default function VideoCard({ video, compact = false }: { video: Video; co
       href={youtubeUrl(video.youtubeId)}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition-colors hover:border-gray-300 dark:border-neutral-800 dark:bg-neutral-900/60 dark:hover:border-neutral-700"
+      className="group flex h-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition-colors hover:border-gray-300 dark:border-neutral-800 dark:bg-neutral-900/60 dark:hover:border-neutral-700"
     >
       <div className="relative aspect-video w-full overflow-hidden bg-gray-100 dark:bg-neutral-800">
         {/* eslint-disable-next-line @next/next/no-img-element -- YouTube serves its own sized thumbnails */}
