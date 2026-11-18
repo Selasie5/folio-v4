@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ChevronRightIcon, LockClosedIcon } from "@heroicons/react/20/solid";
 import ConfidentialStory from "@/components/core/ConfidentialStory";
+import SideQuestHighlights from "@/components/core/SideQuestHighlights";
 import SideQuestStory from "@/components/core/SideQuestStory";
 import PillLink from "@/components/layout/PillLink";
 import SectionIndicator from "@/components/layout/SectionIndicator";
@@ -75,6 +76,8 @@ export default async function SideQuestPage({ params }: { params: Params }) {
             )}
           </div>
         </header>
+
+        {!quest.confidential && <SideQuestHighlights highlights={quest.highlights ?? []} />}
 
         {!quest.confidential && <SideQuestStory intro={quest.intro} sections={quest.sections} />}
 

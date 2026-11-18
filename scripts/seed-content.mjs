@@ -26,7 +26,7 @@ const stableJson = (value) =>
       ? Object.fromEntries(Object.keys(inner).sort().map((key) => [key, inner[key]]))
       : inner,
   );
-const CONTENT_FIELDS = ["tagline", "role", "period", "link", "intro", "sections"];
+const CONTENT_FIELDS = ["tagline", "role", "period", "link", "highlights", "intro", "sections"];
 // Plain JSON so this runs on any supported Node version (no TypeScript loader needed).
 const sideQuests = JSON.parse(readFileSync(path.join(root, "src/content/sidequests.json"), "utf8"));
 
@@ -68,6 +68,14 @@ const toDocument = (quest, index) => {
     document.confidential = true;
     if (quest.teaser) document.teaser = quest.teaser;
   }
+  if (quest.highlights?.length && !quest.confidential) {
+    document.highlights = quest.highlights.map((highlight, index) => ({
+      _key: `highlight-${index + 1}`,
+      _type: "highlight",
+      value: highlight.value,
+      label: highlight.label,
+    }));
+  }
   if (quest.period) document.period = quest.period;
   if (quest.role) document.role = quest.role;
   if (quest.link) document.link = { label: quest.link.label, href: quest.link.href };
@@ -108,6 +116,7 @@ async function main() {
       continue;
     }
     const fields = CONTENT_FIELDS.filter((field) => quest[field] !== undefined)
+      .filter((field) => !(current.confidential && field === "highlights"))
       .filter((field) => !(current.confidential && (field === "intro" || field === "sections")))
       .filter((field) => stableJson(current[field] ?? null) !== stableJson(quest[field]));
     console.log(`side quest | ${fields.length ? "update " + fields.join(", ") : "up to date"} | ${quest.name}`);

@@ -5,6 +5,12 @@ export interface SideQuestSection {
   paragraphs: string[];
 }
 
+/** A key fact shown as a card near the top of a side quest's page, e.g. { value: "2.8M", label: "orders matched per second" }. */
+export interface SideQuestHighlight {
+  value: string;
+  label: string;
+}
+
 export interface SideQuest {
   slug: string;
   name: string;
@@ -17,6 +23,7 @@ export interface SideQuest {
   /** The full story is hidden behind an access code; only the teaser is public. */
   confidential?: boolean;
   teaser?: string;
+  highlights?: SideQuestHighlight[];
   intro: string[];
   sections: SideQuestSection[];
 }

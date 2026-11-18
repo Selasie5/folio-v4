@@ -85,6 +85,25 @@ export const sideQuest = defineType({
       ],
     }),
     defineField({
+      name: "highlights",
+      title: "Highlights",
+      description: "Up to 4 key facts shown as cards near the top of the page, e.g. value \"2.8M\", label \"orders matched per second\". Public, so not shown for confidential side quests.",
+      type: "array",
+      hidden: ({ document }) => Boolean(document?.confidential),
+      validation: (Rule) => Rule.max(4),
+      of: [
+        defineArrayMember({
+          name: "highlight",
+          type: "object",
+          fields: [
+            defineField({ name: "value", title: "Value", type: "string", description: "Short and bold, e.g. 2.8M, 1.28×, 4 MB", validation: (Rule) => Rule.required().max(16) }),
+            defineField({ name: "label", title: "Label", type: "string", validation: (Rule) => Rule.required().max(60) }),
+          ],
+          preview: { select: { title: "value", subtitle: "label" } },
+        }),
+      ],
+    }),
+    defineField({
       name: "intro",
       title: "Intro paragraphs",
       type: "array",

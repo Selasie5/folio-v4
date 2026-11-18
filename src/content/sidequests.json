@@ -40,6 +40,20 @@
           "Voya is in active development and the waitlist is open. If you’re the friend who always ends up planning the trip, I’m building this for you."
         ]
       }
+    ],
+    "highlights": [
+      {
+        "value": "Itinerary",
+        "label": "built for the whole group"
+      },
+      {
+        "value": "Budget",
+        "label": "worked out before you go"
+      },
+      {
+        "value": "Shared pot",
+        "label": "friends pay in, stablecoins underneath"
+      }
     ]
   },
   {
@@ -100,6 +114,24 @@
           "We recently tested V1. It went quite well, and we’re actively refining it."
         ]
       }
+    ],
+    "highlights": [
+      {
+        "value": "3",
+        "label": "friends from uni, building together"
+      },
+      {
+        "value": "2024",
+        "label": "first venture, Integrion"
+      },
+      {
+        "value": "Google",
+        "label": "one of the places Integrion was demoed"
+      },
+      {
+        "value": "Liuca",
+        "label": "AI-native accountant, ready for use"
+      }
     ]
   },
   {
@@ -153,6 +185,24 @@
           "To keep a long-running process healthy, the stream reconnects with exponential backoff, and trade histories live in fixed-size circular buffers. On top sits a React paper-trading workstation with order entry, a clickable depth ladder, a price trace, and time and sales."
         ]
       }
+    ],
+    "highlights": [
+      {
+        "value": "2.8M",
+        "label": "orders matched per second in C++"
+      },
+      {
+        "value": "1.28×",
+        "label": "faster matching in C++ than TypeScript"
+      },
+      {
+        "value": "O(1)",
+        "label": "best-price reads, via heaps"
+      },
+      {
+        "value": "Live",
+        "label": "IEX market data through Alpaca"
+      }
     ]
   },
   {
@@ -204,6 +254,24 @@
           "Creators use a TanStack Start app running on Cloudflare Workers, talking to the core over GraphQL, with Sentry for errors and PostHog for analytics. A third app, for brands, completes the platform."
         ]
       }
+    ],
+    "highlights": [
+      {
+        "value": "3 ways",
+        "label": "to work: contests, CPM deals and UGC"
+      },
+      {
+        "value": "Escrow",
+        "label": "brand money held until the work is done"
+      },
+      {
+        "value": "Verified",
+        "label": "views on YouTube, Instagram and TikTok"
+      },
+      {
+        "value": "Paystack",
+        "label": "and Moolre for brand payments"
+      }
     ]
   },
   {
@@ -254,6 +322,24 @@
           "The backend is written in Go, with MongoDB for metadata and S3 or local disk for blocks. Authentication uses JWTs that expire after 24 hours, with passwords hashed using bcrypt."
         ]
       }
+    ],
+    "highlights": [
+      {
+        "value": "~4 MB",
+        "label": "uploaded for a 1 MB change to a 10 GB file"
+      },
+      {
+        "value": "4 MB",
+        "label": "blocks, named by their SHA-256 hash"
+      },
+      {
+        "value": "409",
+        "label": "Conflict instead of overwriting someone's work"
+      },
+      {
+        "value": "Go",
+        "label": "backend and sync agent"
+      }
     ]
   },
   {
@@ -291,6 +377,24 @@
           "It’s a Python API built with FastAPI, using SHAP, LIME and Captum for the explanations and Matplotlib and Plotly for the charts, which it saves and serves as static files. There’s a command-line tool for the same explanations, and the whole service runs in Docker. The API docs are live at explainable-backend.onrender.com/docs."
         ]
       }
+    ],
+    "highlights": [
+      {
+        "value": "3",
+        "label": "explanation methods: SHAP, LIME, Integrated Gradients"
+      },
+      {
+        "value": "4",
+        "label": "model frameworks: scikit-learn, XGBoost, LightGBM, PyTorch"
+      },
+      {
+        "value": "1 call",
+        "label": "dataset and model in, explanations out"
+      },
+      {
+        "value": "Live",
+        "label": "API docs on Render"
+      }
     ]
   },
   {
@@ -321,6 +425,20 @@
           "It’s a GraphQL API built with Apollo Server on Express, with the schema split into modules for authentication, events and categories so each part of the domain stays self-contained.",
           "Data lives in MongoDB through Mongoose. Organisers sign in with JSON Web Tokens, and passwords are hashed with bcrypt."
         ]
+      }
+    ],
+    "highlights": [
+      {
+        "value": "4",
+        "label": "models: organisations, events, categories, nominees"
+      },
+      {
+        "value": "Per vote",
+        "label": "pricing set on every event"
+      },
+      {
+        "value": "GraphQL",
+        "label": "API on Apollo Server"
       }
     ]
   },
@@ -358,6 +476,20 @@
           "The reply is built byte by byte in a 512-byte buffer, the classic size limit for DNS over UDP. It copies the transaction ID so the client can match the answer to its question, sets the flag that marks the message as a response, encodes the name back into labels, and writes the answer records from a small in-memory table."
         ]
       }
+    ],
+    "highlights": [
+      {
+        "value": "12 bytes",
+        "label": "of header, parsed by hand"
+      },
+      {
+        "value": "512 bytes",
+        "label": "the classic DNS-over-UDP reply limit"
+      },
+      {
+        "value": "0",
+        "label": "DNS libraries used"
+      }
     ]
   },
   {
@@ -394,6 +526,20 @@
           "Any async function can be wrapped: instead of calling it directly, you hand it to the breaker’s executeAction and await the result. The repo includes examples for an HTTP API called with axios, a database call and a basic case, with tests written in Mocha and Chai."
         ]
       }
+    ],
+    "highlights": [
+      {
+        "value": "3",
+        "label": "states: closed, open, half-open"
+      },
+      {
+        "value": "5",
+        "label": "failures before it trips, by default"
+      },
+      {
+        "value": "5 s",
+        "label": "before it tries again, by default"
+      }
     ]
   },
   {
@@ -423,6 +569,20 @@
           "When you run it, it searches upwards from the folder you’re in for its configuration, using cosmiconfig: a tool.config.js file, or a “tool” section in package.json. If it finds nothing, it says so and falls back to sensible defaults, so it always runs.",
           "That configuration is handed to the command being run. The repo includes a small test project with its own tool.config.js to try it against."
         ]
+      }
+    ],
+    "highlights": [
+      {
+        "value": "2",
+        "label": "flags: --start and --build"
+      },
+      {
+        "value": "Auto",
+        "label": "finds its config, like ESLint and Prettier"
+      },
+      {
+        "value": "Defaults",
+        "label": "when no config is found"
       }
     ]
   }
