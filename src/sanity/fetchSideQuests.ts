@@ -12,7 +12,6 @@ const sideQuestFields = `
   "confidential": coalesce(confidential, false),
   teaser,
   // Never return story text for confidential quests, even if some was saved by mistake.
-  "highlights": select(confidential == true => [], coalesce(highlights[]{ value, label }, [])),
   "intro": select(confidential == true => [], coalesce(intro, [])),
   "sections": select(confidential == true => [], coalesce(sections[]{ heading, "paragraphs": coalesce(paragraphs, []) }, []))
 `;

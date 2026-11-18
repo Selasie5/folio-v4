@@ -24,14 +24,14 @@
         "heading": "What Voya does",
         "paragraphs": [
           "Voya takes a trip from daydream to departure. It builds the itinerary, works out the budget, and makes splitting the cost painless.",
-          "Instead of settling up after the fact, friends pool money into a shared pot before the trip. Everyone can see what has gone in and what has gone out, and the pot pays for the things the group agreed on."
+          "Instead of settling up after the fact, ==friends pool money into a shared pot before the trip==. Everyone can see what has gone in and what has gone out, and the pot pays for the things the group agreed on."
         ]
       },
       {
         "heading": "Why stablecoins",
         "paragraphs": [
-          "The shared pot runs on stablecoins behind the scenes. Friends don’t need to think about that part; they just see a pot of money in a currency they understand. Stablecoins handle the rest, which matters a lot when the people in a group live in different places and use different currencies.",
-          "It’s the same idea that runs through most of my fintech work: the technology should do the heavy lifting quietly, and the person using it should only see something simple."
+          "==The shared pot runs on stablecoins behind the scenes==. Friends don’t need to think about that part; they just see a pot of money in a currency they understand. Stablecoins handle the rest, which matters a lot when the people in a group live in different places and use different currencies.",
+          "It’s the same idea that runs through most of my fintech work: ==the technology should do the heavy lifting quietly==, and the person using it should only see something simple."
         ]
       },
       {
@@ -39,20 +39,6 @@
         "paragraphs": [
           "Voya is in active development and the waitlist is open. If you’re the friend who always ends up planning the trip, I’m building this for you."
         ]
-      }
-    ],
-    "highlights": [
-      {
-        "value": "Itinerary",
-        "label": "built for the whole group"
-      },
-      {
-        "value": "Budget",
-        "label": "worked out before you go"
-      },
-      {
-        "value": "Shared pot",
-        "label": "friends pay in, stablecoins underneath"
       }
     ]
   },
@@ -75,7 +61,7 @@
     "period": "2024 – Present",
     "role": "Co-founder, Member of Technical Staff",
     "intro": [
-      "General Intelligence Labs is three friends who keep building things together: Christian, Eugene and me. We take our ventures seriously and ourselves a little less so, which is how one of our long-running goals became, half-jokingly, to one day post that we’ve raised $100M to change the future of QA."
+      "General Intelligence Labs is three friends who keep building things together: Christian, Eugene and me. We take our ventures seriously and ourselves a little less so, which is how one of our long-running goals became, half-jokingly, to one day post that we’ve ==raised $100M to change the future of QA==."
     ],
     "sections": [
       {
@@ -90,47 +76,29 @@
         "paragraphs": [
           "Our first venture, in 2024, was Integrion: AI-native QA engineering for distributed systems. The goal was to build the go-to AI-powered automated QA tool for backend systems.",
           "We fell into our roles naturally, and they have mostly stuck. I owned the frontend, Eugene owned the backend, and Christian owned the AI.",
-          "We got to demo Integrion in some cool places, including Google. In the end, we couldn’t keep up with the cost of AI credits, and we closed it down."
+          "We got to demo Integrion in some cool places, ==including Google==. In the end, ==we couldn’t keep up with the cost of AI credits==, and we closed it down."
         ]
       },
       {
         "heading": "Athena, now Liuca: the AI-native accountant",
         "paragraphs": [
           "After a long break, we came back with our next venture: an AI-native accountant. We built out the MVP and were getting ready to launch when a multi-million-dollar financial company released their own version.",
-          "That felt surreal. They obviously had deeper pockets and more reach. Instead of giving up, we took some time, learned from what they shipped, and refined our product. It was called Athena; it’s now called Liuca, and it’s ready for use."
+          "That felt surreal. They obviously had deeper pockets and more reach. Instead of giving up, we took some time, learned from what they shipped, and refined our product. It was called Athena; ==it’s now called Liuca, and it’s ready for use==."
         ]
       },
       {
         "heading": "Agentic spending on stablecoin rails",
         "paragraphs": [
           "We like being at the edge of what AI can do, and a couple of months ago we started looking at a frontier not many people were considering yet: agentic spending, where AI agents can spend money on your behalf, within limits you control.",
-          "For the WeWire Hackhive 2.0, we built controlled agentic spending on stablecoin rails. We didn’t win. The feedback, more or less, was that our solution was too advanced to be a viable startup in the African market right now. We like to think we were just ahead of our time, especially since some of the biggest names in stablecoins are now working on the same idea."
+          "For the WeWire Hackhive 2.0, ==we built controlled agentic spending on stablecoin rails==. We didn’t win. The feedback, more or less, was that our solution was too advanced to be a viable startup in the African market right now. We like to think we were just ahead of our time, especially since some of the biggest names in stablecoins are now working on the same idea."
         ]
       },
       {
         "heading": "Ovaal: an agentic cashier for restaurants",
         "paragraphs": [
-          "Our most recent venture is a partnership with Forge Studios, the engineering and design studio in Accra, Ghana. Together we’re building an agentic cashier for restaurants, integrated into Ovaal, Forge’s restaurant POS system.",
+          "Our most recent venture is a partnership with Forge Studios, the engineering and design studio in Accra, Ghana. Together we’re building ==an agentic cashier for restaurants==, integrated into Ovaal, Forge’s restaurant POS system.",
           "We recently tested V1. It went quite well, and we’re actively refining it."
         ]
-      }
-    ],
-    "highlights": [
-      {
-        "value": "3",
-        "label": "friends from uni, building together"
-      },
-      {
-        "value": "2024",
-        "label": "first venture, Integrion"
-      },
-      {
-        "value": "Google",
-        "label": "one of the places Integrion was demoed"
-      },
-      {
-        "value": "Liuca",
-        "label": "AI-native accountant, ready for use"
       }
     ]
   },
@@ -152,22 +120,22 @@
       {
         "heading": "Price-time priority",
         "paragraphs": [
-          "Quotient matches orders the way most exchanges do: the best price trades first, and among orders at the same price, whoever arrived first wins. It handles limit orders, which name a price, and market orders, which take whatever the best available price is.",
+          "Quotient matches orders the way most exchanges do: ==the best price trades first, and among orders at the same price, whoever arrived first wins==. It handles limit orders, which name a price, and market orders, which take whatever the best available price is.",
           "A large order can fill partially against several resting orders. Orders can be cancelled or modified, and every execution lands in a trade log. It also prevents self-trades: if an order would match against another order from the same owner, the engine keeps any fills it already made with other people and cancels the rest of the incoming order."
         ]
       },
       {
         "heading": "The data structures behind it",
         "paragraphs": [
-          "Each side of the book is a map from price to a first-in, first-out queue of orders. A max-heap sits over the bid prices and a min-heap over the ask prices, so finding the best price is a constant-time read and adding a new price level is logarithmic.",
-          "When a price level empties, it isn’t removed from the heap straight away. It’s cleaned up lazily the next time someone asks for the best price, so each stale entry is discarded exactly once. A global index from order ID to order makes cancelling or modifying any order a constant-time lookup instead of a scan of the whole book.",
+          "Each side of the book is a map from price to a first-in, first-out queue of orders. A max-heap sits over the bid prices and a min-heap over the ask prices, so ==finding the best price is a constant-time read== and adding a new price level is logarithmic.",
+          "When a price level empties, it isn’t removed from the heap straight away. It’s cleaned up lazily the next time someone asks for the best price, so ==each stale entry is discarded exactly once==. A global index from order ID to order makes cancelling or modifying any order a constant-time lookup instead of a scan of the whole book.",
           "Small details matter for fairness. Reducing an order’s size keeps its place in the queue, but increasing it or changing its price sends it to the back, because it’s effectively a new order."
         ]
       },
       {
         "heading": "Correctness first, then speed",
         "paragraphs": [
-          "Every piece was built the simple, obviously correct way first and locked down with tests, and only then optimised. The first version found the best ask with a linear scan, and cancellation scanned every price level. Both were replaced with the heap and the ID index once the tests could prove nothing broke.",
+          "Every piece was ==built the simple, obviously correct way first and locked down with tests, and only then optimised==. The first version found the best ask with a linear scan, and cancellation scanned every price level. Both were replaced with the heap and the ID index once the tests could prove nothing broke.",
           "Some optimisations were deliberately left out. Depth snapshots are rebuilt on every request instead of cached, because matching and cancelling run far more often than depth reads, and a cache would add invalidation work to every one of them. The README keeps a log of each of these trade-offs."
         ]
       },
@@ -175,33 +143,15 @@
         "heading": "TypeScript versus C++",
         "paragraphs": [
           "The engine is written in TypeScript and tested with Vitest. To see what native code would buy, I ported the order book and matching engine to C++, checked it against the same behaviour as the TypeScript version, and benchmarked both on identical workloads: five trials of a million operations each.",
-          "C++ matched about 2.8 million orders a second against TypeScript’s 2.2 million, 1.28 times faster, and its slowest 1% of matches were far tighter: about 0.6 microseconds against 3.1. For cancellations the gap almost disappeared, at 1.06 times, so I don’t claim a real native advantage there."
+          "C++ matched ==about 2.8 million orders a second against TypeScript’s 2.2 million, 1.28 times faster==, and its slowest 1% of matches were far tighter: about 0.6 microseconds against 3.1. For cancellations the gap almost disappeared, at 1.06 times, so I don’t claim a real native advantage there."
         ]
       },
       {
         "heading": "Trading against the real market",
         "paragraphs": [
-          "An optional adapter streams live stock prices from IEX through Alpaca’s WebSocket API. Live quotes become liquidity the engine can trade against. Reported trades are kept separately, because a trade report doesn’t say which side started it, so it can’t be replayed faithfully as an order.",
+          "An optional adapter streams live stock prices from IEX through Alpaca’s WebSocket API. Live quotes become liquidity the engine can trade against. Reported trades are kept separately, because ==a trade report doesn’t say which side started it==, so it can’t be replayed faithfully as an order.",
           "To keep a long-running process healthy, the stream reconnects with exponential backoff, and trade histories live in fixed-size circular buffers. On top sits a React paper-trading workstation with order entry, a clickable depth ladder, a price trace, and time and sales."
         ]
-      }
-    ],
-    "highlights": [
-      {
-        "value": "2.8M",
-        "label": "orders matched per second in C++"
-      },
-      {
-        "value": "1.28×",
-        "label": "faster matching in C++ than TypeScript"
-      },
-      {
-        "value": "O(1)",
-        "label": "best-price reads, via heaps"
-      },
-      {
-        "value": "Live",
-        "label": "IEX market data through Alpaca"
       }
     ]
   },
@@ -217,13 +167,13 @@
       "href": "https://github.com/Selasie5/stackd-platform-core"
     },
     "intro": [
-      "When a brand pays a creator for content, someone has to go first. Pay up front and the brand takes the risk; pay after and the creator does. Stackd is a platform I’m building to take that problem away: brands post work, creators deliver, and the money sits safely in the middle until both sides are happy."
+      "When a brand pays a creator for content, someone has to go first. Pay up front and the brand takes the risk; pay after and the creator does. Stackd is a platform I’m building to take that problem away: brands post work, creators deliver, and ==the money sits safely in the middle until both sides are happy==."
     ],
     "sections": [
       {
         "heading": "Three ways to work together",
         "paragraphs": [
-          "Brands can post three kinds of opportunity. Contests let many creators submit work, with a winner announced on a set date. CPM deals pay creators by the views their content earns, against a campaign budget. UGC orders are straightforward commissions for user-generated content.",
+          "Brands can post three kinds of opportunity. ==Contests== let many creators submit work, with a winner announced on a set date. ==CPM deals== pay creators by the views their content earns, against a campaign budget. ==UGC orders== are straightforward commissions for user-generated content.",
           "Creators discover opportunities, submit their work, and get paid into a wallet on the platform, which they can withdraw from."
         ]
       },
@@ -231,20 +181,20 @@
         "heading": "Money held in escrow",
         "paragraphs": [
           "Brands fund a wallet through Paystack or Moolre. When a campaign is live, the money it needs is allocated into escrow, so the payment for the work is set aside rather than promised.",
-          "As work is completed, each payment moves from in escrow, to ready for payout, to paid, landing in the creator’s wallet. Every wallet movement is written to a ledger with the balance before and after, so every amount can be traced."
+          "As work is completed, each payment moves from in escrow, to ready for payout, to paid, landing in the creator’s wallet. ==Every wallet movement is written to a ledger with the balance before and after==, so every amount can be traced."
         ]
       },
       {
         "heading": "When things go wrong",
         "paragraphs": [
           "Opening a dispute freezes the payment. Settlement then goes one of two ways. If the brand is right, the money is refunded to the brand. If the creator is right, the payment goes back into escrow and is released to them.",
-          "One edge case is handled honestly: if the creator has already withdrawn the money, the platform won’t pretend it can claw it back automatically. That case is flagged to be handled by a person."
+          "One edge case is handled honestly: if the creator has already withdrawn the money, ==the platform won’t pretend it can claw it back automatically==. That case is flagged to be handled by a person."
         ]
       },
       {
         "heading": "Proving the views are real",
         "paragraphs": [
-          "Paying by views only works if the views are real. Stackd verifies creators’ YouTube, Instagram and TikTok accounts, and checks the videos they submit, before money moves. Identity checks (KYC) sit alongside."
+          "==Paying by views only works if the views are real==. Stackd verifies creators’ YouTube, Instagram and TikTok accounts, and checks the videos they submit, before money moves. Identity checks (KYC) sit alongside."
         ]
       },
       {
@@ -253,24 +203,6 @@
           "The core is a GraphQL API built with Apollo Server on Express, backed by Postgres on Neon through Drizzle ORM. Notifications run as background jobs on BullMQ and Redis, email goes out through Resend, push notifications through Firebase Cloud Messaging, and media is stored on Cloudinary. It ships as a Docker container.",
           "Creators use a TanStack Start app running on Cloudflare Workers, talking to the core over GraphQL, with Sentry for errors and PostHog for analytics. A third app, for brands, completes the platform."
         ]
-      }
-    ],
-    "highlights": [
-      {
-        "value": "3 ways",
-        "label": "to work: contests, CPM deals and UGC"
-      },
-      {
-        "value": "Escrow",
-        "label": "brand money held until the work is done"
-      },
-      {
-        "value": "Verified",
-        "label": "views on YouTube, Instagram and TikTok"
-      },
-      {
-        "value": "Paystack",
-        "label": "and Moolre for brand payments"
       }
     ]
   },
@@ -292,21 +224,21 @@
       {
         "heading": "Blocks named by their content",
         "paragraphs": [
-          "Every file is split into fixed 4 MB blocks, and each block is named by the SHA-256 hash of its contents. That one decision does a lot of work. Two identical blocks always get the same name, so they’re only ever stored once, even across different files and different users."
+          "Every file is split into fixed 4 MB blocks, and ==each block is named by the SHA-256 hash of its contents==. That one decision does a lot of work. Two identical blocks always get the same name, so ==they’re only ever stored once==, even across different files and different users."
         ]
       },
       {
         "heading": "Only send what changed",
         "paragraphs": [
           "Before uploading, the client hashes its blocks and asks the server which ones it doesn’t already have. The server answers with just the missing hashes, and only those blocks travel over the network.",
-          "So a 10 GB file with a 1 MB change costs roughly one 4 MB block of upload, not 10 GB."
+          "So ==a 10 GB file with a 1 MB change costs roughly one 4 MB block of upload, not 10 GB==."
         ]
       },
       {
         "heading": "Two kinds of consistency",
         "paragraphs": [
-          "Metadata and data have different needs, so they’re kept apart. File metadata is strongly consistent: every commit bumps a version number, and the server uses optimistic concurrency control. If a client tries to save changes on top of a version that someone else has already replaced, it gets a 409 Conflict instead of silently overwriting their work.",
-          "The bulk block data, by contrast, is eventually consistent. That’s safe because blocks never change: a block’s name is its content."
+          "Metadata and data have different needs, so they’re kept apart. File metadata is strongly consistent: every commit bumps a version number, and the server uses optimistic concurrency control. If a client tries to save changes on top of a version that someone else has already replaced, ==it gets a 409 Conflict instead of silently overwriting their work==.",
+          "The bulk block data, by contrast, is eventually consistent. That’s safe because ==blocks never change: a block’s name is its content==."
         ]
       },
       {
@@ -322,24 +254,6 @@
           "The backend is written in Go, with MongoDB for metadata and S3 or local disk for blocks. Authentication uses JWTs that expire after 24 hours, with passwords hashed using bcrypt."
         ]
       }
-    ],
-    "highlights": [
-      {
-        "value": "~4 MB",
-        "label": "uploaded for a 1 MB change to a 10 GB file"
-      },
-      {
-        "value": "4 MB",
-        "label": "blocks, named by their SHA-256 hash"
-      },
-      {
-        "value": "409",
-        "label": "Conflict instead of overwriting someone's work"
-      },
-      {
-        "value": "Go",
-        "label": "backend and sync agent"
-      }
     ]
   },
   {
@@ -354,7 +268,7 @@
       "href": "https://github.com/Selasie5/explainable-backend"
     },
     "intro": [
-      "A machine learning model can tell you a loan should be rejected, but not why. That’s a problem for anyone who has to trust it, audit it, or explain the decision to a customer. This backend takes a trained model and its data, and returns explanations people can read: charts, feature rankings and a narrative of what drove each prediction."
+      "A machine learning model can tell you a loan should be rejected, but not why. That’s a problem for anyone who has to trust it, audit it, or explain the decision to a customer. This backend takes a trained model and its data, and ==returns explanations people can read==: charts, feature rankings and a narrative of what drove each prediction."
     ],
     "sections": [
       {
@@ -366,8 +280,8 @@
       {
         "heading": "Three ways to explain a prediction",
         "paragraphs": [
-          "SHAP measures how much each feature pushed a prediction up or down. The service picks the right flavour automatically: a fast tree explainer for tree-based models like XGBoost, a linear explainer for linear models, and a general one for anything else. It returns the overall importance of every feature, a summary chart, and an interactive force plot.",
-          "LIME explains a single prediction by fitting a small, simple model around that one data point. Integrated Gradients is built for neural networks, tracing how the output changes as each input moves from a neutral baseline to its real value.",
+          "SHAP measures how much each feature pushed a prediction up or down. ==The service picks the right flavour automatically==: a fast tree explainer for tree-based models like XGBoost, a linear explainer for linear models, and a general one for anything else. It returns the overall importance of every feature, a summary chart, and an interactive force plot.",
+          "LIME ==explains a single prediction by fitting a small, simple model around that one data point==. Integrated Gradients is built for neural networks, tracing how the output changes as each input moves from a neutral baseline to its real value.",
           "Any of them can explain a single row, or every row in the dataset in one batch."
         ]
       },
@@ -376,24 +290,6 @@
         "paragraphs": [
           "It’s a Python API built with FastAPI, using SHAP, LIME and Captum for the explanations and Matplotlib and Plotly for the charts, which it saves and serves as static files. There’s a command-line tool for the same explanations, and the whole service runs in Docker. The API docs are live at explainable-backend.onrender.com/docs."
         ]
-      }
-    ],
-    "highlights": [
-      {
-        "value": "3",
-        "label": "explanation methods: SHAP, LIME, Integrated Gradients"
-      },
-      {
-        "value": "4",
-        "label": "model frameworks: scikit-learn, XGBoost, LightGBM, PyTorch"
-      },
-      {
-        "value": "1 call",
-        "label": "dataset and model in, explanations out"
-      },
-      {
-        "value": "Live",
-        "label": "API docs on Render"
       }
     ]
   },
@@ -409,13 +305,13 @@
       "href": "https://github.com/Selasie5/votemaster-engine"
     },
     "intro": [
-      "Award shows, pageants and campus competitions often let the public vote for their favourites, and charge a small fee per vote. VoteMaster is the backend engine for that kind of voting platform."
+      "Award shows, pageants and campus competitions often let the public vote for their favourites, and ==charge a small fee per vote==. VoteMaster is the backend engine for that kind of voting platform."
     ],
     "sections": [
       {
         "heading": "How it’s modelled",
         "paragraphs": [
-          "Everything starts with an organisation, the group running the show. An organisation creates events, each with a name, a unique URL slug, an image, a start and end date, and a price per vote.",
+          "Everything starts with an organisation, the group running the show. An organisation creates events, each with a name, a unique URL slug, an image, a start and end date, and ==a price per vote==.",
           "Events are split into categories, like Best Actor or Song of the Year, and each category has nominees with their own name, description and photo."
         ]
       },
@@ -425,20 +321,6 @@
           "It’s a GraphQL API built with Apollo Server on Express, with the schema split into modules for authentication, events and categories so each part of the domain stays self-contained.",
           "Data lives in MongoDB through Mongoose. Organisers sign in with JSON Web Tokens, and passwords are hashed with bcrypt."
         ]
-      }
-    ],
-    "highlights": [
-      {
-        "value": "4",
-        "label": "models: organisations, events, categories, nominees"
-      },
-      {
-        "value": "Per vote",
-        "label": "pricing set on every event"
-      },
-      {
-        "value": "GraphQL",
-        "label": "API on Apollo Server"
       }
     ]
   },
@@ -460,35 +342,21 @@
       {
         "heading": "Reading the question",
         "paragraphs": [
-          "The server listens for queries over UDP on port 2053. A DNS message is raw binary, so there’s no parser to lean on. It reads the 12-byte header by hand to get the transaction ID, the flags and the number of questions, then reads the question itself: the domain name, the record type and the class."
+          "The server listens for queries over UDP on port 2053. ==A DNS message is raw binary, so there’s no parser to lean on==. It reads the 12-byte header by hand to get the transaction ID, the flags and the number of questions, then reads the question itself: the domain name, the record type and the class."
         ]
       },
       {
         "heading": "Names, labels and compression",
         "paragraphs": [
-          "Domain names aren’t sent as plain text. www.google.com travels as a series of labels, each prefixed by its length, ending in a zero byte.",
-          "To save space, DNS also compresses names. Instead of repeating a name it has already written, a message can include a pointer back to the earlier copy, marked by the top two bits of a byte. The parser follows these pointers, while remembering where the original name ended so it can carry on reading the rest of the message from the right place."
+          "Domain names aren’t sent as plain text. www.google.com travels as ==a series of labels, each prefixed by its length, ending in a zero byte==.",
+          "To save space, DNS also compresses names. Instead of repeating a name it has already written, ==a message can include a pointer back to the earlier copy==, marked by the top two bits of a byte. The parser follows these pointers, while remembering where the original name ended so it can carry on reading the rest of the message from the right place."
         ]
       },
       {
         "heading": "Writing the answer",
         "paragraphs": [
-          "The reply is built byte by byte in a 512-byte buffer, the classic size limit for DNS over UDP. It copies the transaction ID so the client can match the answer to its question, sets the flag that marks the message as a response, encodes the name back into labels, and writes the answer records from a small in-memory table."
+          "The reply is built byte by byte in ==a 512-byte buffer, the classic size limit for DNS over UDP==. It copies the transaction ID so the client can match the answer to its question, sets the flag that marks the message as a response, encodes the name back into labels, and writes the answer records from a small in-memory table."
         ]
-      }
-    ],
-    "highlights": [
-      {
-        "value": "12 bytes",
-        "label": "of header, parsed by hand"
-      },
-      {
-        "value": "512 bytes",
-        "label": "the classic DNS-over-UDP reply limit"
-      },
-      {
-        "value": "0",
-        "label": "DNS libraries used"
       }
     ]
   },
@@ -504,14 +372,14 @@
       "href": "https://github.com/Selasie5/circuit-breaker"
     },
     "intro": [
-      "When a service you depend on goes down, the worst thing you can do is keep calling it. Every call waits, times out and ties up resources, and the failure spreads to everything upstream. A circuit breaker is the fix, borrowed from electrical wiring: after enough failures it trips, and calls fail instantly until the service has had a chance to recover. This is a lightweight one for Node.js."
+      "When a service you depend on goes down, ==the worst thing you can do is keep calling it==. Every call waits, times out and ties up resources, and the failure spreads to everything upstream. A circuit breaker is the fix, borrowed from electrical wiring: after enough failures it trips, and calls fail instantly until the service has had a chance to recover. This is a lightweight one for Node.js."
     ],
     "sections": [
       {
         "heading": "Three states",
         "paragraphs": [
           "The breaker starts closed, and calls pass straight through. Each failure is counted, and when the count reaches the failure threshold, the breaker opens.",
-          "While it’s open, calls are rejected immediately with “Circuit is OPEN”, without touching the struggling service. After a timeout it moves to half-open and lets a trial call through. If enough trial calls succeed, it closes again and normal service resumes."
+          "While it’s open, ==calls are rejected immediately== with “Circuit is OPEN”, without touching the struggling service. After a timeout ==it moves to half-open and lets a trial call through==. If enough trial calls succeed, it closes again and normal service resumes."
         ]
       },
       {
@@ -525,20 +393,6 @@
         "paragraphs": [
           "Any async function can be wrapped: instead of calling it directly, you hand it to the breaker’s executeAction and await the result. The repo includes examples for an HTTP API called with axios, a database call and a basic case, with tests written in Mocha and Chai."
         ]
-      }
-    ],
-    "highlights": [
-      {
-        "value": "3",
-        "label": "states: closed, open, half-open"
-      },
-      {
-        "value": "5",
-        "label": "failures before it trips, by default"
-      },
-      {
-        "value": "5 s",
-        "label": "before it tries again, by default"
       }
     ]
   },
@@ -566,23 +420,9 @@
       {
         "heading": "Finding its config",
         "paragraphs": [
-          "When you run it, it searches upwards from the folder you’re in for its configuration, using cosmiconfig: a tool.config.js file, or a “tool” section in package.json. If it finds nothing, it says so and falls back to sensible defaults, so it always runs.",
+          "When you run it, ==it searches upwards from the folder you’re in for its configuration==, using cosmiconfig: a tool.config.js file, or a “tool” section in package.json. If it finds nothing, it says so and falls back to sensible defaults, ==so it always runs==.",
           "That configuration is handed to the command being run. The repo includes a small test project with its own tool.config.js to try it against."
         ]
-      }
-    ],
-    "highlights": [
-      {
-        "value": "2",
-        "label": "flags: --start and --build"
-      },
-      {
-        "value": "Auto",
-        "label": "finds its config, like ESLint and Prettier"
-      },
-      {
-        "value": "Defaults",
-        "label": "when no config is found"
       }
     ]
   }
