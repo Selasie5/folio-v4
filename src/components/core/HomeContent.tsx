@@ -13,6 +13,8 @@ import Writing from "@/components/core/Writing";
 import MoreLink from "@/components/core/MoreLink";
 import VideoLibrary from "@/components/core/VideoLibrary";
 import Bookshelf from "@/components/core/Bookshelf";
+import Listening from "@/components/core/Listening";
+import type { LikedSong, NowPlaying } from "@/lib/spotify";
 import type { Book } from "@/content/books";
 import type { Video } from "@/content/videos";
 import type { Post } from "@/content/devto";
@@ -26,9 +28,10 @@ interface HomeContentProps {
   sideQuests?: SideQuest[];
   videos?: Video[];
   books?: Book[];
+  listening?: { nowPlaying: NowPlaying | null; liked: LikedSong[]; playedLabel?: string };
 }
 
-export default function HomeContent({ content, posts = [], sideQuests = [], videos = [], books = [] }: HomeContentProps) {
+export default function HomeContent({ content, posts = [], sideQuests = [], videos = [], books = [], listening }: HomeContentProps) {
   const {
     profile,
     experiences = [],
@@ -100,6 +103,8 @@ export default function HomeContent({ content, posts = [], sideQuests = [], vide
       <VideoLibrary videos={videos} />
 
       <Bookshelf books={books} />
+
+      {listening && <Listening nowPlaying={listening.nowPlaying} liked={listening.liked} playedLabel={listening.playedLabel} />}
 
       {(githubHref || mailHref) && (
         <section className="mt-14 w-full sm:mt-16" aria-labelledby="connect-heading">

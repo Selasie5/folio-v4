@@ -300,3 +300,22 @@ main:has(> [data-section-indicator]) {
     background-size: 100% 62%;
   }
 }
+
+/* Spotify "now playing" bars. */
+.spotify-bars > span {
+  width: 3px;
+  border-radius: 1px;
+  background: currentColor;
+  animation: spotify-bounce 0.9s ease-in-out infinite;
+}
+.spotify-bars > span:nth-child(1) { height: 60%; animation-delay: -0.2s; }
+.spotify-bars > span:nth-child(2) { height: 100%; animation-delay: -0.5s; }
+.spotify-bars > span:nth-child(3) { height: 40%; animation-delay: -0.8s; }
+@keyframes spotify-bounce {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+}
+.spotify-bars > span { transform-origin: bottom; }
+@media (prefers-reduced-motion: reduce) {
+  .spotify-bars > span { animation: none; }
+}
