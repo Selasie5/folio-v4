@@ -26,8 +26,9 @@ export async function unlockSideQuest(slug: string, code: string): Promise<Unloc
 
   // Reserve this attempt before the code is checked; refuse once the limit is reached.
   const key = await visitorKey();
-  const wait = reserveAttempt(key);
-  if (wait > 0) {
+  const reservation = reserveAttempt(key);
+  if (!reservation.allowed) {
+    const wait = reservation.waitMinutes;
     return { ok: false, error: `Too many attempts. Try again in ${wait} minute${wait === 1 ? "" : "s"}.` };
   }
 
@@ -37,7 +38,7 @@ export async function unlockSideQuest(slug: string, code: string): Promise<Unloc
     await sleep(800);
     return { ok: false, error: "That code didn’t work. Check it and try again." };
   }
-  // Refund only this attempt; earlier wrong guesses keep counting.
-  refundAttempt(key);
+  // Refund only this attempt, in the window it was counted in; earlier wrong guesses keep counting.
+  refundAttempt(key, reservation.window);
   return { ok: true, intro: story.intro, sections: story.sections };
 }

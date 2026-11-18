@@ -7,7 +7,8 @@
 // - Active counters are never evicted to make room. Only expired ones are dropped; if the table is
 //   still full, new visitors are refused briefly (fail closed) rather than resetting anyone's count.
 // - A correct code refunds only the attempt that used it, so knowing one code can't be used to
-//   reset guesses against another side quest.
+//   reset guesses against another side quest. The refund applies only to the window the attempt was
+//   reserved in, so a slow check that finishes after the window rolls over can't erase newer guesses.
 //
 // The counts live in this server instance's memory. On a platform that runs several instances
 // (like Vercel), each instance keeps its own count; for one limit across all of them, back this with
@@ -29,33 +30,35 @@ function makeRoom(now: number): boolean {
   return attempts.size < MAX_TRACKED;
 }
 
+/** The outcome of reserving an attempt: allowed (with the window it was counted in), or refused. */
+export type Reservation = { allowed: true; window: number } | { allowed: false; waitMinutes: number };
+
 /**
- * Reserves one attempt for this visitor. Returns 0 if the attempt may go ahead, or the number of
- * minutes until they may try again. Synchronous on purpose: check-and-count can't interleave.
+ * Reserves one attempt for this visitor. Synchronous on purpose: check-and-count can't interleave.
+ * The returned window identifies the counting window, for refundAttempt.
  */
-export function reserveAttempt(visitor: string, now = Date.now()): number {
+export function reserveAttempt(visitor: string, now = Date.now()): Reservation {
   const entry = attempts.get(visitor);
   if (entry && entry.resetAt > now) {
-    if (entry.count >= MAX_ATTEMPTS) return minutesUntil(entry.resetAt, now);
+    if (entry.count >= MAX_ATTEMPTS) return { allowed: false, waitMinutes: minutesUntil(entry.resetAt, now) };
     entry.count += 1;
-    return 0;
+    return { allowed: true, window: entry.resetAt };
   }
-  if (entry) {
-    // Expired: start a fresh window in place.
-    attempts.set(visitor, { count: 1, resetAt: now + WINDOW_MS });
-    return 0;
-  }
-  // New visitor: needs a slot. If none is free without dropping an active counter, refuse.
-  if (!makeRoom(now)) return 1;
-  attempts.set(visitor, { count: 1, resetAt: now + WINDOW_MS });
-  return 0;
+  // Expired visitors restart in place; new visitors need a free slot without dropping an active counter.
+  if (!entry && !makeRoom(now)) return { allowed: false, waitMinutes: 1 };
+  const resetAt = now + WINDOW_MS;
+  attempts.set(visitor, { count: 1, resetAt });
+  return { allowed: true, window: resetAt };
 }
 
-/** A correct code: refund the one attempt it used. Earlier wrong guesses still count. */
-export function refundAttempt(visitor: string) {
+/**
+ * A correct code: refund the one attempt it used, but only within the window it was reserved in.
+ * Earlier wrong guesses still count, and a newer window is never touched.
+ */
+export function refundAttempt(visitor: string, window: number) {
   const entry = attempts.get(visitor);
-  if (entry && entry.count > 0) entry.count -= 1;
+  if (entry && entry.resetAt === window && entry.count > 0) entry.count -= 1;
 }
 
 /** For tests only. */
-export const __limits = { MAX_ATTEMPTS, MAX_TRACKED, size: () => attempts.size, reset: () => attempts.clear() };
+export const __limits = { MAX_ATTEMPTS, MAX_TRACKED, WINDOW_MS, size: () => attempts.size, reset: () => attempts.clear() };
