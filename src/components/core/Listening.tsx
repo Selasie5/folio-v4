@@ -31,7 +31,7 @@ function AlbumArt({ track, size }: { track: Track; size: "lg" | "sm" }) {
   );
 }
 
-/** A quiet one-line Spotify note under the intro: "Last played <song> by <artist> · 22 hours ago". */
+/** A quiet one-line Spotify note under the intro: "Last played <song> (<artists>) · 22 hours ago". */
 export function NowPlayingLine({ nowPlaying, playedLabel }: { nowPlaying: NowPlaying; playedLabel?: string }) {
   const { track, isPlaying } = nowPlaying;
   return (
@@ -49,8 +49,9 @@ export function NowPlayingLine({ nowPlaying, playedLabel }: { nowPlaying: NowPla
         >
           {track.title}
         </a>
-        {" by "}
+        {" ("}
         {track.artists}
+        {")"}
         {!isPlaying && playedLabel && <span className="text-gray-400 dark:text-neutral-500"> · {playedLabel}</span>}
       </span>
     </p>
