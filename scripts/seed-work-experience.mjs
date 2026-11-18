@@ -19,14 +19,15 @@ function normalizeCompany(company) {
   return /^blackhorse(?:mobility)?(?:limited|ltd)?$/.test(name) ? "blackhorse" : name;
 }
 
-const startOf = (period) => String(period ?? "").split(/s+[–-]s+/)[0].trim().toLowerCase();
+const startOf = (period) => String(period ?? "").split(/\s+[–-]\s+/)[0].trim().toLowerCase();
 const sameRole = (a, b) => a.trim().toLowerCase() === b.trim().toLowerCase();
 const seedKey = ({ company, role, period }) =>
   createHash("sha256").update(`${company}|${role}|${period.split(" – ")[0]}`).digest("hex").slice(0, 16);
 
 // Finds the saved stint for a seeded one: the key the seed would have given it, otherwise the
-// same company + role + start date, otherwise the only stint with that company + role.
-// Stops rather than guessing when more than one stint could match.
+// same company + role + start date. A same-role stint with a different start date is a different
+// stint, so its details are never copied; the only fallback is a single same-role stint with no
+// period saved at all. Stops rather than guessing when more than one stint could match.
 function findSavedStint(seeded, existing, taken) {
   const available = existing.filter((entry) => !taken.has(entry._key));
   const key = seedKey(seeded);
@@ -42,7 +43,8 @@ function findSavedStint(seeded, existing, taken) {
       `Ambiguous match for "${seeded.company} | ${seeded.role} | ${seeded.period}": ${sameCompanyRole.length} saved stints could match. Fix the seed or Studio first.`,
     );
   }
-  return sameCompanyRole[0];
+  const [only] = sameCompanyRole;
+  return only && !startOf(only.period) ? only : undefined;
 }
 
 function prepareExperiences(existing = []) {
