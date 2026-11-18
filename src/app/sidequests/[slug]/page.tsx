@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { LockClosedIcon } from "@heroicons/react/20/solid";
+import { ChevronRightIcon, LockClosedIcon } from "@heroicons/react/20/solid";
 import ConfidentialStory from "@/components/core/ConfidentialStory";
 import SideQuestStory from "@/components/core/SideQuestStory";
 import PillLink from "@/components/layout/PillLink";
@@ -66,9 +66,10 @@ export default async function SideQuestPage({ params }: { params: Params }) {
                   href={quest.link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bio-text-link transition-colors hover:text-black dark:hover:text-white"
+                  className="group inline-flex items-center gap-0.5 text-gray-600 transition-colors hover:text-black dark:text-neutral-300 dark:hover:text-white"
                 >
-                  {quest.link.label} ↗
+                  {quest.link.label}
+                  <ChevronRightIcon aria-hidden className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5" />
                 </a>
               </>
             )}

@@ -3,6 +3,9 @@
 //   - tech stack   → portfolio.techStack      (only if empty in Sanity)
 //   - contacts     → portfolio.contacts       (only if empty in Sanity)
 // Side quests are created if missing and left alone if they already exist, so Studio edits win.
+// With --update, existing side quests also get their story (intro, sections), tagline, role, period
+// and link refreshed from src/content/sidequests.json. Name, status, order and confidential settings
+// are never touched, and confidential quests never get story text written into their public document.
 // Preview by default; pass --apply to write.
 import assert from "node:assert/strict";
 import { readFileSync, writeFileSync, mkdtempSync } from "node:fs";
@@ -15,6 +18,8 @@ import nextEnv from "@next/env";
 const root = fileURLToPath(new URL("../", import.meta.url));
 nextEnv.loadEnvConfig(root);
 const apply = process.argv.includes("--apply");
+const update = process.argv.includes("--update");
+const CONTENT_FIELDS = ["tagline", "role", "period", "link", "intro", "sections"];
 // Plain JSON so this runs on any supported Node version (no TypeScript loader needed).
 const sideQuests = JSON.parse(readFileSync(path.join(root, "src/content/sidequests.json"), "utf8"));
 
@@ -66,7 +71,7 @@ async function main() {
   const client = createClient({ projectId, dataset, token, apiVersion: "2026-09-20", useCdn: false, perspective: "raw" });
 
   const questDocs = sideQuests.map(toDocument);
-  const existing = await client.fetch(`*[_type == "sideQuest"]{_id, "slug": slug.current}`);
+  const existing = await client.fetch(`*[_type == "sideQuest" && !(_id in path("drafts.**"))]{..., "slug": slug.current}`);
   const existingQuests = existing.map(({ _id }) => _id);
   // A quest created in Studio has a random ID; don't add a second document with the same slug.
   const toCreate = questDocs.filter((quest) => {
@@ -77,8 +82,23 @@ async function main() {
   const portfolios = await client.fetch(`*[_id in ["portfolio", "drafts.portfolio"]]`);
   assert(portfolios.some(({ _id }) => _id === "portfolio"), "The published portfolio document was not found");
 
+  // --update: refresh content fields on quests that already exist, only where they differ.
+  const toUpdate = [];
   for (const quest of toCreate) {
-    console.log(`side quest | ${existingQuests.includes(quest._id) ? "exists, keep" : "create"} | ${quest.name}`);
+    const current = existing.find(({ _id }) => _id === quest._id);
+    if (!current) {
+      console.log(`side quest | create | ${quest.name}`);
+      continue;
+    }
+    if (!update) {
+      console.log(`side quest | exists, keep | ${quest.name}`);
+      continue;
+    }
+    const fields = CONTENT_FIELDS.filter((field) => quest[field] !== undefined)
+      .filter((field) => !(current.confidential && (field === "intro" || field === "sections")))
+      .filter((field) => JSON.stringify(current[field] ?? null) !== JSON.stringify(quest[field]));
+    console.log(`side quest | ${fields.length ? "update " + fields.join(", ") : "up to date"} | ${quest.name}`);
+    if (fields.length) toUpdate.push({ current, sets: Object.fromEntries(fields.map((field) => [field, quest[field]])) });
   }
   const portfolioSets = portfolios.map((document) => {
     const sets = {};
@@ -90,11 +110,13 @@ async function main() {
   if (!apply) return;
 
   const backupDir = mkdtempSync(path.join(tmpdir(), "portfolio-content-seed-"));
-  writeFileSync(path.join(backupDir, "before.json"), JSON.stringify({ portfolios, existingQuests }, null, 2));
+  writeFileSync(path.join(backupDir, "before.json"), JSON.stringify({ portfolios, existingQuests, sideQuests: existing }, null, 2));
   console.log(`Backup: ${backupDir}`);
 
   let transaction = client.transaction();
   for (const quest of toCreate) transaction = transaction.createIfNotExists(quest);
+  // Guarded by the revision read above, so a Studio edit made in between rejects the whole write.
+  for (const { current, sets } of toUpdate) transaction = transaction.patch(current._id, (patch) => patch.ifRevisionId(current._rev).set(sets));
   for (const { document, sets } of portfolioSets) {
     if (Object.keys(sets).length) transaction = transaction.patch(document._id, (patch) => patch.ifRevisionId(document._rev).set(sets));
   }
@@ -109,6 +131,12 @@ async function main() {
       const { _rev, _createdAt, _updatedAt, ...fields } = saved;
       assert.deepEqual(fields, quest, `Saved fields differ for ${quest._id}`);
     }
+  }
+  for (const { current, sets } of toUpdate) {
+    const saved = savedQuests.find(({ _id }) => _id === current._id);
+    for (const [field, value] of Object.entries(sets)) assert.deepEqual(saved[field], value, `${field} not saved on ${current._id}`);
+    const untouched = ({ _rev, _updatedAt, ...rest }) => Object.fromEntries(Object.entries(rest).filter(([key]) => !(key in sets) && key !== "slug"));
+    assert.deepEqual(untouched(saved), untouched(current), `Other fields changed on ${current._id}`);
   }
   const updated = await client.fetch(`*[_id in ["portfolio", "drafts.portfolio"]]`);
   for (const { document, sets } of portfolioSets) {

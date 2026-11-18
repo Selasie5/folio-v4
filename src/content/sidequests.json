@@ -4,7 +4,7 @@
     "name": "Voya",
     "tagline": "Group travel with a shared pot powered by stablecoins",
     "status": "Waitlist open",
-    "role": "Builder",
+    "role": "Software Engineer",
     "link": {
       "label": "Visit Voya",
       "href": "https://voya-landing-web.vercel.app/"
@@ -47,7 +47,7 @@
     "name": "Stablecoin rails for Africa",
     "tagline": "Moving money across African borders, with the stablecoins hidden behind local currency",
     "status": "Building",
-    "role": "Builder",
+    "role": "Software Engineer",
     "confidential": true,
     "teaser": "A cross-border payments project I'm building. The details are confidential for now. If I've shared an access code with you, enter it below.",
     "intro": [],
@@ -105,37 +105,52 @@
   {
     "slug": "quotient",
     "name": "Quotient",
-    "tagline": "A limit order book and matching engine with price-time priority, the core of how exchanges execute orders",
+    "tagline": "A limit order book and matching engine with price-time priority, benchmarked in TypeScript and C++",
     "status": "Shipped",
     "period": "2026",
-    "role": "Builder",
+    "role": "Software Engineer",
     "link": {
       "label": "View on GitHub",
       "href": "https://github.com/Selasie5/quotient"
     },
     "intro": [
-      "Quotient is a limit order book and matching engine. It implements price-time priority matching: the mechanism exchanges and trading venues use to decide which orders trade, at what price, and in what order."
+      "Every trade on a stock exchange comes down to one question: when a buy order and a sell order meet, who trades with whom, at what price, and in what order? The piece of software that answers it is a matching engine. Quotient is my matching engine, built from the order book up."
     ],
     "sections": [
       {
-        "heading": "What it does",
+        "heading": "Price-time priority",
         "paragraphs": [
-          "It takes limit orders, which buy or sell at a set price or better, and market orders, which execute immediately at the best available price. Matching follows price-time priority: the best price trades first, and among equal prices the earliest order wins.",
-          "Orders can fill partially across several resting orders, and they can be cancelled or modified. Every execution goes into a trade log, and the book can be queried for its depth: the total quantity waiting at each price level."
+          "Quotient matches orders the way most exchanges do: the best price trades first, and among orders at the same price, whoever arrived first wins. It handles limit orders, which name a price, and market orders, which take whatever the best available price is.",
+          "A large order can fill partially against several resting orders. Orders can be cancelled or modified, and every execution lands in a trade log. It also prevents self-trades: if an order would match against another order from the same owner, the engine keeps any fills it already made with other people and cancels the rest of the incoming order."
         ]
       },
       {
-        "heading": "How it’s built",
+        "heading": "The data structures behind it",
         "paragraphs": [
-          "Each side of the book is a map from price to a first-in, first-out queue of orders at that price. Heaps over the price levels (a max-heap for bids, a min-heap for asks) give constant-time reads of the best bid and ask, and logarithmic-time updates.",
-          "The engine and its REST API are written in TypeScript and tested with Vitest. I also ported the order book and matching engine to C++, purely to benchmark throughput and latency against the TypeScript version."
+          "Each side of the book is a map from price to a first-in, first-out queue of orders. A max-heap sits over the bid prices and a min-heap over the ask prices, so finding the best price is a constant-time read and adding a new price level is logarithmic.",
+          "When a price level empties, it isn’t removed from the heap straight away. It’s cleaned up lazily the next time someone asks for the best price, so each stale entry is discarded exactly once. A global index from order ID to order makes cancelling or modifying any order a constant-time lookup instead of a scan of the whole book.",
+          "Small details matter for fairness. Reducing an order’s size keeps its place in the queue, but increasing it or changing its price sends it to the back, because it’s effectively a new order."
         ]
       },
       {
-        "heading": "Trading against live prices",
+        "heading": "Correctness first, then speed",
         "paragraphs": [
-          "An optional adapter feeds real market data in: it consumes the IEX stock feed through Alpaca’s WebSocket API and turns quotes into liquidity the engine can trade against.",
-          "On top sits a React paper-trading workstation with order entry, a clickable depth ladder, a session price trace, and time and sales."
+          "Every piece was built the simple, obviously correct way first and locked down with tests, and only then optimised. The first version found the best ask with a linear scan, and cancellation scanned every price level. Both were replaced with the heap and the ID index once the tests could prove nothing broke.",
+          "Some optimisations were deliberately left out. Depth snapshots are rebuilt on every request instead of cached, because matching and cancelling run far more often than depth reads, and a cache would add invalidation work to every one of them. The README keeps a log of each of these trade-offs."
+        ]
+      },
+      {
+        "heading": "TypeScript versus C++",
+        "paragraphs": [
+          "The engine is written in TypeScript and tested with Vitest. To see what native code would buy, I ported the order book and matching engine to C++, checked it against the same behaviour as the TypeScript version, and benchmarked both on identical workloads: five trials of a million operations each.",
+          "C++ matched about 2.8 million orders a second against TypeScript’s 2.2 million, 1.28 times faster, and its slowest 1% of matches were far tighter: about 0.6 microseconds against 3.1. For cancellations the gap almost disappeared, at 1.06 times, so I don’t claim a real native advantage there."
+        ]
+      },
+      {
+        "heading": "Trading against the real market",
+        "paragraphs": [
+          "An optional adapter streams live stock prices from IEX through Alpaca’s WebSocket API. Live quotes become liquidity the engine can trade against. Reported trades are kept separately, because a trade report doesn’t say which side started it, so it can’t be replayed faithfully as an order.",
+          "To keep a long-running process healthy, the stream reconnects with exponential backoff, and trade histories live in fixed-size circular buffers. On top sits a React paper-trading workstation with order entry, a clickable depth ladder, a price trace, and time and sales."
         ]
       }
     ]
@@ -143,36 +158,50 @@
   {
     "slug": "stackd",
     "name": "Stackd",
-    "tagline": "A platform for creators and brands: opportunities, submissions, wallets and payouts",
+    "tagline": "A platform where brands pay creators for content, with escrow, disputes and verified views",
     "status": "Building",
     "period": "2026",
-    "role": "Builder",
+    "role": "Software Engineer",
     "link": {
       "label": "View on GitHub",
       "href": "https://github.com/Selasie5/stackd-platform-core"
     },
     "intro": [
-      "Stackd is a platform I’m building for creators and brands. It’s split into three apps: a core backend that runs the platform, an app for creators, and an app for brands."
+      "When a brand pays a creator for content, someone has to go first. Pay up front and the brand takes the risk; pay after and the creator does. Stackd is a platform I’m building to take that problem away: brands post work, creators deliver, and the money sits safely in the middle until both sides are happy."
     ],
     "sections": [
       {
-        "heading": "The core platform",
+        "heading": "Three ways to work together",
         "paragraphs": [
-          "The core is a GraphQL API built with Apollo Server on Express, backed by Postgres on Neon through Drizzle ORM. It’s organised into modules for opportunities, submissions, payments, wallets, KYC, disputes, messaging, notifications, social features and admin.",
-          "Background work such as notifications runs on BullMQ queues over Redis. Email goes out through Resend, push notifications through Firebase Cloud Messaging, and media is handled by Cloudinary. Payments come in through Paystack, and the whole service ships as a Docker container."
+          "Brands can post three kinds of opportunity. Contests let many creators submit work, with a winner announced on a set date. CPM deals pay creators by the views their content earns, against a campaign budget. UGC orders are straightforward commissions for user-generated content.",
+          "Creators discover opportunities, submit their work, and get paid into a wallet on the platform, which they can withdraw from."
         ]
       },
       {
-        "heading": "The creators app",
+        "heading": "Money held in escrow",
         "paragraphs": [
-          "Creators get a TanStack Start app running on Cloudflare Workers. It talks to the core over GraphQL with Apollo Client and covers sign-up, onboarding and a dashboard.",
-          "It’s built with Tailwind and Radix-based components, with Sentry for error monitoring and PostHog for product analytics."
+          "Brands fund a wallet through Paystack or Moolre. When a campaign is live, the money it needs is allocated into escrow, so the payment for the work is set aside rather than promised.",
+          "As work is completed, each payment moves from in escrow, to ready for payout, to paid, landing in the creator’s wallet. Every wallet movement is written to a ledger with the balance before and after, so every amount can be traced."
         ]
       },
       {
-        "heading": "The brand app",
+        "heading": "When things go wrong",
         "paragraphs": [
-          "A third app, for brands, completes the platform alongside the core and the creators app."
+          "Opening a dispute freezes the payment. Settlement then goes one of two ways. If the brand is right, the money is refunded to the brand. If the creator is right, the payment goes back into escrow and is released to them.",
+          "One edge case is handled honestly: if the creator has already withdrawn the money, the platform won’t pretend it can claw it back automatically. That case is flagged to be handled by a person."
+        ]
+      },
+      {
+        "heading": "Proving the views are real",
+        "paragraphs": [
+          "Paying by views only works if the views are real. Stackd verifies creators’ YouTube, Instagram and TikTok accounts, and checks the videos they submit, before money moves. Identity checks (KYC) sit alongside."
+        ]
+      },
+      {
+        "heading": "Under the hood",
+        "paragraphs": [
+          "The core is a GraphQL API built with Apollo Server on Express, backed by Postgres on Neon through Drizzle ORM. Notifications run as background jobs on BullMQ and Redis, email goes out through Resend, push notifications through Firebase Cloud Messaging, and media is stored on Cloudinary. It ships as a Docker container.",
+          "Creators use a TanStack Start app running on Cloudflare Workers, talking to the core over GraphQL, with Sentry for errors and PostHog for analytics. A third app, for brands, completes the platform."
         ]
       }
     ]
@@ -180,37 +209,49 @@
   {
     "slug": "upstack",
     "name": "UpStack",
-    "tagline": "A distributed, content-addressable object storage system with delta sync and shared folders",
+    "tagline": "A distributed object storage system that only re-uploads the parts of a file that changed",
     "status": "Shipped",
     "period": "2026",
-    "role": "Team project",
+    "role": "Software Engineer (team project)",
     "link": {
       "label": "View on GitHub",
       "href": "https://github.com/Selasie5/upstack"
     },
     "intro": [
-      "UpStack is a distributed, content-addressable storage system. It keeps file metadata strongly consistent while letting the bulk object data be eventually consistent, by separating metadata management from where the bytes are physically stored."
+      "Change one paragraph in a huge file and most sync tools upload the whole thing again. UpStack is a distributed, content-addressable storage system my team built to avoid that: it works out exactly which parts of a file changed and moves only those."
     ],
     "sections": [
       {
-        "heading": "How files are stored",
+        "heading": "Blocks named by their content",
         "paragraphs": [
-          "Files are split into fixed 4 MB blocks, and each block is identified by its SHA-256 hash. Because blocks are addressed by their content, identical data is only ever stored once.",
-          "Before uploading, a client asks the server which of its block hashes it doesn’t have yet, and only sends those. Changing part of a large file means re-sending only the blocks that changed."
+          "Every file is split into fixed 4 MB blocks, and each block is named by the SHA-256 hash of its contents. That one decision does a lot of work. Two identical blocks always get the same name, so they’re only ever stored once, even across different files and different users."
         ]
       },
       {
-        "heading": "Staying in sync",
+        "heading": "Only send what changed",
         "paragraphs": [
-          "A sync agent written in Go watches local folders and uploads changes automatically, with no user action needed.",
-          "Every metadata commit increments a version number. The server uses optimistic concurrency control: if a client tries to commit against a version that’s already been superseded, it gets a 409 Conflict instead of overwriting someone else’s changes."
+          "Before uploading, the client hashes its blocks and asks the server which ones it doesn’t already have. The server answers with just the missing hashes, and only those blocks travel over the network.",
+          "So a 10 GB file with a 1 MB change costs roughly one 4 MB block of upload, not 10 GB."
         ]
       },
       {
-        "heading": "Sharing and the console",
+        "heading": "Two kinds of consistency",
         "paragraphs": [
-          "Each file has a fixed owner, who can share it with other people by email. A React management console handles uploads, downloads, shared files and permissions.",
-          "The backend is written in Go, with MongoDB for metadata, S3 or local disk for objects, JWT authentication and bcrypt-hashed passwords."
+          "Metadata and data have different needs, so they’re kept apart. File metadata is strongly consistent: every commit bumps a version number, and the server uses optimistic concurrency control. If a client tries to save changes on top of a version that someone else has already replaced, it gets a 409 Conflict instead of silently overwriting their work.",
+          "The bulk block data, by contrast, is eventually consistent. That’s safe because blocks never change: a block’s name is its content."
+        ]
+      },
+      {
+        "heading": "Syncing without thinking about it",
+        "paragraphs": [
+          "A sync agent written in Go watches folders on your machine. When files are created, changed or removed, it chunks and hashes them locally and runs the delta upload automatically, with no buttons to press.",
+          "Files have a fixed owner who can share them with other people by email, and a React management console covers uploads, downloads, shared files and permissions."
+        ]
+      },
+      {
+        "heading": "The stack",
+        "paragraphs": [
+          "The backend is written in Go, with MongoDB for metadata and S3 or local disk for blocks. Authentication uses JWTs that expire after 24 hours, with passwords hashed using bcrypt."
         ]
       }
     ]
@@ -218,30 +259,36 @@
   {
     "slug": "explainable-backend",
     "name": "Explainable AI Backend",
-    "tagline": "An API that turns machine learning models and datasets into human-readable explanations",
+    "tagline": "Upload a model and a dataset, get back charts and plain-language reasons for its predictions",
     "status": "Shipped",
     "period": "2025",
-    "role": "Builder",
+    "role": "Software Engineer",
     "link": {
       "label": "View on GitHub",
       "href": "https://github.com/Selasie5/explainable-backend"
     },
     "intro": [
-      "Machine learning models are good at making predictions and bad at explaining them. This backend takes a model and its data and returns explanations people can actually read: charts, plus a narrative of what drove each prediction."
+      "A machine learning model can tell you a loan should be rejected, but not why. That’s a problem for anyone who has to trust it, audit it, or explain the decision to a customer. This backend takes a trained model and its data, and returns explanations people can read: charts, feature rankings and a narrative of what drove each prediction."
     ],
     "sections": [
       {
-        "heading": "What it explains",
+        "heading": "Upload a model, get answers",
         "paragraphs": [
-          "It supports three explanation methods: SHAP, LIME and Integrated Gradients. It works with tabular, text and image models, can explain a single row or a whole batch, and returns narrative-rich JSON and HTML reports alongside the plots.",
-          "It’s built to be extended, so new models and explanation methods can be plugged in."
+          "You send a dataset as a CSV and a trained model to a single analyse endpoint, and choose an explanation method. It accepts scikit-learn models saved with pickle or joblib, XGBoost models as JSON, LightGBM models as text, and PyTorch models, and checks the model and the data are compatible before doing any work."
+        ]
+      },
+      {
+        "heading": "Three ways to explain a prediction",
+        "paragraphs": [
+          "SHAP measures how much each feature pushed a prediction up or down. The service picks the right flavour automatically: a fast tree explainer for tree-based models like XGBoost, a linear explainer for linear models, and a general one for anything else. It returns the overall importance of every feature, a summary chart, and an interactive force plot.",
+          "LIME explains a single prediction by fitting a small, simple model around that one data point. Integrated Gradients is built for neural networks, tracing how the output changes as each input moves from a neutral baseline to its real value.",
+          "Any of them can explain a single row, or every row in the dataset in one batch."
         ]
       },
       {
         "heading": "How it’s built",
         "paragraphs": [
-          "The API is written in Python with FastAPI, using SHAP, LIME and Captum for the explanations and Matplotlib and Plotly for the charts. It works with scikit-learn, XGBoost, LightGBM, PyTorch and TensorFlow models.",
-          "It can be used through the API or a command-line tool, and it’s containerised with Docker and Docker Compose. The API docs are live at explainable-backend.onrender.com/docs."
+          "It’s a Python API built with FastAPI, using SHAP, LIME and Captum for the explanations and Matplotlib and Plotly for the charts, which it saves and serves as static files. There’s a command-line tool for the same explanations, and the whole service runs in Docker. The API docs are live at explainable-backend.onrender.com/docs."
         ]
       }
     ]
@@ -249,23 +296,30 @@
   {
     "slug": "votemaster",
     "name": "VoteMaster",
-    "tagline": "A GraphQL voting engine for organisations, events, categories and nominees",
+    "tagline": "The engine behind paid voting for awards and events: organisations, categories, nominees and votes",
     "status": "Shipped",
     "period": "2025 – 2026",
-    "role": "Builder",
+    "role": "Software Engineer",
     "link": {
       "label": "View on GitHub",
       "href": "https://github.com/Selasie5/votemaster-engine"
     },
     "intro": [
-      "VoteMaster is the backend engine for a voting platform. Organisations run events, each event is split into categories, and each category has nominees."
+      "Award shows, pageants and campus competitions often let the public vote for their favourites, and charge a small fee per vote. VoteMaster is the backend engine for that kind of voting platform."
     ],
     "sections": [
       {
-        "heading": "How it’s built",
+        "heading": "How it’s modelled",
         "paragraphs": [
-          "It’s a GraphQL API built with Apollo Server on Express, with the schema split into modules for authentication, events and categories.",
-          "Data lives in MongoDB through Mongoose, with models for organisations, events, categories and nominees. Authentication uses JSON Web Tokens, and passwords are hashed with bcrypt."
+          "Everything starts with an organisation, the group running the show. An organisation creates events, each with a name, a unique URL slug, an image, a start and end date, and a price per vote.",
+          "Events are split into categories, like Best Actor or Song of the Year, and each category has nominees with their own name, description and photo."
+        ]
+      },
+      {
+        "heading": "The API",
+        "paragraphs": [
+          "It’s a GraphQL API built with Apollo Server on Express, with the schema split into modules for authentication, events and categories so each part of the domain stays self-contained.",
+          "Data lives in MongoDB through Mongoose. Organisers sign in with JSON Web Tokens, and passwords are hashed with bcrypt."
         ]
       }
     ]
@@ -273,23 +327,35 @@
   {
     "slug": "dns-server",
     "name": "DNS Server",
-    "tagline": "A DNS server written from scratch in TypeScript, answering queries over UDP",
+    "tagline": "A DNS server written from scratch in TypeScript, reading and writing raw DNS packets",
     "status": "Shipped",
     "period": "2025",
-    "role": "Builder",
+    "role": "Software Engineer",
     "link": {
       "label": "View on GitHub",
       "href": "https://github.com/Selasie5/dns-server"
     },
     "intro": [
-      "DNS is how a name like google.com becomes an IP address. I built a DNS server from scratch in TypeScript through CodeCrafters’ “Build your own DNS server” challenge, working directly with the raw binary messages."
+      "Every time you open a website, your computer quietly asks a DNS server to turn a name like google.com into an IP address. This DNS server handles that conversation byte by byte. I built it from scratch in TypeScript, through CodeCrafters’ “Build your own DNS server” challenge."
     ],
     "sections": [
       {
-        "heading": "Speaking DNS",
+        "heading": "Reading the question",
         "paragraphs": [
-          "The server listens for queries over UDP. For each one, it reads the header (transaction ID, flags and question count), then parses the domain name from DNS’s length-prefixed label format with its own parser, followed by the query type and class.",
-          "It then builds the response byte by byte in a 512-byte buffer, encoding the header, question and answer records, and answers from a small in-memory set of records."
+          "The server listens for queries over UDP on port 2053. A DNS message is raw binary, so there’s no parser to lean on. It reads the 12-byte header by hand to get the transaction ID, the flags and the number of questions, then reads the question itself: the domain name, the record type and the class."
+        ]
+      },
+      {
+        "heading": "Names, labels and compression",
+        "paragraphs": [
+          "Domain names aren’t sent as plain text. www.google.com travels as a series of labels, each prefixed by its length, ending in a zero byte.",
+          "To save space, DNS also compresses names. Instead of repeating a name it has already written, a message can include a pointer back to the earlier copy, marked by the top two bits of a byte. The parser follows these pointers, while remembering where the original name ended so it can carry on reading the rest of the message from the right place."
+        ]
+      },
+      {
+        "heading": "Writing the answer",
+        "paragraphs": [
+          "The reply is built byte by byte in a 512-byte buffer, the classic size limit for DNS over UDP. It copies the transaction ID so the client can match the answer to its question, sets the flag that marks the message as a response, encodes the name back into labels, and writes the answer records from a small in-memory table."
         ]
       }
     ]
@@ -297,29 +363,35 @@
   {
     "slug": "circuit-breaker",
     "name": "Circuit Breaker",
-    "tagline": "A lightweight, configurable circuit breaker that keeps Node.js services resilient",
+    "tagline": "A small, configurable circuit breaker that stops one failing service from taking down the rest",
     "status": "Shipped",
     "period": "2025",
-    "role": "Builder",
+    "role": "Software Engineer",
     "link": {
       "label": "View on GitHub",
       "href": "https://github.com/Selasie5/circuit-breaker"
     },
     "intro": [
-      "When a service you depend on starts failing, calling it again and again only makes things worse. A circuit breaker notices the failures, stops the calls for a while, and lets the service recover. This is a lightweight, customisable one for Node.js."
+      "When a service you depend on goes down, the worst thing you can do is keep calling it. Every call waits, times out and ties up resources, and the failure spreads to everything upstream. A circuit breaker is the fix, borrowed from electrical wiring: after enough failures it trips, and calls fail instantly until the service has had a chance to recover. This is a lightweight one for Node.js."
     ],
     "sections": [
       {
-        "heading": "How it works",
+        "heading": "Three states",
         "paragraphs": [
-          "The breaker starts closed, letting calls through. When failures reach a threshold, it opens and rejects calls immediately instead of waiting on a broken service.",
-          "After a timeout it goes half-open and lets a trial call through. If enough trial calls succeed, it closes again. The failure threshold, success threshold and timeout are all configurable; the defaults are 5 failures, 1 success and 5 seconds."
+          "The breaker starts closed, and calls pass straight through. Each failure is counted, and when the count reaches the failure threshold, the breaker opens.",
+          "While it’s open, calls are rejected immediately with “Circuit is OPEN”, without touching the struggling service. After a timeout it moves to half-open and lets a trial call through. If enough trial calls succeed, it closes again and normal service resumes."
+        ]
+      },
+      {
+        "heading": "Configuring it",
+        "paragraphs": [
+          "The failure threshold, the number of successes needed to close again, and the timeout before trying again are all configurable. The defaults are 5 failures, 1 success and 5 seconds."
         ]
       },
       {
         "heading": "Using it",
         "paragraphs": [
-          "Any async action can be wrapped in the breaker. The repo includes examples for a basic case, an HTTP API called with axios, and a database call, with tests written in Mocha and Chai."
+          "Any async function can be wrapped: instead of calling it directly, you hand it to the breaker’s executeAction and await the result. The repo includes examples for an HTTP API called with axios, a database call and a basic case, with tests written in Mocha and Chai."
         ]
       }
     ]
@@ -327,22 +399,29 @@
   {
     "slug": "custom-cli",
     "name": "Custom-Built CLI",
-    "tagline": "A command-line tool built with Node.js",
+    "tagline": "A Node.js command-line tool that finds its own config, the way ESLint and Prettier do",
     "status": "Shipped",
     "period": "2024",
-    "role": "Builder",
+    "role": "Software Engineer",
     "link": {
       "label": "View on GitHub",
       "href": "https://github.com/Selasie5/Custom-Built-CLI"
     },
     "intro": [
-      "A command-line tool built with Node.js. It installs as its own command, parses arguments with arg, and prints coloured output with chalk."
+      "Tools like ESLint and Prettier feel like magic: you run them in any project and they just find their settings. This is a command-line tool I built in Node.js to work the same way, as the foundation for a tool that starts and builds projects."
     ],
     "sections": [
       {
-        "heading": "How it’s built",
+        "heading": "Commands and flags",
         "paragraphs": [
-          "Commands and configuration live in separate modules, so new commands can be added without touching the rest. The repo includes a test project to run the tool against."
+          "It installs as its own command and understands two flags, --start and --build, parsed with the arg library. Pass anything it doesn’t recognise and it explains what went wrong in yellow, then prints a short usage guide listing the commands it supports, coloured with chalk."
+        ]
+      },
+      {
+        "heading": "Finding its config",
+        "paragraphs": [
+          "When you run it, it searches upwards from the folder you’re in for its configuration, using cosmiconfig: a tool.config.js file, or a “tool” section in package.json. If it finds nothing, it says so and falls back to sensible defaults, so it always runs.",
+          "That configuration is handed to the command being run. The repo includes a small test project with its own tool.config.js to try it against."
         ]
       }
     ]
