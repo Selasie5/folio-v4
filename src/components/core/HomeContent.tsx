@@ -12,6 +12,8 @@ import Biography from "@/components/core/Biography";
 import Writing from "@/components/core/Writing";
 import MoreLink from "@/components/core/MoreLink";
 import VideoLibrary from "@/components/core/VideoLibrary";
+import Bookshelf from "@/components/core/Bookshelf";
+import type { Book } from "@/content/books";
 import type { Video } from "@/content/videos";
 import type { Post } from "@/content/devto";
 
@@ -23,9 +25,10 @@ interface HomeContentProps {
   posts?: Post[];
   sideQuests?: SideQuest[];
   videos?: Video[];
+  books?: Book[];
 }
 
-export default function HomeContent({ content, posts = [], sideQuests = [], videos = [] }: HomeContentProps) {
+export default function HomeContent({ content, posts = [], sideQuests = [], videos = [], books = [] }: HomeContentProps) {
   const {
     profile,
     experiences = [],
@@ -95,6 +98,8 @@ export default function HomeContent({ content, posts = [], sideQuests = [], vide
       <SideQuests quests={sideQuests} />
 
       <VideoLibrary videos={videos} />
+
+      <Bookshelf books={books} />
 
       {(githubHref || mailHref) && (
         <section className="mt-14 w-full sm:mt-16" aria-labelledby="connect-heading">
