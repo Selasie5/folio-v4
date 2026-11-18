@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PostList } from "@/components/core/Writing";
-import { getPosts } from "@/content/devto";
+import { getPosts } from "@/sanity/fetchPosts";
 
 export const metadata: Metadata = {
   title: "Writing | Selasie Sepenu",

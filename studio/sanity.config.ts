@@ -25,6 +25,7 @@ export default defineConfig({
               .title("Portfolio")
               .id("portfolio")
               .child(S.document().schemaType("portfolio").documentId("portfolio")),
+            S.documentTypeListItem("post").title("Posts"),
           ]),
     }),
     visionTool(),

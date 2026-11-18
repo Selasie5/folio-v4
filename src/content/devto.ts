@@ -67,14 +67,15 @@ function toPost(article: DevtoArticle): Post {
   };
 }
 
-export async function getPosts(): Promise<Post[]> {
-  const articles = await devtoFetch<DevtoArticle[]>(`/articles?username=${DEVTO_USERNAME}&per_page=100`);
+// /articles/latest is not cached like /articles, so brand-new posts show up immediately.
+export async function getDevtoPosts(): Promise<Post[]> {
+  const articles = await devtoFetch<DevtoArticle[]>(`/articles/latest?username=${DEVTO_USERNAME}&per_page=1000`);
   return (articles ?? [])
     .map(toPost)
     .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
 }
 
-export async function getPost(slug: string): Promise<PostWithBody | null> {
+export async function getDevtoPost(slug: string): Promise<PostWithBody | null> {
   const article = await devtoFetch<DevtoArticle>(`/articles/${DEVTO_USERNAME}/${encodeURIComponent(slug)}`);
   if (!article?.body_html) return null;
   return { ...toPost(article), bodyHtml: article.body_html };

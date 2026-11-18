@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { formatPostDate, getPost, getPosts } from "@/content/devto";
+import { formatPostDate } from "@/content/devto";
+import { getPost, getPosts } from "@/sanity/fetchPosts";
 
 type Params = Promise<{ slug: string }>;
 
