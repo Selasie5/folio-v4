@@ -13,7 +13,7 @@ import Writing from "@/components/core/Writing";
 import MoreLink from "@/components/core/MoreLink";
 import VideoLibrary from "@/components/core/VideoLibrary";
 import Bookshelf from "@/components/core/Bookshelf";
-import Listening, { NowPlayingStatus } from "@/components/core/Listening";
+import Listening, { NowPlayingLine } from "@/components/core/Listening";
 import type { LikedSong, NowPlaying } from "@/lib/spotify";
 import type { Book } from "@/content/books";
 import type { Video } from "@/content/videos";
@@ -64,11 +64,6 @@ export default function HomeContent({ content, posts = [], sideQuests = [], vide
             <motion.p initial="hidden" variants={listVariants} whileInView="visible" custom={2} viewport={{ once: true }} className="mt-1 text-xs leading-5 font-[500] text-gray-600 dark:text-white">
               {profile?.role}
             </motion.p>
-            {listening?.nowPlaying && (
-              <motion.div initial="hidden" variants={listVariants} whileInView="visible" custom={2} viewport={{ once: true }} className="min-w-0 max-w-full">
-                <NowPlayingStatus nowPlaying={listening.nowPlaying} playedLabel={listening.playedLabel} />
-              </motion.div>
-            )}
           </div>
         </div>
         <ThemeToggle />
@@ -88,6 +83,11 @@ export default function HomeContent({ content, posts = [], sideQuests = [], vide
               </>
             )}
           </motion.p>
+        )}
+        {listening?.nowPlaying && (
+          <motion.div initial="hidden" variants={listVariants} whileInView="visible" custom={4} viewport={{ once: true }} className="mt-6 w-full min-w-0">
+            <NowPlayingLine nowPlaying={listening.nowPlaying} playedLabel={listening.playedLabel} />
+          </motion.div>
         )}
       </section>
 
