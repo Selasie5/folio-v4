@@ -2,31 +2,31 @@
 
 import { setTimeout as sleep } from "node:timers/promises";
 import { cookies } from "next/headers";
+import type { SideQuestSection } from "@/content/sidequests";
 import { ACCESS_DAYS, accessCookieName, checkAccessCode } from "@/sanity/confidential";
 
-export interface UnlockState {
-  error?: string;
-  unlocked?: boolean;
-}
+export type UnlockResult =
+  | { ok: true; intro: string[]; sections: SideQuestSection[] }
+  | { ok: false; error: string };
 
-export async function unlockSideQuest(slug: string, _previous: UnlockState, formData: FormData): Promise<UnlockState> {
-  const code = String(formData.get("code") ?? "");
-  if (!code.trim()) return { error: "Enter the access code you were given." };
-  if (!/^[a-z0-9-]+$/.test(slug) || code.length > 64) return { error: "That code didn’t work." };
+/** Checks an access code; on success sets the unlock cookie and returns the story. */
+export async function unlockSideQuest(slug: string, code: string): Promise<UnlockResult> {
+  if (typeof slug !== "string" || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) return { ok: false, error: "That code didn’t work." };
+  if (typeof code !== "string" || !code.trim() || code.length > 64) return { ok: false, error: "Enter the access code you were given." };
 
-  const cookieValue = await checkAccessCode(slug, code);
-  if (!cookieValue) {
+  const unlocked = await checkAccessCode(slug, code);
+  if (!unlocked) {
     // Slow down guessing.
     await sleep(800);
-    return { error: "That code didn’t work. Check it and try again." };
+    return { ok: false, error: "That code didn’t work. Check it and try again." };
   }
 
-  (await cookies()).set(accessCookieName(slug), cookieValue, {
+  (await cookies()).set(accessCookieName(slug), unlocked.cookieValue, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: `/sidequests/${slug}`,
     maxAge: ACCESS_DAYS * 24 * 60 * 60,
   });
-  return { unlocked: true };
+  return { ok: true, intro: unlocked.intro, sections: unlocked.sections };
 }

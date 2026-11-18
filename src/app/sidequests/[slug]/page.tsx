@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
-import { Fragment } from "react";
 import { notFound } from "next/navigation";
 import { LockClosedIcon } from "@heroicons/react/20/solid";
-import AccessCodeForm from "@/components/core/AccessCodeForm";
+import ConfidentialStory from "@/components/core/ConfidentialStory";
+import SideQuestStory from "@/components/core/SideQuestStory";
 import PillLink from "@/components/layout/PillLink";
 import SectionIndicator from "@/components/layout/SectionIndicator";
 import StatusTag from "@/components/core/StatusTag";
-import type { SideQuestSection } from "@/content/sidequests";
 import { confidentialAccessConfigured, getUnlockedContent } from "@/sanity/confidential";
 import { getSideQuest, getSideQuests } from "@/sanity/fetchSideQuests";
-import { unlockSideQuest } from "./actions";
 
 type Params = Promise<{ slug: string }>;
 
@@ -28,24 +26,6 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     // Keep confidential pages out of search results.
     robots: quest.confidential ? { index: false, follow: false } : undefined,
   };
-}
-
-function Story({ intro, sections }: { intro: string[]; sections: SideQuestSection[] }) {
-  return (
-    <div className="article-body mt-8">
-      {intro.map((paragraph, index) => (
-        <p key={index}>{paragraph}</p>
-      ))}
-      {sections.map((section, sectionIndex) => (
-        <Fragment key={sectionIndex}>
-          <h2>{section.heading}</h2>
-          {section.paragraphs.map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
-          ))}
-        </Fragment>
-      ))}
-    </div>
-  );
 }
 
 export default async function SideQuestPage({ params }: { params: Params }) {
@@ -96,15 +76,15 @@ export default async function SideQuestPage({ params }: { params: Params }) {
           </div>
         </header>
 
-        {!quest.confidential && <Story intro={quest.intro} sections={quest.sections} />}
+        {!quest.confidential && <SideQuestStory intro={quest.intro} sections={quest.sections} />}
 
-        {quest.confidential && unlocked && <Story intro={unlocked.intro} sections={unlocked.sections} />}
+        {quest.confidential && unlocked && <SideQuestStory intro={unlocked.intro} sections={unlocked.sections} />}
 
         {quest.confidential && !unlocked && (
           <div className="mt-8 space-y-6">
             {quest.teaser && <p className="text-[15px] leading-7 text-gray-600 dark:text-neutral-300">{quest.teaser}</p>}
             {confidentialAccessConfigured ? (
-              <AccessCodeForm action={unlockSideQuest.bind(null, slug)} contactHref={contactHref} />
+              <ConfidentialStory slug={slug} name={quest.name} contactHref={contactHref} />
             ) : (
               <p className="text-sm text-gray-500 dark:text-neutral-400">
                 <a href={contactHref} className="bio-text-link transition-colors hover:text-black dark:hover:text-white">

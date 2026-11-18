@@ -22,8 +22,12 @@ export const sideQuestPrivate = defineType({
       name: "accessCode",
       title: "Access code",
       type: "string",
-      description: "Share this with people who should see the full story. Changing it locks out everyone who used the old one.",
-      validation: (Rule) => Rule.required().min(6),
+      description:
+        "8 letters or digits, e.g. K7Q4-MZ2P (the hyphen is optional). Share it with people who should see the full story. Changing it locks out everyone who used the old one.",
+      validation: (Rule) =>
+        Rule.required().custom((code) =>
+          /^[A-Za-z0-9]{4}-?[A-Za-z0-9]{4}$/.test(code ?? "") ? true : "Use 8 letters or digits, like K7Q4-MZ2P",
+        ),
     }),
     defineField({
       name: "intro",

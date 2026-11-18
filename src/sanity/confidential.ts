@@ -47,7 +47,8 @@ function signature(slug: string, accessCode: string) {
   return createHmac("sha256", readToken ?? "").update(`${slug}:${accessCode}`).digest("hex");
 }
 
-const normalize = (code: string) => code.trim().toUpperCase().replace(/\s+/g, "");
+// Case, spaces and the hyphen don't matter: "k7q4 mz2p" matches "K7Q4-MZ2P".
+const normalize = (code: string) => code.toUpperCase().replace(/[^A-Z0-9]/g, "");
 
 function safeEqual(a: string, b: string) {
   const left = Buffer.from(a);
@@ -64,10 +65,10 @@ export async function getUnlockedContent(slug: string) {
   return { intro: content.intro, sections: content.sections };
 }
 
-/** Checks a submitted code. Returns the cookie value to set, or null if the code is wrong. */
-export async function checkAccessCode(slug: string, submitted: string): Promise<string | null> {
+/** Checks a submitted code. Returns the cookie value to set and the story, or null if the code is wrong. */
+export async function checkAccessCode(slug: string, submitted: string) {
   const content = await getConfidentialContent(slug);
   if (!content?.accessCode) return null;
   if (!safeEqual(normalize(submitted), normalize(content.accessCode))) return null;
-  return signature(slug, content.accessCode);
+  return { cookieValue: signature(slug, content.accessCode), intro: content.intro, sections: content.sections };
 }
