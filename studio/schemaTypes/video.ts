@@ -28,7 +28,7 @@ export const video = defineType({
       name: "order",
       title: "Order",
       type: "number",
-      description: "Lower numbers show first; the home page shows the first 3.",
+      description: "Lower numbers show first; the home page shows the first 2.",
       validation: (Rule) => Rule.required().integer(),
     }),
   ],

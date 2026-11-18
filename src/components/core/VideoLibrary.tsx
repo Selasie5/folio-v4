@@ -3,7 +3,7 @@ import VideoCard from "@/components/core/VideoCard";
 import type { Video } from "@/content/videos";
 
 /** How many videos the home page shows before linking to /videos. */
-export const VIDEO_PREVIEW_COUNT = 3;
+export const VIDEO_PREVIEW_COUNT = 2;
 
 /** Home-page section: the first few videos as cards, with a link to the full library. */
 export default function VideoLibrary({ videos }: { videos: Video[] }) {
@@ -15,9 +15,9 @@ export default function VideoLibrary({ videos }: { videos: Video[] }) {
         <h2 id="videos-heading" className="text-lg text-black dark:text-neutral-100 mono">Video Library</h2>
         {videos.length > VIDEO_PREVIEW_COUNT && <MoreLink href="/videos" label="View all" />}
       </div>
-      <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {videos.slice(0, VIDEO_PREVIEW_COUNT).map((video) => (
-          <VideoCard key={video.youtubeId} video={video} compact />
+          <VideoCard key={video.youtubeId} video={video} />
         ))}
       </div>
     </section>
