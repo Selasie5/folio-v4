@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { ChevronRightIcon, LockClosedIcon } from "@heroicons/react/20/solid";
 import ConfidentialStory from "@/components/core/ConfidentialStory";
 import SideQuestStory from "@/components/core/SideQuestStory";
-import PillLink from "@/components/layout/PillLink";
+import PageTopBar from "@/components/layout/PageTopBar";
 import SectionIndicator from "@/components/layout/SectionIndicator";
 import StatusTag from "@/components/core/StatusTag";
 import { confidentialAccessConfigured } from "@/sanity/confidential";
@@ -39,7 +39,7 @@ export default async function SideQuestPage({ params }: { params: Params }) {
   return (
     <main className="flex w-full flex-col items-start">
       <SectionIndicator />
-      <PillLink href="/" label="Back home" caret="left" />
+      <PageTopBar href="/" label="Back home" />
 
       <article className="mt-8 w-full">
         <header>

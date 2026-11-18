@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import PillLink from "@/components/layout/PillLink";
+import PageTopBar from "@/components/layout/PageTopBar";
 import SectionIndicator from "@/components/layout/SectionIndicator";
 import { formatPostDate } from "@/content/devto";
 import { getPost, getPosts } from "@/sanity/fetchPosts";
@@ -31,7 +31,7 @@ export default async function PostPage({ params }: { params: Params }) {
   return (
     <main className="flex w-full flex-col items-start">
       <SectionIndicator />
-      <PillLink href="/writing" label="All posts" caret="left" />
+      <PageTopBar href="/writing" label="All posts" />
 
       <article className="mt-8 w-full">
         <header>

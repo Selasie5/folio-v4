@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { SideQuestList } from "@/components/core/SideQuests";
-import PillLink from "@/components/layout/PillLink";
+import PageTopBar from "@/components/layout/PageTopBar";
 import { getSideQuests } from "@/sanity/fetchSideQuests";
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export default async function SideQuestsPage() {
 
   return (
     <main className="flex w-full flex-col items-start">
-      <PillLink href="/" label="Back home" caret="left" />
+      <PageTopBar href="/" label="Back home" />
       <header className="mt-8">
         <h1 className="text-2xl leading-tight text-black dark:text-neutral-100 mono">Side Quests</h1>
         <p className="mt-3 max-w-[52ch] text-sm leading-6 text-gray-500 dark:text-neutral-400">

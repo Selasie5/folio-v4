@@ -4,6 +4,10 @@
 //
 // Usage: node scripts/seed-confidential.mjs <slug> ["Public teaser text"] [--apply] [--site=https://example.com]
 // With --site, the live page is also fetched after the change to confirm the story is gone.
+//
+// Sanity can't lock a document against editing, so applying requires --confirm-freeze: nobody may
+// edit this side quest in Studio until the script finishes. Drafts and release versions are checked
+// before writing and again afterwards, so an edit made during the run is still caught.
 // Preview by default. Never prints the access code; read it in Studio → Confidential content.
 import assert from "node:assert/strict";
 import { randomBytes } from "node:crypto";
@@ -49,14 +53,13 @@ async function main() {
   const [quest] = published;
 
   // A draft or release version that still holds the story would put it back in public when published.
-  const variants = (await client.fetch(`*[_id in path("drafts.**") || _id in path("versions.**")]{_id, intro, sections}`)).filter(
-    ({ _id }) => _id === `drafts.${quest._id}` || _id.endsWith(`.${quest._id}`),
-  );
-  const unsafe = variants.filter(({ intro, sections }) => (intro?.length ?? 0) + (sections?.length ?? 0) > 0);
-  assert(
-    unsafe.length === 0,
-    `These unpublished versions still contain the story; discard or empty them in Studio first: ${unsafe.map(({ _id }) => _id).join(", ")}`,
-  );
+  const unsafeVariants = async () =>
+    (await client.fetch(`*[_id in path("drafts.**") || _id in path("versions.**")]{_id, intro, sections}`))
+      .filter(({ _id }) => _id === `drafts.${quest._id}` || _id.endsWith(`.${quest._id}`))
+      .filter(({ intro, sections }) => (intro?.length ?? 0) + (sections?.length ?? 0) > 0)
+      .map(({ _id }) => _id);
+  const unsafe = await unsafeVariants();
+  assert(unsafe.length === 0, `These unpublished versions still contain the story; discard or empty them in Studio first: ${unsafe.join(", ")}`);
   const privateId = `confidential.${quest._id}`;
   const existingPrivate = await client.getDocument(privateId);
 
@@ -74,6 +77,10 @@ async function main() {
     teaser,
   }, null, 2));
   if (!apply) return;
+  assert(
+    process.argv.includes("--confirm-freeze"),
+    "Applying needs --confirm-freeze: make sure nobody edits this side quest in Studio until the script finishes.",
+  );
 
   const backupDir = mkdtempSync(path.join(tmpdir(), "portfolio-confidential-"));
   writeFileSync(path.join(backupDir, "before.json"), JSON.stringify({ quest, existingPrivate }, null, 2));
@@ -101,6 +108,12 @@ async function main() {
   assert.equal(await anonymous.fetch(`count(*[_type == "sideQuestPrivate"])`), 0, "Confidential documents are publicly readable");
   const leaked = await anonymous.fetch(`count(*[$paragraph in intro])`, { paragraph: intro[0] });
   assert.equal(leaked, 0, "Story text is still publicly readable somewhere");
+  // Re-check unpublished versions: one created or edited during the run would republish the story.
+  const unsafeAfter = await unsafeVariants();
+  assert(
+    unsafeAfter.length === 0,
+    `An unpublished version gained story text during the run; discard or empty it in Studio before it's published: ${unsafeAfter.join(", ")}`,
+  );
   console.log("Verified in Sanity: story moved to the private document, removed from the public one, and hidden from public reads.");
   if (!site) {
     console.log(
@@ -110,17 +123,34 @@ async function main() {
   }
   // The first request can still get the cached page while it triggers a rebuild; check a fresh one.
   const url = `${site}/sidequests/${slug}`;
-  const probe = intro[0].slice(0, 80);
+  // Compare on unescaped text: decode HTML entities and JSON string escapes from the page data.
+  const normalise = (text) =>
+    text
+      .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
+      .replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(Number(dec)))
+      .replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&")
+      .replace(/\\u([0-9a-f]{4})/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+      .replace(/\\(["\\/])/g, "$1")
+      .replace(/<!-- -->/g, "");
+  // Probe with several story fragments (first paragraph, every heading), stripped of highlight marks.
+  const probes = [intro[0], ...sections.map((section) => section.heading)]
+    .filter(Boolean)
+    .map((text) => text.replace(/==/g, "").slice(0, 60));
   for (let attempt = 1; attempt <= 6; attempt += 1) {
-    const html = await (await fetch(url, { headers: { "Cache-Control": "no-cache" } })).text();
-    if (!html.includes(probe)) {
-      console.log(`Confirmed on the live site: ${url} no longer contains the story.`);
+    const response = await fetch(url, { headers: { "Cache-Control": "no-cache" }, redirect: "manual" });
+    const page = normalise(await response.text());
+    const locked = page.includes("This story is confidential");
+    const leaked = probes.filter((probe) => page.includes(probe));
+    if (response.status === 200 && locked && leaked.length === 0) {
+      console.log(`Confirmed on the live site: ${url} serves the locked page and none of the story.`);
       return;
     }
-    console.log(`Live page still has the story (attempt ${attempt}); waiting for it to regenerate…`);
+    console.log(
+      `Not confirmed yet (attempt ${attempt}): status ${response.status}, locked ${locked}, story fragments found ${leaked.length}. Waiting…`,
+    );
     await new Promise((resolve) => setTimeout(resolve, 15_000));
   }
-  throw new Error(`${url} still serves the story. Redeploy or revalidate the page, then check again.`);
+  throw new Error(`${url} isn't confirmed locked and story-free. Redeploy or revalidate the page, then check again.`);
 }
 
 main().catch((error) => {

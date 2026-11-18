@@ -16,7 +16,7 @@ import MoreLink from "@/components/core/MoreLink";
 import type { Post } from "@/content/devto";
 
 // How many roles the home page shows before linking to /experience.
-const EXPERIENCE_PREVIEW_COUNT = 4;
+const EXPERIENCE_PREVIEW_COUNT = 3;
 
 interface HomeContentProps {
   content: PortfolioContent;

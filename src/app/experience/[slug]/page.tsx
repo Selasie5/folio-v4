@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import TechStackCard from "@/components/core/TechStackCard";
-import PillLink from "@/components/layout/PillLink";
+import PageTopBar from "@/components/layout/PageTopBar";
 import { withSlugs } from "@/content/experience";
 import { getPortfolioContent } from "@/sanity/fetchPortfolio";
 
@@ -36,7 +36,7 @@ export default async function ExperienceDetailPage({ params }: { params: Params 
 
   return (
     <main className="flex w-full flex-col items-start">
-      <PillLink href="/experience" label="Work Experience" caret="left" />
+      <PageTopBar href="/experience" label="Work Experience" />
 
       <article className="mt-8 w-full">
         <header className="flex items-start gap-4">

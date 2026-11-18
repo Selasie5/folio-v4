@@ -5,7 +5,7 @@ import StatusTag from "@/components/core/StatusTag";
 import type { SideQuest } from "@/content/sidequests";
 
 /** How many side quests the home page shows before linking to /sidequests. */
-export const SIDE_QUEST_PREVIEW_COUNT = 4;
+export const SIDE_QUEST_PREVIEW_COUNT = 3;
 
 export function SideQuestList({ quests }: { quests: SideQuest[] }) {
   return (

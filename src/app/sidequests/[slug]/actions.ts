@@ -4,7 +4,7 @@ import { setTimeout as sleep } from "node:timers/promises";
 import { headers } from "next/headers";
 import type { SideQuestSection } from "@/content/sidequests";
 import { checkAccessCode } from "@/sanity/confidential";
-import { clearAttempts, reserveAttempt } from "@/sanity/unlockRateLimit";
+import { refundAttempt, reserveAttempt } from "@/sanity/unlockRateLimit";
 
 export type UnlockResult =
   | { ok: true; intro: string[]; sections: SideQuestSection[] }
@@ -37,6 +37,7 @@ export async function unlockSideQuest(slug: string, code: string): Promise<Unloc
     await sleep(800);
     return { ok: false, error: "That code didn’t work. Check it and try again." };
   }
-  clearAttempts(key);
+  // Refund only this attempt; earlier wrong guesses keep counting.
+  refundAttempt(key);
   return { ok: true, intro: story.intro, sections: story.sections };
 }

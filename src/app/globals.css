@@ -266,6 +266,8 @@ main:has(> [data-section-indicator]) {
 /* Highlighter marks in side quest stories: a soft marker stroke behind key phrases, like a
    highlighter pen in a book. On browsers with scroll-driven animations it sweeps in as you read. */
 .story-highlight {
+  /* Clear the browser's built-in bright-yellow <mark> background; only the marker stroke shows. */
+  background-color: transparent;
   color: inherit;
   padding: 0 0.12em;
   margin: 0 -0.04em;
