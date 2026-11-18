@@ -53,8 +53,8 @@ export const sideQuest = defineType({
       name: "status",
       title: "Status",
       type: "string",
-      description: "Active, Building and Waitlist open get their own colour; anything else shows grey.",
-      options: { list: ["Active", "Building", "Waitlist open"] },
+      description: "Active, Building, Shipped and Waitlist open get their own colour; anything else shows grey.",
+      options: { list: ["Active", "Building", "Shipped", "Waitlist open"] },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
