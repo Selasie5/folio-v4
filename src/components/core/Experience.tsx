@@ -13,7 +13,7 @@ export default function Experience({ experiences = [], all }: ExperienceProps) {
   const fullList = all ?? items;
 
   return (
-    <ul className="focus-list w-full divide-y divide-gray-100 border-y border-gray-100 dark:divide-neutral-800 dark:border-neutral-800">
+    <ul className="focus-list w-full divide-y divide-dotted divide-gray-300 border-y border-dotted border-gray-300 dark:divide-neutral-700 dark:border-neutral-700">
       {items.map((experience, index) => (
         <li key={`${experience.company}-${experience.role}-${index}`}>
           <Link

@@ -16,7 +16,7 @@ const ContactLink: React.FC<ContactLinkProps> = ({ item }) => {
 
   return (
     <motion.div
-      className="w-full border-b border-gray-100 dark:border-neutral-800 py-3 cursor-pointer select-none"
+      className="w-full border-b border-dotted border-gray-300 dark:border-neutral-700 py-3 cursor-pointer select-none"
       whileHover={{ scale: 1.02 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       onHoverStart={() => setHovered(true)}

@@ -201,8 +201,8 @@ body {
   color: #737373;
 }
 .dark .article-body blockquote { border-color: #404040; color: #a3a3a3; }
-.article-body hr { border-color: #f3f4f6; margin: 2.5em 0; }
-.dark .article-body hr { border-color: #262626; }
+.article-body hr { border: 0; border-top: 1px dotted #d1d5db; margin: 2.5em 0; }
+.dark .article-body hr { border-top-color: #404040; }
 .article-body img,
 .article-body video,
 .article-body iframe {

@@ -8,7 +8,7 @@ export default function SideQuests({ quests }: { quests: SideQuest[] }) {
   return (
     <section className="mt-14 w-full sm:mt-16" aria-labelledby="sidequests-heading">
       <h2 id="sidequests-heading" className="text-lg text-black dark:text-neutral-100 mono">Side Quests</h2>
-      <ul className="focus-list mt-5 w-full divide-y divide-gray-100 border-y border-gray-100 dark:divide-neutral-800 dark:border-neutral-800">
+      <ul className="focus-list mt-5 w-full divide-y divide-dotted divide-gray-300 border-y border-dotted border-gray-300 dark:divide-neutral-700 dark:border-neutral-700">
         {quests.map((quest) => (
           <li key={quest.slug}>
             <Link

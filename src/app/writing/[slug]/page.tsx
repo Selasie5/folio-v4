@@ -55,7 +55,7 @@ export default async function PostPage({ params }: { params: Params }) {
 
         <div className="article-body mt-8" dangerouslySetInnerHTML={{ __html: post.bodyHtml }} />
 
-        <footer className="mt-12 border-t border-gray-100 pt-6 dark:border-neutral-800">
+        <footer className="mt-12 border-t border-dotted border-gray-300 pt-6 dark:border-neutral-700">
           <a
             href={post.url}
             target="_blank"
