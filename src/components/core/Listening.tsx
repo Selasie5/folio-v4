@@ -75,38 +75,24 @@ export function LikedSongRow({ song, showAlbum = false }: { song: LikedSong; sho
   );
 }
 
-/** Home-page section: now playing (or last played) and a few recently liked songs. */
-export default function Listening({
-  nowPlaying,
-  liked,
-  playedLabel,
-}: {
-  nowPlaying: NowPlaying | null;
-  liked: LikedSong[];
-  playedLabel?: string;
-}) {
-  if (!nowPlaying && liked.length === 0) return null;
+/** Home-page section: a few recently liked songs, linking to the full list on /music.
+ *  (The now playing / last played card sits under the intro instead.) */
+export default function Listening({ liked }: { liked: LikedSong[] }) {
+  if (liked.length === 0) return null;
 
   return (
-    <section className="mt-14 w-full sm:mt-16" aria-labelledby="listening-heading">
+    <section className="mt-14 w-full sm:mt-16" aria-labelledby="liked-heading">
       <div className="flex items-center justify-between gap-4">
-        <h2 id="listening-heading" className="text-lg text-black dark:text-neutral-100 mono">Listening</h2>
-        {liked.length > 0 && <MoreLink href="/music" label="Liked songs" />}
+        <h2 id="liked-heading" className="text-lg text-black dark:text-neutral-100 mono">Liked Songs</h2>
+        {liked.length > 0 && <MoreLink href="/music" label="View all" />}
       </div>
-      {nowPlaying && (
-        <div className="mt-5">
-          <NowPlayingCard nowPlaying={nowPlaying} playedLabel={playedLabel} />
-        </div>
-      )}
-      {liked.length > 0 && (
-        <ul className="focus-list mt-4 w-full divide-y divide-dotted divide-gray-300 border-y border-dotted border-gray-300 dark:divide-neutral-700 dark:border-neutral-700">
-          {liked.slice(0, LIKED_PREVIEW_COUNT).map((song) => (
-            <li key={song.track.id + song.addedAt}>
-              <LikedSongRow song={song} />
-            </li>
-          ))}
-        </ul>
-      )}
+      <ul className="focus-list mt-5 w-full divide-y divide-dotted divide-gray-300 border-y border-dotted border-gray-300 dark:divide-neutral-700 dark:border-neutral-700">
+        {liked.slice(0, LIKED_PREVIEW_COUNT).map((song) => (
+          <li key={song.track.id + song.addedAt}>
+            <LikedSongRow song={song} />
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

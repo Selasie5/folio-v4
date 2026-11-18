@@ -13,7 +13,7 @@ import Writing from "@/components/core/Writing";
 import MoreLink from "@/components/core/MoreLink";
 import VideoLibrary from "@/components/core/VideoLibrary";
 import Bookshelf from "@/components/core/Bookshelf";
-import Listening from "@/components/core/Listening";
+import Listening, { NowPlayingCard } from "@/components/core/Listening";
 import type { LikedSong, NowPlaying } from "@/lib/spotify";
 import type { Book } from "@/content/books";
 import type { Video } from "@/content/videos";
@@ -84,6 +84,11 @@ export default function HomeContent({ content, posts = [], sideQuests = [], vide
             )}
           </motion.p>
         )}
+        {listening?.nowPlaying && (
+          <motion.div initial="hidden" variants={listVariants} whileInView="visible" custom={4} viewport={{ once: true }} className="mt-8 w-full">
+            <NowPlayingCard nowPlaying={listening.nowPlaying} playedLabel={listening.playedLabel} />
+          </motion.div>
+        )}
       </section>
 
       {(experiences ?? []).length > 0 && (
@@ -104,7 +109,7 @@ export default function HomeContent({ content, posts = [], sideQuests = [], vide
 
       <Bookshelf books={books} />
 
-      {listening && <Listening nowPlaying={listening.nowPlaying} liked={listening.liked} playedLabel={listening.playedLabel} />}
+      {listening && <Listening liked={listening.liked} />}
 
       {(githubHref || mailHref) && (
         <section className="mt-14 w-full sm:mt-16" aria-labelledby="connect-heading">
