@@ -10,7 +10,8 @@ const tones: Record<string, string> = {
 const fallback = "bg-gray-100 text-gray-600 ring-gray-500/15 dark:bg-neutral-800 dark:text-neutral-300 dark:ring-neutral-700";
 
 export default function StatusTag({ status }: { status: string }) {
-  const tone = tones[status.trim().toLowerCase()] ?? fallback;
+  const key = status.trim().toLowerCase();
+  const tone = Object.hasOwn(tones, key) ? tones[key] : fallback;
 
   return (
     <span className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-md px-2 py-0.5 text-[11px] font-medium leading-4 ring-1 ring-inset ${tone}`}>

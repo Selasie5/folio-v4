@@ -11,29 +11,56 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 nextEnv.loadEnvConfig(root);
 const seed = JSON.parse(readFileSync(path.join(root, "src/content/work-experience.json"), "utf8"));
 const apply = process.argv.includes("--apply");
+// Roles in Sanity that aren't in the seed are kept unless this flag is passed.
+const removeUnmatched = process.argv.includes("--remove-unmatched");
 
 function normalizeCompany(company) {
   const name = company.toLowerCase().replace(/[^a-z0-9]/g, "");
   return /^blackhorse(?:mobility)?(?:limited|ltd)?$/.test(name) ? "blackhorse" : name;
 }
 
+const startOf = (period) => String(period ?? "").split(/s+[–-]s+/)[0].trim().toLowerCase();
+const sameRole = (a, b) => a.trim().toLowerCase() === b.trim().toLowerCase();
+const seedKey = ({ company, role, period }) =>
+  createHash("sha256").update(`${company}|${role}|${period.split(" – ")[0]}`).digest("hex").slice(0, 16);
+
+// Finds the saved stint for a seeded one: the key the seed would have given it, otherwise the
+// same company + role + start date, otherwise the only stint with that company + role.
+// Stops rather than guessing when more than one stint could match.
+function findSavedStint(seeded, existing, taken) {
+  const available = existing.filter((entry) => !taken.has(entry._key));
+  const key = seedKey(seeded);
+  const byKey = available.find((entry) => entry._key === key);
+  if (byKey) return byKey;
+  const sameCompanyRole = available.filter(
+    (entry) => normalizeCompany(entry.company) === normalizeCompany(seeded.company) && sameRole(entry.role, seeded.role),
+  );
+  const sameStart = sameCompanyRole.filter((entry) => startOf(entry.period) === startOf(seeded.period));
+  if (sameStart.length === 1) return sameStart[0];
+  if (sameStart.length > 1 || sameCompanyRole.length > 1) {
+    throw new Error(
+      `Ambiguous match for "${seeded.company} | ${seeded.role} | ${seeded.period}": ${sameCompanyRole.length} saved stints could match. Fix the seed or Studio first.`,
+    );
+  }
+  return sameCompanyRole[0];
+}
+
 function prepareExperiences(existing = []) {
-  return seed.experiences.map(({ company, role, period }) => {
+  const taken = new Set();
+  const seeded = seed.experiences.map((entry) => {
+    const { company, role, period } = entry;
     assert(company && role && period, "Every seeded position needs a company, role, and period");
-    const companyEntries = existing.filter((entry) => normalizeCompany(entry.company) === normalizeCompany(company));
-    const matchingRole = companyEntries.find((entry) => entry.role.trim().toLowerCase() === role.trim().toLowerCase());
-    const logo = matchingRole?.logo ?? companyEntries.find((entry) => entry.logo)?.logo;
-    const result = {
-      ...matchingRole,
-      _type: "experience",
-      _key: matchingRole?._key ?? createHash("sha256").update(`${company}|${role}|${period.split(" – ")[0]}`).digest("hex").slice(0, 16),
-      company,
-      role,
-      period,
-    };
+    const saved = findSavedStint(entry, existing, taken);
+    if (saved) taken.add(saved._key);
+    // Logos are shared per company, independent of which stint matched.
+    const companyLogo = existing.find((other) => normalizeCompany(other.company) === normalizeCompany(company) && other.logo)?.logo;
+    const result = { ...saved, _type: "experience", _key: saved?._key ?? seedKey(entry), company, role, period };
+    const logo = saved?.logo ?? companyLogo;
     if (logo) result.logo = logo;
     return result;
   });
+  const unmatched = existing.filter((entry) => !taken.has(entry._key));
+  return { experiences: removeUnmatched ? seeded : [...seeded, ...unmatched], unmatched };
 }
 
 function otherFields(document) {
@@ -55,9 +82,14 @@ async function main() {
   const ids = ["portfolio", "drafts.portfolio"];
   const documents = await client.fetch("*[_id in $ids]", { ids });
   assert(documents.some(({ _id }) => _id === "portfolio"), "The published portfolio document was not found");
-  const plans = documents.map((document) => ({ document, experiences: prepareExperiences(document.experiences) }));
-  console.log(JSON.stringify({ mode: apply ? "apply" : "preview", projectId, dataset, documents: plans.map(({ document, experiences }) => ({ id: document._id, previousPositions: document.experiences?.length ?? 0, positions: experiences.length })) }, null, 2));
-  for (const { company, role, period } of seed.experiences) console.log(`${company} | ${role} | ${period}`);
+  const plans = documents.map((document) => ({ document, ...prepareExperiences(document.experiences) }));
+  console.log(JSON.stringify({ mode: apply ? "apply" : "preview", projectId, dataset, removeUnmatched, documents: plans.map(({ document, experiences }) => ({ id: document._id, previousPositions: document.experiences?.length ?? 0, positions: experiences.length })) }, null, 2));
+  for (const { company, role, period } of seed.experiences) console.log(`seed | ${company} | ${role} | ${period}`);
+  for (const { document, unmatched } of plans) {
+    for (const entry of unmatched) {
+      console.log(`${document._id}: not in seed, ${removeUnmatched ? "WILL BE REMOVED" : "kept"} | ${entry.company} | ${entry.role} | ${entry.period}`);
+    }
+  }
   if (!apply) return;
 
   const backupDir = mkdtempSync(path.join(tmpdir(), "portfolio-experience-seed-"));

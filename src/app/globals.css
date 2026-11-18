@@ -244,7 +244,7 @@ body {
   transition: opacity 250ms ease, filter 250ms ease;
 }
 @media (hover: hover) {
-  .focus-list:hover > li:not(:hover) > * {
+  .focus-list:hover > li:not(:hover):not(:has(:focus-visible)) > * {
     opacity: 0.3;
     filter: blur(1.5px);
   }
@@ -255,4 +255,10 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .focus-list > li > * { transition: none; }
+}
+
+/* Pages with the floating section indicator: leave room below the content so the pill
+   never covers the last line or the article footer link. */
+main:has(> [data-section-indicator]) {
+  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
 }

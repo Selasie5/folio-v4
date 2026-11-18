@@ -50,8 +50,14 @@ export async function getSideQuests(): Promise<SideQuest[]> {
 export async function getSideQuest(slug: string): Promise<SideQuest | undefined> {
   if (sanityClient) {
     try {
-      const quest = await sanityClient.fetch<SideQuest | null>(sideQuestQuery, { slug }, fetchOptions);
+      const { quest, total } = await sanityClient.fetch<{ quest: SideQuest | null; total: number }>(
+        `{ "quest": ${sideQuestQuery}, "total": count(*[_type == "sideQuest"]) }`,
+        { slug },
+        fetchOptions,
+      );
       if (quest) return clean(quest);
+      // Sanity is up and manages side quests: a missing slug really is missing (e.g. deleted in Studio).
+      if (total > 0) return undefined;
     } catch (error) {
       console.error(`Unable to load side quest "${slug}" from Sanity; using the local copy.`, error);
     }

@@ -114,9 +114,11 @@ async function main() {
   const updated = await client.fetch(`*[_id in ["portfolio", "drafts.portfolio"]]`);
   for (const { document } of plans) {
     const current = updated.find(({ _id }) => _id === document._id);
-    assert.equal(current.experiences.length, document.experiences.length, "Entry count changed");
-    current.experiences.forEach((entry, index) => {
-      const before = document.experiences[index];
+    const currentEntries = current.experiences ?? [];
+    const beforeEntries = document.experiences ?? [];
+    assert.equal(currentEntries.length, beforeEntries.length, "Entry count changed");
+    currentEntries.forEach((entry, index) => {
+      const before = beforeEntries[index];
       const detail = details[keyOf(entry)];
       assert.equal(entry._key, before._key);
       assert.deepEqual(entry.achievements, before.achievements?.length ? before.achievements : detail?.achievements ?? before.achievements);

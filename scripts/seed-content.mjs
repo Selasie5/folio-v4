@@ -11,11 +11,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createClient } from "@sanity/client";
 import nextEnv from "@next/env";
-import { sideQuests } from "../src/content/sidequests.ts";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 nextEnv.loadEnvConfig(root);
 const apply = process.argv.includes("--apply");
+// Plain JSON so this runs on any supported Node version (no TypeScript loader needed).
+const sideQuests = JSON.parse(readFileSync(path.join(root, "src/content/sidequests.json"), "utf8"));
 
 // Mirrors src/content/fallback.ts.
 const techStack = [
@@ -65,11 +66,18 @@ async function main() {
   const client = createClient({ projectId, dataset, token, apiVersion: "2026-09-20", useCdn: false, perspective: "raw" });
 
   const questDocs = sideQuests.map(toDocument);
-  const existingQuests = await client.fetch(`*[_type == "sideQuest"]._id`);
+  const existing = await client.fetch(`*[_type == "sideQuest"]{_id, "slug": slug.current}`);
+  const existingQuests = existing.map(({ _id }) => _id);
+  // A quest created in Studio has a random ID; don't add a second document with the same slug.
+  const toCreate = questDocs.filter((quest) => {
+    const sameSlug = existing.find(({ slug, _id }) => slug === quest.slug.current && _id !== quest._id);
+    if (sameSlug) console.log(`side quest | skip, slug already used by ${sameSlug._id} | ${quest.name}`);
+    return !sameSlug;
+  });
   const portfolios = await client.fetch(`*[_id in ["portfolio", "drafts.portfolio"]]`);
   assert(portfolios.some(({ _id }) => _id === "portfolio"), "The published portfolio document was not found");
 
-  for (const quest of questDocs) {
+  for (const quest of toCreate) {
     console.log(`side quest | ${existingQuests.includes(quest._id) ? "exists, keep" : "create"} | ${quest.name}`);
   }
   const portfolioSets = portfolios.map((document) => {
@@ -86,14 +94,22 @@ async function main() {
   console.log(`Backup: ${backupDir}`);
 
   let transaction = client.transaction();
-  for (const quest of questDocs) transaction = transaction.createIfNotExists(quest);
+  for (const quest of toCreate) transaction = transaction.createIfNotExists(quest);
   for (const { document, sets } of portfolioSets) {
     if (Object.keys(sets).length) transaction = transaction.patch(document._id, (patch) => patch.ifRevisionId(document._rev).set(sets));
   }
   await transaction.commit({ visibility: "sync" });
 
-  const savedQuests = await client.fetch(`*[_type == "sideQuest"]{_id, name, "sections": count(sections)}`);
-  for (const quest of questDocs) assert(savedQuests.some(({ _id }) => _id === quest._id), `Missing ${quest._id}`);
+  const savedQuests = await client.fetch(`*[_type == "sideQuest"]`);
+  for (const quest of toCreate) {
+    const saved = savedQuests.find(({ _id }) => _id === quest._id);
+    assert(saved, `Missing ${quest._id}`);
+    // Newly created quests must match the seed exactly; existing ones were left alone on purpose.
+    if (!existingQuests.includes(quest._id)) {
+      const { _rev, _createdAt, _updatedAt, ...fields } = saved;
+      assert.deepEqual(fields, quest, `Saved fields differ for ${quest._id}`);
+    }
+  }
   const updated = await client.fetch(`*[_id in ["portfolio", "drafts.portfolio"]]`);
   for (const { document, sets } of portfolioSets) {
     const current = updated.find(({ _id }) => _id === document._id);

@@ -73,7 +73,7 @@ function toPost(article: DevtoArticle): Post {
 // /articles/latest is not cached like /articles, so brand-new posts show up immediately.
 export async function getDevtoPosts(): Promise<Post[]> {
   const articles = await devtoFetch<DevtoArticle[]>(`/articles/latest?username=${DEVTO_USERNAME}&per_page=1000`);
-  return (articles ?? [])
+  return (Array.isArray(articles) ? articles : [])
     .map(toPost)
     .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
 }

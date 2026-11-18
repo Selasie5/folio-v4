@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import { setTimeout as sleep } from "node:timers/promises";
 import { createClient } from "@sanity/client";
 import nextEnv from "@next/env";
+import { addGuardedWrites, explainWriteError, fetchTargets } from "./lib/guarded-write.mjs";
 
 const DEVTO_USERNAME = "selasie5";
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -67,8 +68,12 @@ async function main() {
 
   const documents = (await loadArticles()).map(toDocument);
   for (const document of documents) assert(document.bodyHtml, `No body returned for ${document.slug.current}`);
-  const existing = await client.fetch(`*[_type == "post"]`);
+  const existing = await client.fetch(`*[_type == "post"]{_id, "slug": slug.current}`);
   const existingIds = new Set(existing.map(({ _id }) => _id));
+  for (const document of documents) {
+    const clash = existing.find(({ slug, _id }) => slug === document.slug.current && _id !== document._id);
+    assert(!clash, `Slug ${document.slug.current} is already used by ${clash?._id}`);
+  }
 
   console.log(JSON.stringify({ mode: apply ? "apply" : "preview", projectId, dataset, devtoArticles: documents.length, existingPosts: existing.length }, null, 2));
   for (const { _id, title, publishedAt } of documents) {
@@ -77,12 +82,16 @@ async function main() {
   if (!apply) return;
 
   const backupDir = mkdtempSync(path.join(tmpdir(), "portfolio-posts-sync-"));
-  writeFileSync(path.join(backupDir, "before.json"), JSON.stringify(existing, null, 2));
+  // Back up exactly the documents this sync can overwrite, and write only if they haven't changed since.
+  const targets = await fetchTargets(client, documents);
+  writeFileSync(path.join(backupDir, "before.json"), JSON.stringify([...targets.values()], null, 2));
   console.log(`Backup: ${backupDir}`);
 
-  let transaction = client.transaction();
-  for (const document of documents) transaction = transaction.createOrReplace(document);
-  await transaction.commit({ visibility: "sync" });
+  await addGuardedWrites(client.transaction(), documents, targets)
+    .commit({ visibility: "sync" })
+    .catch((error) => {
+      throw explainWriteError(error);
+    });
 
   const ids = documents.map(({ _id }) => _id);
   const saved = await client.fetch(`*[_id in $ids]{ _id, "slug": slug.current, bodyHtml }`, { ids });

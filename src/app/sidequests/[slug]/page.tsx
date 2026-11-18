@@ -33,14 +33,14 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 function Story({ intro, sections }: { intro: string[]; sections: SideQuestSection[] }) {
   return (
     <div className="article-body mt-8">
-      {intro.map((paragraph) => (
-        <p key={paragraph}>{paragraph}</p>
+      {intro.map((paragraph, index) => (
+        <p key={index}>{paragraph}</p>
       ))}
-      {sections.map((section) => (
-        <Fragment key={section.heading}>
+      {sections.map((section, sectionIndex) => (
+        <Fragment key={sectionIndex}>
           <h2>{section.heading}</h2>
-          {section.paragraphs.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
+          {section.paragraphs.map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
           ))}
         </Fragment>
       ))}

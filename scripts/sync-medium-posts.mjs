@@ -8,6 +8,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createClient } from "@sanity/client";
 import nextEnv from "@next/env";
+import { addGuardedWrites, explainWriteError, fetchTargets } from "./lib/guarded-write.mjs";
 
 const MEDIUM_USERNAME = "selasisepenu5";
 const WORDS_PER_MINUTE = 238;
@@ -35,9 +36,10 @@ function toDocument(item) {
   // Medium appends a tracking pixel to every feed item.
   body = body.replace(/<img[^>]+src="https:\/\/medium\.com\/_\/stat[^"]*"[^>]*>/g, "");
 
-  // A figure at the very top is the story's cover image.
+  // An uncaptioned figure at the very top is the story's cover image.
+  // A captioned one stays in the body, so its caption isn't lost.
   let coverImage;
-  const lead = body.match(/^\s*<figure>\s*<img[^>]+src="([^"]+)"[^>]*\/?>\s*(?:<figcaption>[\s\S]*?<\/figcaption>)?\s*<\/figure>/);
+  const lead = body.match(/^\s*<figure>\s*<img[^>]+src="([^"]+)"[^>]*\/?>\s*<\/figure>/);
   if (lead) {
     coverImage = lead[1];
     body = body.slice(lead[0].length);
@@ -97,12 +99,17 @@ async function main() {
   if (!apply) return;
 
   const backupDir = mkdtempSync(path.join(tmpdir(), "portfolio-medium-sync-"));
-  writeFileSync(path.join(backupDir, "before.json"), JSON.stringify(await client.fetch(`*[_type == "post" && source == "medium"]`), null, 2));
+  // Back up exactly the documents this sync can overwrite (by ID, not by the editable source field),
+  // and write only if they haven't changed since.
+  const targets = await fetchTargets(client, documents);
+  writeFileSync(path.join(backupDir, "before.json"), JSON.stringify([...targets.values()], null, 2));
   console.log(`Backup: ${backupDir}`);
 
-  let transaction = client.transaction();
-  for (const document of documents) transaction = transaction.createOrReplace(document);
-  await transaction.commit({ visibility: "sync" });
+  await addGuardedWrites(client.transaction(), documents, targets)
+    .commit({ visibility: "sync" })
+    .catch((error) => {
+      throw explainWriteError(error);
+    });
 
   const saved = await client.fetch(`*[_id in $ids]{_id, "slug": slug.current, bodyHtml}`, { ids: documents.map(({ _id }) => _id) });
   for (const document of documents) {

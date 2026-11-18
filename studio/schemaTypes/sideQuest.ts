@@ -30,7 +30,10 @@ export const sideQuest = defineType({
       type: "slug",
       description: "Used in the site URL: /sidequests/<slug>.",
       options: { source: "name" },
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) =>
+        Rule.required().custom((slug) =>
+          /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug?.current ?? "") ? true : "Use lowercase letters, numbers and single hyphens only",
+        ),
     }),
     defineField({
       name: "order",
