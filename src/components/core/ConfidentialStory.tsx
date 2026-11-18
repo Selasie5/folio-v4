@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { LockClosedIcon } from "@heroicons/react/20/solid";
 import SideQuestStory from "@/components/core/SideQuestStory";
@@ -45,7 +45,26 @@ interface ConfidentialStoryProps {
 export default function ConfidentialStory({ slug, name, contactHref }: ConfidentialStoryProps) {
   const reduceMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
+  // The unlocked story lives only in memory, so leaving or reloading the page locks it again.
   const [story, setStory] = useState<{ intro: string[]; sections: SideQuestSection[] } | null>(null);
+
+  // Browsers can keep a page in the back/forward cache and restore it as it was; re-lock on the
+  // way out and again if it's restored, so Back never shows an unlocked story.
+  useEffect(() => {
+    const relock = () => {
+      setOpen(false);
+      setStory(null);
+    };
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) relock();
+    };
+    window.addEventListener("pagehide", relock);
+    window.addEventListener("pageshow", onPageShow);
+    return () => {
+      window.removeEventListener("pagehide", relock);
+      window.removeEventListener("pageshow", onPageShow);
+    };
+  }, []);
 
   return (
     <div className="relative">

@@ -1,13 +1,9 @@
-// Server-only: reads confidential side quest content and checks access.
+// Server-only: reads confidential side quest content and checks access codes.
 // Never import this from a client component — it uses SANITY_API_READ_TOKEN.
-import { createHmac, timingSafeEqual } from "node:crypto";
-import { cookies } from "next/headers";
+import { timingSafeEqual } from "node:crypto";
 import { createClient } from "@sanity/client";
 import type { SideQuestSection } from "@/content/sidequests";
 import { sanityApiVersion, sanityDataset, sanityProjectId } from "./env";
-
-/** How long an unlocked side quest stays unlocked in that browser. */
-export const ACCESS_DAYS = 7;
 
 const readToken = process.env.SANITY_API_READ_TOKEN;
 
@@ -39,14 +35,6 @@ async function getConfidentialContent(slug: string): Promise<ConfidentialContent
   );
 }
 
-export const accessCookieName = (slug: string) => `sq-access-${slug}`;
-
-// The cookie holds a signature of the slug and the current code, keyed by the server's token.
-// Changing the code in Studio invalidates every existing unlock.
-function signature(slug: string, accessCode: string) {
-  return createHmac("sha256", readToken ?? "").update(`${slug}:${accessCode}`).digest("hex");
-}
-
 // Case, spaces and the hyphen don't matter: "k7q4 mz2p" matches "K7Q4-MZ2P".
 const normalize = (code: string) => code.toUpperCase().replace(/[^A-Z0-9]/g, "");
 
@@ -56,19 +44,10 @@ function safeEqual(a: string, b: string) {
   return left.length === right.length && timingSafeEqual(left, right);
 }
 
-/** The story, if this visitor has unlocked it; otherwise null. */
-export async function getUnlockedContent(slug: string) {
-  const token = (await cookies()).get(accessCookieName(slug))?.value;
-  if (!token) return null;
-  const content = await getConfidentialContent(slug);
-  if (!content?.accessCode || !safeEqual(token, signature(slug, content.accessCode))) return null;
-  return { intro: content.intro, sections: content.sections };
-}
-
-/** Checks a submitted code. Returns the cookie value to set and the story, or null if the code is wrong. */
+/** Checks a submitted code. Returns the story if it's right, otherwise null. */
 export async function checkAccessCode(slug: string, submitted: string) {
   const content = await getConfidentialContent(slug);
   if (!content?.accessCode) return null;
   if (!safeEqual(normalize(submitted), normalize(content.accessCode))) return null;
-  return { cookieValue: signature(slug, content.accessCode), intro: content.intro, sections: content.sections };
+  return { intro: content.intro, sections: content.sections };
 }
