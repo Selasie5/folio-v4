@@ -6,6 +6,7 @@ export const sanityClient = sanityProjectId
       projectId: sanityProjectId,
       dataset: sanityDataset,
       apiVersion: sanityApiVersion,
-      useCdn: true,
+      // Read straight from the API in dev so Studio edits show on the next reload.
+      useCdn: process.env.NODE_ENV === "production",
     })
   : null;

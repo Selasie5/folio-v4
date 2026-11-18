@@ -56,7 +56,7 @@ const TechStackCard: React.FC<TechStackCardProps> = ({ title, sm }) => {
 
   return (
     <motion.div
-      className={`relative bg-gray-100 group text-black border rounded-lg shadow-[2px_2px_0px_0px] shadow-gray-200 hover:shadow-none transition-shadow duration-300 cursor-pointer flex items-center gap-2 overflow-hidden ${sm ? "text-xs py-2 px-2" : "text-sm px-4 py-3 "}`}
+      className={`relative bg-gray-100 dark:bg-neutral-800 group text-black dark:text-neutral-100 border dark:border-neutral-700 rounded-lg shadow-[2px_2px_0px_0px] shadow-gray-200 dark:shadow-neutral-700 hover:shadow-none transition-shadow duration-300 cursor-pointer flex items-center gap-2 overflow-hidden ${sm ? "text-[11px] py-1.5 px-2" : "text-xs px-3 py-2"}`}
       whileHover={{ scale: 1.03 }}
       onHoverStart={() => {
         controls.start({ x: 0, opacity: 1 });
@@ -70,7 +70,7 @@ const TechStackCard: React.FC<TechStackCardProps> = ({ title, sm }) => {
           initial={{ x: -20, opacity: 0 }}
           animate={controls}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          className="text-lg text-gray-600 hidden group-hover:inline-block"
+          className="text-lg text-gray-600 dark:text-neutral-400 hidden group-hover:inline-block"
         >
           <Icon />
         </motion.span>

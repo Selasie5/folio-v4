@@ -2,9 +2,9 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <footer className=' bg-white flex justify-between items-center w-full px-10 py-1'>
+    <footer className='mt-16 flex w-full items-center justify-between bg-white pt-6 dark:bg-[#111111]'>
       <div>
-      <span className='uppercase text-sm text-gray-800'>© {new Date().getFullYear()} Selasie Sepenu. All rights reserved.</span>
+      <span className='text-[11px] leading-5 uppercase text-gray-800 dark:text-neutral-400'>© {new Date().getFullYear()} Selasie Sepenu. All rights reserved.</span>
       </div>
       {/* //Show the current time */}
 {/* <div>

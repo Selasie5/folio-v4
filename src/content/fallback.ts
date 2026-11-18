@@ -1,17 +1,14 @@
 import type { PortfolioContent } from "./types";
+import { organizationsHeading, organizationsFromExperiences } from "./organizations";
+import { biography, biographyLinks } from "./biography";
 
-export const fallbackPortfolioContent: PortfolioContent = {
+const basePortfolioContent: PortfolioContent = {
   profile: {
     name: "Selasie Sepenu",
     role: "Software Engineer",
     image: "/seps-anime.png",
-    bio: [
-      "I love building software that feels intentional, scalable, and human-centered.",
-      "From backend systems that just work to interfaces that flow seamlessly, I care about every layer of what makes technology meaningful.",
-      "I'm a software engineer passionate about crafting reliable systems and shaping how technology connects people. Over the past few years, I've worked across startups and engineering teams — building tools, mentoring peers, and learning from some of the best.",
-      "I believe great engineering sits at the intersection of logic, creativity, and empathy. Whether it's designing smooth web experiences, architecting APIs, or improving performance, I enjoy solving problems that make a measurable impact.",
-      "When I'm not building or debugging, I'm probably mentoring new developers, playing music, or talking to my favorite person 😊.",
-    ],
+    bio: biography,
+    bioLinks: biographyLinks,
     quote:
       "Seest thou a man diligent in his business? he shall stand before kings; he shall not stand before mean men",
     quoteSource: "Proverbs 22:29",
@@ -184,4 +181,10 @@ export const fallbackPortfolioContent: PortfolioContent = {
     { label: "book", display: "/ Book A Call", href: "https://calendly.com/yourusername" },
     { label: "mail", display: "/ Send Me A Mail", href: "mailto:selasisepenu5@gmail.com" },
   ],
+};
+
+export const fallbackPortfolioContent: PortfolioContent = {
+  ...basePortfolioContent,
+  organizationsHeading,
+  organizations: organizationsFromExperiences(basePortfolioContent.experiences),
 };

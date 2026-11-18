@@ -1,8 +1,17 @@
+export type BiographyBrand = "forge" | "blackhorse" | "quotient" | "fides" | "voya";
+
+export interface BiographyLink {
+  label: string;
+  href?: string;
+  brand?: BiographyBrand;
+}
+
 export interface ProfileContent {
   name: string;
   role: string;
   image: string;
   bio: string[];
+  bioLinks?: BiographyLink[];
   quote: string;
   quoteSource: string;
 }
@@ -41,8 +50,16 @@ export interface ContactContent {
   href: string;
 }
 
+export interface OrganizationContent {
+  name: string;
+  logo: string;
+  url?: string;
+}
+
 export interface PortfolioContent {
   profile: ProfileContent;
+  organizationsHeading?: string;
+  organizations?: OrganizationContent[];
   projects: ProjectContent[];
   experiences: ExperienceContent[];
   certifications: CertificationContent[];

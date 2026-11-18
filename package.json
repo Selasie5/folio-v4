@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "cms": "npm --prefix studio run dev",
+    "cms:seed-experience": "node scripts/seed-work-experience.mjs",
     "cms:build": "npm --prefix studio run build",
     "cms:deploy": "npm --prefix studio run deploy"
   },

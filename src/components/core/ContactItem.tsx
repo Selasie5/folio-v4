@@ -16,7 +16,7 @@ const ContactLink: React.FC<ContactLinkProps> = ({ item }) => {
 
   return (
     <motion.div
-      className="w-full border-b border-gray-100 py-3 cursor-pointer select-none"
+      className="w-full border-b border-gray-100 dark:border-neutral-800 py-3 cursor-pointer select-none"
       whileHover={{ scale: 1.02 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       onHoverStart={() => setHovered(true)}
@@ -37,7 +37,7 @@ const ContactLink: React.FC<ContactLinkProps> = ({ item }) => {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -10, opacity: 0 }}
                 transition={{ duration: 0.2}}
-                className="text-base font-normal text-black uppercase tracking-wide non-mono"
+                className="text-sm font-normal text-black dark:text-neutral-100 uppercase tracking-wide non-mono"
               >
                 {item.display}
               </motion.span>
@@ -48,7 +48,7 @@ const ContactLink: React.FC<ContactLinkProps> = ({ item }) => {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -10, opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="text-base non-mono text-blue-950"
+                className="text-sm text-blue-950 dark:text-blue-300"
               >
                 {item.href.replace(/^https?:\/\//, "")}
               </motion.span>
@@ -60,17 +60,19 @@ const ContactLink: React.FC<ContactLinkProps> = ({ item }) => {
           whileHover={{ rotate: 45 }}
           transition={{ type: "spring", stiffness: 300, damping: 15 }}
         >
-          <ArrowUpRightIcon className="h-5 w-5 font-light text-black" />
+          <ArrowUpRightIcon className="h-5 w-5 font-light text-black dark:text-neutral-100" />
         </motion.div>
       </Link>
     </motion.div>
   );
 };
 
-const ContactLinksList = ({ contacts }: { contacts: ContactContent[] }) => {
+const ContactLinksList = ({ contacts = [] }: { contacts?: ContactContent[] }) => {
+  const safeContacts = contacts ?? [];
+
   return (
-    <div className="flex flex-col justify-center items-start gap-3 mt-5">
-      {contacts.map((item) => (
+    <div className="mt-5 flex w-full flex-col items-start justify-center gap-1">
+      {safeContacts.map((item) => (
         <ContactLink key={item.label} item={item} />
       ))}
     </div>

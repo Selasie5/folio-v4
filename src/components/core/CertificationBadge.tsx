@@ -25,13 +25,13 @@ const CertificationBadge: React.FC<CertificationBadgeProps> = ({
       whileHover={{ scale: 1.03 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
       viewport={{ once: true }}
-      className="relative w-full  sm:w-auto border border-gray-200 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300  rounded-xl px-5 py-4 flex flex-col justify-center items-center gap-4 cursor-pointer"
+      className="relative w-full  sm:w-auto border border-gray-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300  rounded-xl px-5 py-4 flex flex-col justify-center items-center gap-4 cursor-pointer"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 to-gray-50/10 rounded-xl pointer-events-none"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 dark:from-blue-950/20 to-gray-50/10 dark:to-neutral-900/10 rounded-xl pointer-events-none"></div>
 
       {/* Logo */}
       <div className="relative flex-shrink-0">
-        <div className="h-12 w-12 bg-gray-100 rounded-full overflow-hidden flex justify-center items-center border border-gray-200">
+        <div className="h-12 w-12 bg-gray-100 dark:bg-neutral-800 rounded-full overflow-hidden flex justify-center items-center border border-gray-200 dark:border-neutral-700">
           <Image
             src={logo}
             alt={`${issuer} logo`}
@@ -45,11 +45,11 @@ const CertificationBadge: React.FC<CertificationBadgeProps> = ({
       {/* Text Info */}
       <div className="flex flex-col justify-center items-center text-center gap-0.5">
         <div className="flex items-center gap-1">
-          <h4 className="text-gray-900 text-sm font-semibold">{title}</h4>
+          <h4 className="text-gray-900 dark:text-neutral-100 text-sm font-semibold">{title}</h4>
           <CheckBadgeIcon className="h-4 w-4 text-yellow-500" />
         </div>
-        <p className="text-gray-600 text-sm">{issuer}</p>
-        <p className="text-gray-400 text-xs">Issued {issuedDate}</p>
+        <p className="text-gray-600 dark:text-neutral-400 text-sm">{issuer}</p>
+        <p className="text-gray-400 dark:text-neutral-400 text-xs">Issued {issuedDate}</p>
       </div>
     </motion.div>
   );

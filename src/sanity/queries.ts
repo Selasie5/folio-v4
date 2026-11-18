@@ -1,9 +1,16 @@
 export const portfolioQuery = `*[_type == "portfolio" && _id == "portfolio"][0]{
+  organizationsHeading,
+  "organizations": organizations[]{
+    name,
+    "logo": logo.asset->url,
+    url
+  },
   "profile": {
     "name": profile.name,
     "role": profile.role,
     "image": coalesce(profile.image.asset->url, "/seps-anime.png"),
     "bio": profile.bio,
+    "bioLinks": profile.bioLinks[]{label, href, brand},
     "quote": profile.quote,
     "quoteSource": profile.quoteSource
   },

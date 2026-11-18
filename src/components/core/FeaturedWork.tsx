@@ -24,56 +24,64 @@ const FeaturedWork: React.FC<FeaturedWorkProps> = ({
   image,
   logo,
 }) => {
+  const handleCardClick = () => {
+    const target = live || repo;
+    if (target) {
+      window.open(target, "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+      whileHover={{ scale: 1.02, y: -2 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
       viewport={{ once: true }}
-      className="w-full h-auto border border-gray-200 rounded-lg p-5 bg-white/80 backdrop-blur-sm cursor-pointer flex flex-col justify-center items-start gap-5 shadow-sm hover:shadow-md transition-shadow duration-300"
+      onClick={handleCardClick}
+      role="link"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") handleCardClick();
+      }}
+      className="group w-full aspect-square border border-gray-200 dark:border-neutral-700 rounded-xl p-4 sm:p-5 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm cursor-pointer flex flex-col justify-between gap-3 shadow-sm hover:shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/30"
     >
       {/* Header */}
       <div className="flex justify-between items-center w-full">
-        <motion.div
-          className="flex justify-center items-start gap-4"
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-        >
+        <div className="flex items-center gap-2.5 min-w-0">
           <div
-            className="h-10 w-10 rounded-full bg-gray-300 bg-cover bg-center"
+            className="h-8 w-8 rounded-full bg-gray-200 dark:bg-neutral-700 bg-cover bg-center shrink-0 border border-gray-200 dark:border-neutral-700"
             style={{
               backgroundImage: logo ? `url(${logo})` : `url('/assets/project.png')`,
             }}
           />
-          <div className="flex flex-col justify-center items-start">
-            <h4 className="text-black text-base font-medium flex items-center">
-              {title}
-              <CheckBadgeIcon className="inline h-4 w-4 text-blue-500 ml-1" />
+          <div className="flex flex-col min-w-0">
+            <h4 className="text-black dark:text-neutral-100 text-sm font-medium flex items-center gap-1 truncate">
+              <span className="truncate">{title}</span>
+              <CheckBadgeIcon className="inline h-3.5 w-3.5 text-blue-500 shrink-0" />
             </h4>
             {repo && (
-              <span className="text-gray-500 text-sm">@{repo.split("/").pop()}</span>
+              <span className="text-gray-400 dark:text-neutral-400 text-xs truncate">
+                @{repo.split("/").filter(Boolean).pop()}
+              </span>
             )}
           </div>
-        </motion.div>
+        </div>
 
-        {/* Icons */}
-        <motion.div
-          className="flex justify-center items-center gap-1"
-          initial={{ opacity: 0, x: 10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-        >
+        {/* Action Icons */}
+        <div className="flex items-center gap-1.5 shrink-0 ml-2">
           {repo && (
             <motion.a
               href={repo}
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ scale: 1.1, rotate: 3 }}
+              whileHover={{ scale: 1.15 }}
               whileTap={{ scale: 0.95 }}
+              aria-label="GitHub Repository"
+              className="text-gray-500 dark:text-neutral-400 hover:text-black dark:hover:text-white p-1 transition-colors"
+              onClick={(e) => e.stopPropagation()}
             >
-              <SiGithub className="size-6 text-gray-700 hover:text-black transition-colors duration-200" />
+              <SiGithub className="h-4 w-4" />
             </motion.a>
           )}
 
@@ -82,39 +90,33 @@ const FeaturedWork: React.FC<FeaturedWorkProps> = ({
               href={live}
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-gray-200 shadow-[2px_2px_0px_0px] shadow-gray-300 p-1 w-6 h-6 rounded-lg hover:shadow-none transition-all duration-300 flex justify-center items-center"
+              aria-label="Live Demo"
+              className="bg-gray-100 dark:bg-neutral-800 hover:bg-gray-200 dark:hover:bg-neutral-700 text-gray-700 dark:text-neutral-300 p-1 w-6 h-6 rounded flex items-center justify-center transition-colors shadow-sm"
+              onClick={(e) => e.stopPropagation()}
             >
-              <span className="text-xs text-gray-600 hover:text-gray-800">↗</span>
+              <span className="text-xs font-semibold leading-none">↗</span>
             </motion.a>
           )}
-        </motion.div>
+        </div>
       </div>
 
-      {/* Body */}
-      <motion.div
-        className="flex flex-col justify-center items-start gap-4"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.3 }}
-      >
-        <p className="text-gray-500 text-[15px] leading-relaxed">{description}</p>
+      {/* Description */}
+      <p className="text-gray-500 dark:text-white text-xs sm:text-[13px] leading-relaxed line-clamp-2 shrink-0">
+        {description}
+      </p>
 
-        <motion.div
-          whileHover={{ scale: 1.03 }}
-          transition={{ type: "spring", stiffness: 200, damping: 15 }}
-          className="w-full overflow-hidden rounded-lg"
-        >
-          <Image
-            src={image}
-            alt={`${title} preview`}
-            width={800}
-            height={400}
-            className="rounded-lg w-full object-cover"
-          />
-        </motion.div>
-      </motion.div>
+      {/* Preview Image - Full view without cropping */}
+      <div className="relative w-full flex-1 min-h-0 rounded-lg overflow-hidden bg-gray-50/80 dark:bg-neutral-950/80 border border-gray-100 dark:border-neutral-800 flex items-center justify-center p-2">
+        <Image
+          src={image}
+          alt={`${title} preview`}
+          fill
+          className="object-contain rounded transition-transform duration-300 group-hover:scale-105"
+          sizes="(max-width: 639px) calc(100vw - 80px), 260px"
+        />
+      </div>
     </motion.div>
   );
 };
