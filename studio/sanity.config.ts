@@ -32,6 +32,11 @@ export default defineConfig({
               .schemaType("sideQuest")
               .child(S.documentTypeList("sideQuest").title("Side Quests").defaultOrdering([{ field: "order", direction: "asc" }])),
             S.listItem()
+              .title("Videos")
+              .id("videos")
+              .schemaType("video")
+              .child(S.documentTypeList("video").title("Videos").defaultOrdering([{ field: "order", direction: "asc" }])),
+            S.listItem()
               .title("Confidential content")
               .id("confidentialContent")
               .schemaType("sideQuestPrivate")

@@ -11,6 +11,7 @@
     "cms:seed-experience": "node scripts/seed-work-experience.mjs",
     "cms:sync-posts": "node scripts/sync-devto-posts.mjs",
     "cms:sync-medium": "node scripts/sync-medium-posts.mjs",
+    "cms:seed-videos": "node scripts/seed-videos.mjs",
     "cms:build": "npm --prefix studio run build",
     "cms:deploy": "npm --prefix studio run deploy",
     "test:unlock-limit": "node --no-warnings scripts/test-unlock-rate-limit.mjs"

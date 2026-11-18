@@ -6,13 +6,13 @@ import type { PortfolioContent } from "@/content/types";
 import { listVariants } from "@/components/animations";
 import SideQuests from "@/components/core/SideQuests";
 import type { SideQuest } from "@/content/sidequests";
-import ContactLinksList from "@/components/core/ContactItem";
 import Experience from "@/components/core/Experience";
-import TechStackCard from "@/components/core/TechStackCard";
 import ThemeToggle from "@/components/core/ThemeToggle";
 import Biography from "@/components/core/Biography";
 import Writing from "@/components/core/Writing";
 import MoreLink from "@/components/core/MoreLink";
+import VideoLibrary from "@/components/core/VideoLibrary";
+import type { Video } from "@/content/videos";
 import type { Post } from "@/content/devto";
 
 // How many roles the home page shows before linking to /experience.
@@ -22,18 +22,19 @@ interface HomeContentProps {
   content: PortfolioContent;
   posts?: Post[];
   sideQuests?: SideQuest[];
+  videos?: Video[];
 }
 
-export default function HomeContent({ content, posts = [], sideQuests = [] }: HomeContentProps) {
+export default function HomeContent({ content, posts = [], sideQuests = [], videos = [] }: HomeContentProps) {
   const {
     profile,
     experiences = [],
-    techStack = [],
     contacts = [],
   } = content || {};
 
-  const safeTechStack = techStack ?? [];
-  const safeContacts = contacts ?? [];
+  // Let's Connect is a single line: GitHub and email only, taken from the contact links in Sanity.
+  const githubHref = (contacts ?? []).find((contact) => contact.label === "github")?.href;
+  const mailHref = (contacts ?? []).find((contact) => contact.label === "mail")?.href;
   const safeBio = profile?.bio ?? [];
 
   return (
@@ -93,19 +94,31 @@ export default function HomeContent({ content, posts = [], sideQuests = [] }: Ho
 
       <SideQuests quests={sideQuests} />
 
-      {safeTechStack.length > 0 && (
-        <section className="mt-14 w-full sm:mt-16">
-          <h2 className="text-black dark:text-neutral-100 text-lg mono">Tech Stack</h2>
-          <div className="mt-5 flex flex-wrap justify-start gap-2.5">
-            {safeTechStack.map((tech) => <TechStackCard key={tech} title={tech} sm={false} />)}
-          </div>
-        </section>
-      )}
+      <VideoLibrary videos={videos} />
 
-      {safeContacts.length > 0 && (
-        <section className="mt-14 w-full sm:mt-16">
-          <h2 className="text-black dark:text-neutral-100 text-lg mono">Let&apos;s Connect</h2>
-          <ContactLinksList contacts={safeContacts} />
+      {(githubHref || mailHref) && (
+        <section className="mt-14 w-full sm:mt-16" aria-labelledby="connect-heading">
+          <h2 id="connect-heading" className="text-lg text-black dark:text-neutral-100 mono">Let&apos;s Connect</h2>
+          <p className="mt-4 text-sm leading-6 text-gray-500 dark:text-neutral-300">
+            {githubHref && (
+              <>
+                Connect with me on{" "}
+                <a href={githubHref} target="_blank" rel="noopener noreferrer" className="bio-text-link text-black transition-colors hover:text-gray-600 dark:text-white dark:hover:text-neutral-300">
+                  GitHub
+                </a>
+              </>
+            )}
+            {githubHref && mailHref && " or "}
+            {mailHref && (
+              <>
+                {githubHref ? "shoot me a " : "Shoot me a "}
+                <a href={mailHref} className="bio-text-link text-black transition-colors hover:text-gray-600 dark:text-white dark:hover:text-neutral-300">
+                  mail
+                </a>
+              </>
+            )}
+            .
+          </p>
         </section>
       )}
     </main>
