@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 // Headings that mark a section in an article body.
 const HEADING_SELECTOR = ".article-body h2";
@@ -15,7 +15,10 @@ const RING_RADIUS = (RING_SIZE - RING_STROKE) / 2;
 
 // Soft, slightly damped spring: follows the scroll closely without jitter or overshoot.
 const RING_SPRING = { stiffness: 140, damping: 28, mass: 0.4, restDelta: 0.001 };
-const LAYOUT_SPRING = { type: "spring", stiffness: 420, damping: 38, mass: 0.8 } as const;
+// Width of the label when the section changes. Animating width (not a layout transform) keeps the
+// ring exactly beside the text: transform-based layout animations drift inside a fixed element
+// while the page scrolls, which left the ring sitting on top of longer titles.
+const WIDTH_SPRING = { type: "spring", stiffness: 420, damping: 38, mass: 0.8 } as const;
 
 // Before the first section (or on pages with no sections) the pill shows the page title,
 // and appears once that title has scrolled out of view.
@@ -48,6 +51,26 @@ export default function SectionIndicator() {
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
   const [title, setTitle] = useState<string | null>(null);
+  const [labelWidth, setLabelWidth] = useState<number | null>(null);
+  const measureRef = useRef<HTMLSpanElement>(null);
+  // When the pill first appears, size the label instantly; only animate later section changes.
+  // Decided in the same layout effect that measures, so the resize render sees the right value.
+  const previousTitle = useRef<string | null>(null);
+  const instantResize = useRef(true);
+  const animateWidth = !instantResize.current && !reduceMotion;
+
+  // Measure the new title's natural width before paint; the label animates to it
+  // (capped by its max-width, where the text truncates with an ellipsis).
+  useLayoutEffect(() => {
+    instantResize.current = !previousTitle.current;
+    previousTitle.current = title;
+    const measure = () => {
+      if (measureRef.current) setLabelWidth(Math.ceil(measureRef.current.getBoundingClientRect().width));
+    };
+    measure();
+    // Re-measure once web fonts have loaded, since they change the text width.
+    document.fonts?.ready.then(measure).catch(() => {});
+  }, [title]);
 
   // The ring shows progress through the whole page, driven straight from scroll position
   // so it never waits on a React render.
@@ -89,36 +112,35 @@ export default function SectionIndicator() {
             transition={reduceMotion ? { duration: 0.15 } : { type: "spring", stiffness: 380, damping: 32 }}
             className="max-w-full"
           >
-            <motion.div
-              layout={!reduceMotion}
-              transition={LAYOUT_SPRING}
-              style={{ borderRadius: 9999 }}
-              className="flex max-w-full items-center overflow-hidden border border-gray-200 bg-white/85 py-1.5 pl-1.5 pr-2 shadow-lg shadow-black/5 backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-900/85 dark:shadow-black/40"
-            >
-              <motion.span
-                layout={!reduceMotion}
-                transition={LAYOUT_SPRING}
+            <div className="relative flex max-w-full items-center overflow-hidden rounded-full border border-gray-200 bg-white/85 py-1.5 pl-1.5 pr-2 shadow-lg shadow-black/5 backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-900/85 dark:shadow-black/40">
+              <span
                 className="h-6 w-6 shrink-0 rounded-full"
                 style={{ background: "radial-gradient(circle at 32% 28%, #e0e7ff 0%, #a5b4fc 35%, #475569 100%)" }}
               />
-              <span className="relative ml-3 flex min-w-0 max-w-[min(26rem,calc(100vw-8rem))] overflow-hidden">
-                <AnimatePresence mode="popLayout" initial={false}>
+              {/* Invisible copy of the title, used only to measure its natural width. */}
+              <span ref={measureRef} className="invisible absolute left-0 top-0 whitespace-nowrap text-sm font-medium">
+                {title}
+              </span>
+              <motion.span
+                initial={false}
+                animate={{ width: labelWidth ?? "auto" }}
+                transition={animateWidth ? WIDTH_SPRING : { duration: 0 }}
+                className="relative ml-3 block h-5 min-w-0 max-w-[min(26rem,calc(100vw-8rem))] shrink overflow-hidden"
+              >
+                <AnimatePresence initial={false}>
                   <motion.span
                     key={title}
-                    layout={!reduceMotion}
                     initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10, filter: "blur(3px)" }}
                     animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                     exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -10, filter: "blur(3px)" }}
                     transition={reduceMotion ? { duration: 0.12 } : { type: "spring", stiffness: 420, damping: 36 }}
-                    className="block truncate whitespace-nowrap text-sm font-medium text-black dark:text-white"
+                    className="absolute inset-0 block truncate whitespace-nowrap text-sm font-medium leading-5 text-black dark:text-white"
                   >
                     {title}
                   </motion.span>
                 </AnimatePresence>
-              </span>
-              <motion.svg
-                layout={!reduceMotion}
-                transition={LAYOUT_SPRING}
+              </motion.span>
+              <svg
                 width={RING_SIZE}
                 height={RING_SIZE}
                 viewBox={`0 0 ${RING_SIZE} ${RING_SIZE}`}
@@ -142,8 +164,8 @@ export default function SectionIndicator() {
                   style={{ pathLength: ringProgress }}
                   className="stroke-black dark:stroke-white"
                 />
-              </motion.svg>
-            </motion.div>
+              </svg>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
