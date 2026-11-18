@@ -34,12 +34,15 @@ function clean(quest: SideQuest): SideQuest {
   };
 }
 
-// When Sanity is set up but a read fails, the local copy can’t prove a quest hasn’t since been made
-// confidential in Studio, so it is served without its story: metadata only, never stale private text.
+// Whenever Sanity is set up, it decides what's public. If the site has to fall back to the local
+// copies (a failed read, or an empty dataset), they can't prove a quest hasn't since been made
+// confidential in Studio, so they're served without stories: metadata only, never stale text.
+// Full local stories are only used when no Sanity project is configured at all.
 const withoutStory = (quest: SideQuest): SideQuest => ({ ...quest, intro: [], sections: [] });
+const localFallback = (quest: SideQuest): SideQuest => (sanityClient ? withoutStory(quest) : quest);
 
 // Side quests are edited in Sanity Studio. If Sanity has none or can't be reached,
-// the copies in src/content/sidequests.ts are used instead.
+// the copies in src/content/sidequests.json are used instead.
 export async function getSideQuests(): Promise<SideQuest[]> {
   if (sanityClient) {
     try {
@@ -47,10 +50,9 @@ export async function getSideQuests(): Promise<SideQuest[]> {
       if (quests.length > 0) return quests.map(clean);
     } catch (error) {
       console.error("Unable to load side quests from Sanity; using the local copies without stories.", error);
-      return localSideQuests.map(withoutStory);
     }
   }
-  return localSideQuests;
+  return localSideQuests.map(localFallback);
 }
 
 export async function getSideQuest(slug: string): Promise<SideQuest | undefined> {
@@ -66,9 +68,8 @@ export async function getSideQuest(slug: string): Promise<SideQuest | undefined>
       if (total > 0) return undefined;
     } catch (error) {
       console.error(`Unable to load side quest "${slug}" from Sanity; using the local copy without its story.`, error);
-      const local = getLocalSideQuest(slug);
-      return local && withoutStory(local);
     }
   }
-  return getLocalSideQuest(slug);
+  const local = getLocalSideQuest(slug);
+  return local && localFallback(local);
 }
