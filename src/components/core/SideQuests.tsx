@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LockClosedIcon } from "@heroicons/react/20/solid";
 import StatusTag from "@/components/core/StatusTag";
 import type { SideQuest } from "@/content/sidequests";
 
@@ -16,7 +17,12 @@ export default function SideQuests({ quests }: { quests: SideQuest[] }) {
               className="grid gap-2 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start sm:gap-6"
             >
               <div className="min-w-0">
-                <h3 className="text-sm leading-5 text-black dark:text-white">{quest.name}</h3>
+                <h3 className="flex items-center gap-1.5 text-sm leading-5 text-black dark:text-white">
+                  {quest.name}
+                  {quest.confidential && (
+                    <LockClosedIcon aria-label="Confidential" className="h-3.5 w-3.5 shrink-0 text-gray-400 dark:text-neutral-500" />
+                  )}
+                </h3>
                 <p className="mt-1 text-xs leading-5 text-gray-600 dark:text-neutral-400">{quest.tagline}</p>
               </div>
               <div className="sm:pt-0.5 sm:text-right"><StatusTag status={quest.status} /></div>

@@ -1,6 +1,23 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 // A side project or venture, shown in the home page's Side Quests list and at /sidequests/<slug>.
+export const sideQuestSection = defineArrayMember({
+  name: "sideQuestSection",
+  title: "Section",
+  type: "object",
+  fields: [
+    defineField({ name: "heading", title: "Heading", type: "string", validation: (Rule) => Rule.required() }),
+    defineField({
+      name: "paragraphs",
+      title: "Paragraphs",
+      type: "array",
+      of: [defineArrayMember({ type: "text", rows: 4 })],
+      validation: (Rule) => Rule.required().min(1),
+    }),
+  ],
+  preview: { select: { title: "heading" } },
+});
+
 export const sideQuest = defineType({
   name: "sideQuest",
   title: "Side Quest",
@@ -37,6 +54,22 @@ export const sideQuest = defineType({
       options: { list: ["Active", "Building", "Waitlist open"] },
       validation: (Rule) => Rule.required(),
     }),
+    defineField({
+      name: "confidential",
+      title: "Confidential",
+      type: "boolean",
+      description:
+        "Hide the full story behind an access code. Write the story and code in its Confidential content document, not here, because this document is public.",
+      initialValue: false,
+    }),
+    defineField({
+      name: "teaser",
+      title: "Public teaser",
+      type: "text",
+      rows: 3,
+      description: "Shown to everyone on a confidential side quest's page, above the access-code box.",
+      hidden: ({ document }) => !document?.confidential,
+    }),
     defineField({ name: "period", title: "Period", type: "string", description: "For example: 2024 – Present" }),
     defineField({ name: "role", title: "My role", type: "string" }),
     defineField({
@@ -53,33 +86,23 @@ export const sideQuest = defineType({
       title: "Intro paragraphs",
       type: "array",
       of: [defineArrayMember({ type: "text", rows: 4 })],
-      validation: (Rule) => Rule.required().min(1),
+      description: "Public. Leave empty for confidential side quests.",
+      validation: (Rule) =>
+        Rule.custom((intro, context) =>
+          context.document?.confidential || (Array.isArray(intro) && intro.length > 0) ? true : "Add at least one paragraph",
+        ),
     }),
     defineField({
       name: "sections",
       title: "Sections",
-      description: "Each section gets a heading, which also appears in the floating section indicator.",
+      description: "Public. Each section gets a heading, which also appears in the floating section indicator. Leave empty for confidential side quests.",
       type: "array",
-      of: [
-        defineArrayMember({
-          name: "sideQuestSection",
-          title: "Section",
-          type: "object",
-          fields: [
-            defineField({ name: "heading", title: "Heading", type: "string", validation: (Rule) => Rule.required() }),
-            defineField({
-              name: "paragraphs",
-              title: "Paragraphs",
-              type: "array",
-              of: [defineArrayMember({ type: "text", rows: 4 })],
-              validation: (Rule) => Rule.required().min(1),
-            }),
-          ],
-          preview: { select: { title: "heading" } },
-        }),
-      ],
+      of: [sideQuestSection],
     }),
   ],
   orderings: [{ title: "Display order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] }],
-  preview: { select: { title: "name", subtitle: "status" } },
+  preview: {
+    select: { title: "name", status: "status", confidential: "confidential" },
+    prepare: ({ title, status, confidential }) => ({ title, subtitle: confidential ? `🔒 Confidential · ${status}` : status }),
+  },
 });

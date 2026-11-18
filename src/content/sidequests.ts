@@ -12,6 +12,9 @@ export interface SideQuest {
   period?: string;
   role?: string;
   link?: { label: string; href: string };
+  /** The full story is hidden behind an access code; only the teaser is public. */
+  confidential?: boolean;
+  teaser?: string;
   intro: string[];
   sections: SideQuestSection[];
 }
@@ -58,36 +61,17 @@ export const sideQuests: SideQuest[] = [
     ],
   },
   {
+    // Confidential: the story lives only in Sanity's private "confidential.sideQuest-stablecoin-rails" document.
     slug: "stablecoin-rails",
     name: "Stablecoin rails for Africa",
     tagline: "Moving money across African borders, with the stablecoins hidden behind local currency",
     status: "Building",
     role: "Builder",
-    intro: [
-      "Sending money between African countries is still harder than it should be. I’m building payment rails that use stablecoins to move money across borders, while the people sending and receiving it only ever deal with their own local currency.",
-    ],
-    sections: [
-      {
-        heading: "Why I’m building this",
-        paragraphs: [
-          "Fintech is the part of engineering I care about most, and cross-border payments within Africa are one of its most stubborn problems. Money that should move like a message often moves slowly, costs too much, or doesn’t arrive the way people expect.",
-          "Stablecoins are a good fit for the movement part of the problem. They are fast, they work across borders, and they don’t care which bank you use.",
-        ],
-      },
-      {
-        heading: "Hiding the stablecoins",
-        paragraphs: [
-          "Most people don’t want to hold crypto, learn what a wallet is, or think about which chain their money is on. They want to send money in their own currency and have it arrive in someone else’s.",
-          "So the stablecoins sit underneath, as rails. On either end, the experience is local currency in and local currency out.",
-        ],
-      },
-      {
-        heading: "How it connects to my other work",
-        paragraphs: [
-          "This builds on things I’ve worked on before: Quotient, the limit order book and matching engine I built, and the controlled agentic spending on stablecoin rails that General Intelligence Labs built for the WeWire Hackhive 2.0.",
-        ],
-      },
-    ],
+    confidential: true,
+    teaser:
+      "A cross-border payments project I'm building. The details are confidential for now. If I've shared an access code with you, enter it below.",
+    intro: [],
+    sections: [],
   },
   {
     slug: "general-intelligence-labs",

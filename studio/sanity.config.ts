@@ -31,12 +31,30 @@ export default defineConfig({
               .id("sideQuests")
               .schemaType("sideQuest")
               .child(S.documentTypeList("sideQuest").title("Side Quests").defaultOrdering([{ field: "order", direction: "asc" }])),
+            S.listItem()
+              .title("Confidential content")
+              .id("confidentialContent")
+              .schemaType("sideQuestPrivate")
+              .child(
+                S.documentList()
+                  .title("Confidential content")
+                  .apiVersion("2026-09-20")
+                  // Only dotted IDs are private; never list anything else here.
+                  .filter('_type == "sideQuestPrivate" && _id in path("confidential.**")'),
+              ),
           ]),
     }),
     visionTool(),
   ],
   schema: {
     types: schemaTypes,
-    templates: (templates) => templates.filter(({ schemaType }) => schemaType !== "portfolio"),
+    // Portfolio is a singleton; confidential documents must be created with a "confidential." ID by script.
+    templates: (templates) => templates.filter(({ schemaType }) => !["portfolio", "sideQuestPrivate"].includes(schemaType)),
+  },
+  document: {
+    // Duplicating a confidential document would give the copy a normal, public ID.
+    actions: (actions, { schemaType }) =>
+      schemaType === "sideQuestPrivate" ? actions.filter(({ action }) => action !== "duplicate") : actions,
+    newDocumentOptions: (items) => items.filter(({ templateId }) => templateId !== "sideQuestPrivate"),
   },
 });

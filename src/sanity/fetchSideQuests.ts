@@ -9,6 +9,8 @@ const sideQuestFields = `
   period,
   role,
   "link": select(defined(link.href) => { "label": coalesce(link.label, "Visit site"), "href": link.href }, null),
+  "confidential": coalesce(confidential, false),
+  teaser,
   "intro": coalesce(intro, []),
   "sections": coalesce(sections[]{ heading, "paragraphs": coalesce(paragraphs, []) }, [])
 `;
@@ -27,6 +29,7 @@ function clean(quest: SideQuest): SideQuest {
     period: quest.period ?? undefined,
     role: quest.role ?? undefined,
     link: quest.link ?? undefined,
+    teaser: quest.teaser ?? undefined,
   };
 }
 
