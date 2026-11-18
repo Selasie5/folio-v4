@@ -38,8 +38,23 @@ async function main() {
   const client = createClient({ projectId, dataset, token, apiVersion: "2026-09-20", useCdn: false, perspective: "raw" });
   const anonymous = createClient({ projectId, dataset, apiVersion: "2026-09-20", useCdn: false });
 
-  const quest = await client.fetch(`*[_type == "sideQuest" && slug.current == $slug && !(_id in path("drafts.**"))][0]`, { slug });
-  assert(quest, `No published side quest with slug "${slug}"`);
+  // The published root document only: not a draft (drafts.*) and not a release version (versions.*).
+  const published = await client.fetch(
+    `*[_type == "sideQuest" && slug.current == $slug && !(_id in path("drafts.**")) && !(_id in path("versions.**"))]`,
+    { slug },
+  );
+  assert(published.length === 1, `Expected exactly one published side quest with slug "${slug}", found ${published.length}`);
+  const [quest] = published;
+
+  // A draft or release version that still holds the story would put it back in public when published.
+  const variants = (await client.fetch(`*[_id in path("drafts.**") || _id in path("versions.**")]{_id, intro, sections}`)).filter(
+    ({ _id }) => _id === `drafts.${quest._id}` || _id.endsWith(`.${quest._id}`),
+  );
+  const unsafe = variants.filter(({ intro, sections }) => (intro?.length ?? 0) + (sections?.length ?? 0) > 0);
+  assert(
+    unsafe.length === 0,
+    `These unpublished versions still contain the story; discard or empty them in Studio first: ${unsafe.map(({ _id }) => _id).join(", ")}`,
+  );
   const privateId = `confidential.${quest._id}`;
   const existingPrivate = await client.getDocument(privateId);
 
@@ -62,18 +77,17 @@ async function main() {
   writeFileSync(path.join(backupDir, "before.json"), JSON.stringify({ quest, existingPrivate }, null, 2));
   console.log(`Backup (contains the story; keep it private): ${backupDir}`);
 
-  await client
-    .transaction()
-    .createOrReplace({
-      _id: privateId,
-      _type: "sideQuestPrivate",
-      questSlug: slug,
-      accessCode: existingPrivate?.accessCode ?? generateCode(),
-      intro,
-      sections,
-    })
-    .patch(quest._id, (patch) => patch.ifRevisionId(quest._rev).set({ confidential: true, teaser, intro: [], sections: [] }))
-    .commit({ visibility: "sync" });
+  // Both writes are revision-guarded and in one transaction: if either document changed since it
+  // was read (e.g. someone edited the access code), nothing is written. Re-run to re-read both.
+  let transaction = client.transaction();
+  transaction = existingPrivate
+    ? transaction.patch(privateId, (patch) => patch.ifRevisionId(existingPrivate._rev).set({ questSlug: slug, intro, sections }))
+    : transaction.create({ _id: privateId, _type: "sideQuestPrivate", questSlug: slug, accessCode: generateCode(), intro, sections });
+  transaction = transaction.patch(quest._id, (patch) => patch.ifRevisionId(quest._rev).set({ confidential: true, teaser, intro: [], sections: [] }));
+  await transaction.commit({ visibility: "sync" }).catch((error) => {
+    if (error?.statusCode === 409) throw new Error("A document changed after it was read, so nothing was written. Run the script again.");
+    throw error;
+  });
 
   // Check: the story is in the private document, gone from the public one, and invisible without a token.
   const savedPrivate = await client.getDocument(privateId);
@@ -85,7 +99,8 @@ async function main() {
   assert.equal(await anonymous.fetch(`count(*[_type == "sideQuestPrivate"])`), 0, "Confidential documents are publicly readable");
   const leaked = await anonymous.fetch(`count(*[$paragraph in intro])`, { paragraph: intro[0] });
   assert.equal(leaked, 0, "Story text is still publicly readable somewhere");
-  console.log("Verified: story moved to the private document, removed from the public one, and hidden from public reads.");
+  console.log("Verified in Sanity: story moved to the private document, removed from the public one, and hidden from public reads.");
+  console.log("Note: a deployed site may keep serving its cached copy of the page for up to 60 seconds; check the live page after that.");
 }
 
 main().catch((error) => {

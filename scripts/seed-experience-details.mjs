@@ -89,10 +89,17 @@ async function main() {
 
   const plans = documents.map((document) => {
     const sets = {};
-    for (const entry of document.experiences ?? []) {
+    const entries = document.experiences ?? [];
+    for (const entry of entries) {
       const detail = details[keyOf(entry)];
       const label = `${entry.company} | ${entry.role}`;
       if (!detail) { console.log(`${document._id}: no details for ${label}`); continue; }
+      // Details describe one stint. If there are several stints with this company and role,
+      // don't guess which one they belong to.
+      if (entries.filter((other) => keyOf(other) === keyOf(entry)).length > 1) {
+        console.log(`${document._id}: skip ${label} (${entry.period}): more than one stint with this company and role`);
+        continue;
+      }
       if (!entry.achievements?.length) sets[`experiences[_key=="${entry._key}"].achievements`] = detail.achievements;
       if (!entry.techStack?.length) sets[`experiences[_key=="${entry._key}"].techStack`] = detail.techStack;
       console.log(`${document._id}: ${label} → ${entry.achievements?.length ? "keep" : "fill"} highlights, ${entry.techStack?.length ? "keep" : "fill"} tech stack`);
@@ -112,17 +119,19 @@ async function main() {
   await transaction.commit({ visibility: "sync" });
 
   const updated = await client.fetch(`*[_id in ["portfolio", "drafts.portfolio"]]`);
-  for (const { document } of plans) {
+  for (const plan of plans) {
+    const { document } = plan;
     const current = updated.find(({ _id }) => _id === document._id);
     const currentEntries = current.experiences ?? [];
     const beforeEntries = document.experiences ?? [];
     assert.equal(currentEntries.length, beforeEntries.length, "Entry count changed");
     currentEntries.forEach((entry, index) => {
       const before = beforeEntries[index];
-      const detail = details[keyOf(entry)];
+      // Expect exactly what was planned for this entry, and nothing else changed.
+      const planned = (field) => plan.sets[`experiences[_key=="${entry._key}"].${field}`];
       assert.equal(entry._key, before._key);
-      assert.deepEqual(entry.achievements, before.achievements?.length ? before.achievements : detail?.achievements ?? before.achievements);
-      assert.deepEqual(entry.techStack, before.techStack?.length ? before.techStack : detail?.techStack ?? before.techStack);
+      assert.deepEqual(entry.achievements, planned("achievements") ?? before.achievements);
+      assert.deepEqual(entry.techStack, planned("techStack") ?? before.techStack);
       const strip = ({ achievements, techStack, ...rest }) => rest;
       assert.deepEqual(strip(entry), strip(before), `Other fields changed on ${entry.company}`);
     });

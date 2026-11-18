@@ -14,7 +14,7 @@ const postFields = `
   "tags": coalesce(tags, [])
 `;
 
-const postsQuery = `*[_type == "post" && defined(slug.current) && defined(bodyHtml)] | order(publishedAt desc){${postFields}}`;
+const postsQuery = `*[_type == "post" && defined(slug.current) && length(bodyHtml) > 0] | order(publishedAt desc){${postFields}}`;
 const postQuery = `*[_type == "post" && slug.current == $slug][0]{${postFields}, bodyHtml}`;
 
 // Fresh on every request in dev; cached for a minute in production.

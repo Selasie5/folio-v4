@@ -21,6 +21,10 @@ export function addGuardedWrites(transaction, documents, targets) {
       continue;
     }
     const { _id, _type, ...fields } = document;
+    // Never repurpose a document of another type that happens to use this ID.
+    if (previous._type !== _type) {
+      throw new Error(`Document ${_id} already exists as "${previous._type}", not "${_type}"; refusing to overwrite it.`);
+    }
     // Fields the source no longer has (e.g. a removed cover image) are cleared, like a replace.
     const removed = Object.keys(previous).filter((key) => !key.startsWith("_") && !(key in fields));
     transaction = transaction.patch(_id, (patch) => {

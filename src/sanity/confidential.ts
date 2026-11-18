@@ -23,9 +23,12 @@ interface ConfidentialContent {
 
 async function getConfidentialContent(slug: string): Promise<ConfidentialContent | null> {
   if (!privateClient) return null;
-  // Only documents under the "confidential." path are private; never read anything else as secret content.
+  // Resolve the slug to the published quest's ID (which never changes, even if the slug is renamed),
+  // then read exactly "confidential.<that ID>". Only that private path is ever read as secret content.
   return privateClient.fetch<ConfidentialContent | null>(
-    `*[_type == "sideQuestPrivate" && questSlug == $slug && _id in path("confidential.**")][0]{
+    `*[_type == "sideQuestPrivate" && _id == "confidential." + *[
+      _type == "sideQuest" && slug.current == $slug && !(_id in path("drafts.**")) && !(_id in path("versions.**"))
+    ][0]._id][0]{
       accessCode,
       "intro": coalesce(intro, []),
       "sections": coalesce(sections[]{ heading, "paragraphs": coalesce(paragraphs, []) }, [])

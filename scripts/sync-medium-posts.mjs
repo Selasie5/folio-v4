@@ -30,6 +30,8 @@ const plain = (html) => decode(html.replace(/<[^>]+>/g, " ")).replace(/\s+/g, " 
 function toDocument(item) {
   const url = tag(item, "link").split("?")[0];
   const id = tag(item, "guid").split("/").pop();
+  // The GUID is the post's identity; without it two items could share an ID and overwrite each other.
+  if (!/^[a-z0-9]+$/i.test(id ?? "")) throw new Error(`Medium item "${decode(tag(item, "title"))}" has no usable GUID; refusing to import it.`);
   const slug = url.split("/").pop();
   let body = tag(item, "content:encoded");
 
@@ -88,7 +90,9 @@ async function main() {
 
   const existing = await client.fetch(`*[_type == "post"]{_id, "slug": slug.current}`);
   for (const document of documents) {
-    const clash = existing.find(({ slug, _id }) => slug === document.slug.current && _id !== document._id);
+    // Compare canonical IDs, so a post's own draft (drafts.<id>) or release version isn't a clash.
+    const canonical = (id) => id.replace(/^drafts\./, "").replace(/^versions\.[^.]+\./, "");
+    const clash = existing.find(({ slug, _id }) => slug === document.slug.current && canonical(_id) !== document._id);
     assert(!clash, `Slug ${document.slug.current} is already used by ${clash?._id}`);
   }
 

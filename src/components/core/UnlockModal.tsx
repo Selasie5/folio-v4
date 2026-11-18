@@ -53,6 +53,7 @@ export default function UnlockModal({ open, slug, name, onClose, onUnlocked }: U
   const [phase, setPhase] = useState<Phase>("entering");
   const [error, setError] = useState<string | null>(null);
   const inputs = useRef<(HTMLInputElement | null)[]>([]);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const shake = useAnimationControls();
   const busy = phase !== "entering";
 
@@ -68,11 +69,38 @@ export default function UnlockModal({ open, slug, name, onClose, onUnlocked }: U
     return () => clearTimeout(timer);
   }, [open]);
 
-  // Escape closes (unless a check is in flight); lock page scroll while open.
+  // Return focus to whatever opened the modal (the Unlock button) when it closes.
+  useEffect(() => {
+    if (!open) return;
+    const opener = document.activeElement as HTMLElement | null;
+    return () => opener?.focus?.();
+  }, [open]);
+
+  // Escape closes (unless a check is in flight); Tab stays inside the dialog; lock page scroll while open.
   useEffect(() => {
     if (!open) return;
     const onKey = (event: globalThis.KeyboardEvent) => {
       if (event.key === "Escape" && !busy) onClose();
+      if (event.key !== "Tab" || !dialogRef.current) return;
+      const focusable = Array.from(
+        dialogRef.current.querySelectorAll<HTMLElement>("button:not([disabled]), input:not([disabled])"),
+      );
+      // While the code is being checked everything is disabled: keep focus on the dialog itself.
+      if (focusable.length === 0) {
+        event.preventDefault();
+        dialogRef.current.focus();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const inside = dialogRef.current.contains(document.activeElement);
+      if (event.shiftKey && (document.activeElement === first || !inside)) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !inside)) {
+        event.preventDefault();
+        first.focus();
+      }
     };
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -156,6 +184,8 @@ export default function UnlockModal({ open, slug, name, onClose, onUnlocked }: U
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => !busy && onClose()} aria-hidden />
 
           <motion.div
+            ref={dialogRef}
+            tabIndex={-1}
             role="dialog"
             aria-modal="true"
             aria-labelledby="unlock-title"
@@ -164,7 +194,7 @@ export default function UnlockModal({ open, slug, name, onClose, onUnlocked }: U
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.97, filter: "blur(4px)" }}
             transition={{ type: "spring", stiffness: 380, damping: 32 }}
-            className="relative w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-neutral-800 dark:bg-neutral-900"
+            className="relative w-full max-w-sm rounded-2xl border outline-none border-gray-200 bg-white p-6 shadow-2xl dark:border-neutral-800 dark:bg-neutral-900"
           >
             <button
               type="button"

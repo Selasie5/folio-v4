@@ -91,9 +91,14 @@ export const sideQuest = defineType({
       of: [defineArrayMember({ type: "text", rows: 4 })],
       description: "Public. Leave empty for confidential side quests.",
       validation: (Rule) =>
-        Rule.custom((intro, context) =>
-          context.document?.confidential || (Array.isArray(intro) && intro.length > 0) ? true : "Add at least one paragraph",
-        ),
+        Rule.custom((intro, context) => {
+          const count = Array.isArray(intro) ? intro.length : 0;
+          // This document is public: a confidential quest's story belongs in its Confidential content document.
+          if (context.document?.confidential) {
+            return count === 0 ? true : "Confidential side quests can't have public text. Move it to Confidential content and empty this field.";
+          }
+          return count > 0 ? true : "Add at least one paragraph";
+        }),
     }),
     defineField({
       name: "sections",
@@ -101,6 +106,12 @@ export const sideQuest = defineType({
       description: "Public. Each section gets a heading, which also appears in the floating section indicator. Leave empty for confidential side quests.",
       type: "array",
       of: [sideQuestSection],
+      validation: (Rule) =>
+        Rule.custom((sections, context) =>
+          context.document?.confidential && Array.isArray(sections) && sections.length > 0
+            ? "Confidential side quests can't have public sections. Move them to Confidential content and empty this field."
+            : true,
+        ),
     }),
   ],
   orderings: [{ title: "Display order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] }],

@@ -37,14 +37,15 @@ function findSavedStint(seeded, existing, taken) {
     (entry) => normalizeCompany(entry.company) === normalizeCompany(seeded.company) && sameRole(entry.role, seeded.role),
   );
   const sameStart = sameCompanyRole.filter((entry) => startOf(entry.period) === startOf(seeded.period));
-  if (sameStart.length === 1) return sameStart[0];
-  if (sameStart.length > 1 || sameCompanyRole.length > 1) {
+  const undated = sameCompanyRole.filter((entry) => !startOf(entry.period));
+  // Stints with a different known start date are different stints, so they're never candidates.
+  const candidates = sameStart.length ? sameStart : undated;
+  if (candidates.length > 1) {
     throw new Error(
-      `Ambiguous match for "${seeded.company} | ${seeded.role} | ${seeded.period}": ${sameCompanyRole.length} saved stints could match. Fix the seed or Studio first.`,
+      `Ambiguous match for "${seeded.company} | ${seeded.role} | ${seeded.period}": ${candidates.length} saved stints could match. Fix the seed or Studio first.`,
     );
   }
-  const [only] = sameCompanyRole;
-  return only && !startOf(only.period) ? only : undefined;
+  return candidates[0];
 }
 
 function prepareExperiences(existing = []) {

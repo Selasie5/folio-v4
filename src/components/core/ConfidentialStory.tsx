@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { LockClosedIcon } from "@heroicons/react/20/solid";
 import SideQuestStory from "@/components/core/SideQuestStory";
@@ -47,11 +47,16 @@ export default function ConfidentialStory({ slug, name, contactHref }: Confident
   const [open, setOpen] = useState(false);
   // The unlocked story lives only in memory, so leaving or reloading the page locks it again.
   const [story, setStory] = useState<{ intro: string[]; sections: SideQuestSection[] } | null>(null);
+  // Each unlock attempt belongs to a page session. Re-locking starts a new session, so a result
+  // (or a delayed reveal) left over from before can never show the story without a new code.
+  const session = useRef(0);
+  const attemptSession = useRef(-1);
 
   // Browsers can keep a page in the back/forward cache and restore it as it was; re-lock on the
   // way out and again if it's restored, so Back never shows an unlocked story.
   useEffect(() => {
     const relock = () => {
+      session.current += 1;
       setOpen(false);
       setStory(null);
     };
@@ -95,7 +100,10 @@ export default function ConfidentialStory({ slug, name, contactHref }: Confident
                 <p className="text-sm font-medium text-black dark:text-white">This story is confidential</p>
                 <button
                   type="button"
-                  onClick={() => setOpen(true)}
+                  onClick={() => {
+                    attemptSession.current = session.current;
+                    setOpen(true);
+                  }}
                   className="rounded-full bg-black px-4 py-1.5 text-xs font-medium text-white shadow-sm transition-opacity hover:opacity-85 dark:bg-white dark:text-black"
                 >
                   Unlock
@@ -115,6 +123,8 @@ export default function ConfidentialStory({ slug, name, contactHref }: Confident
         name={name}
         onClose={() => setOpen(false)}
         onUnlocked={(content) => {
+          // Ignore results from an attempt started before the page was re-locked.
+          if (attemptSession.current !== session.current) return;
           setOpen(false);
           setStory(content);
         }}

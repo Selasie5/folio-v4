@@ -71,7 +71,9 @@ async function main() {
   const existing = await client.fetch(`*[_type == "post"]{_id, "slug": slug.current}`);
   const existingIds = new Set(existing.map(({ _id }) => _id));
   for (const document of documents) {
-    const clash = existing.find(({ slug, _id }) => slug === document.slug.current && _id !== document._id);
+    // Compare canonical IDs, so a post's own draft (drafts.<id>) or release version isn't a clash.
+    const canonical = (id) => id.replace(/^drafts\./, "").replace(/^versions\.[^.]+\./, "");
+    const clash = existing.find(({ slug, _id }) => slug === document.slug.current && canonical(_id) !== document._id);
     assert(!clash, `Slug ${document.slug.current} is already used by ${clash?._id}`);
   }
 

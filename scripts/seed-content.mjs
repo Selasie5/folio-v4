@@ -19,6 +19,13 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 nextEnv.loadEnvConfig(root);
 const apply = process.argv.includes("--apply");
 const update = process.argv.includes("--update");
+// JSON with sorted keys, so Sanity returning fields in another order is not a change.
+const stableJson = (value) =>
+  JSON.stringify(value, (_key, inner) =>
+    inner && typeof inner === "object" && !Array.isArray(inner)
+      ? Object.fromEntries(Object.keys(inner).sort().map((key) => [key, inner[key]]))
+      : inner,
+  );
 const CONTENT_FIELDS = ["tagline", "role", "period", "link", "intro", "sections"];
 // Plain JSON so this runs on any supported Node version (no TypeScript loader needed).
 const sideQuests = JSON.parse(readFileSync(path.join(root, "src/content/sidequests.json"), "utf8"));
@@ -55,6 +62,12 @@ const toDocument = (quest, index) => {
       paragraphs: section.paragraphs,
     })),
   };
+  if (quest.confidential) {
+    // The public document of a confidential quest must never carry its story.
+    assert(!quest.intro.length && !quest.sections.length, `Confidential side quest "${quest.slug}" has story text in the public data`);
+    document.confidential = true;
+    if (quest.teaser) document.teaser = quest.teaser;
+  }
   if (quest.period) document.period = quest.period;
   if (quest.role) document.role = quest.role;
   if (quest.link) document.link = { label: quest.link.label, href: quest.link.href };
@@ -96,7 +109,7 @@ async function main() {
     }
     const fields = CONTENT_FIELDS.filter((field) => quest[field] !== undefined)
       .filter((field) => !(current.confidential && (field === "intro" || field === "sections")))
-      .filter((field) => JSON.stringify(current[field] ?? null) !== JSON.stringify(quest[field]));
+      .filter((field) => stableJson(current[field] ?? null) !== stableJson(quest[field]));
     console.log(`side quest | ${fields.length ? "update " + fields.join(", ") : "up to date"} | ${quest.name}`);
     if (fields.length) toUpdate.push({ current, sets: Object.fromEntries(fields.map((field) => [field, quest[field]])) });
   }

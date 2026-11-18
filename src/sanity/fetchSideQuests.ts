@@ -11,8 +11,9 @@ const sideQuestFields = `
   "link": select(defined(link.href) => { "label": coalesce(link.label, "Visit site"), "href": link.href }, null),
   "confidential": coalesce(confidential, false),
   teaser,
-  "intro": coalesce(intro, []),
-  "sections": coalesce(sections[]{ heading, "paragraphs": coalesce(paragraphs, []) }, [])
+  // Never return story text for confidential quests, even if some was saved by mistake.
+  "intro": select(confidential == true => [], coalesce(intro, [])),
+  "sections": select(confidential == true => [], coalesce(sections[]{ heading, "paragraphs": coalesce(paragraphs, []) }, []))
 `;
 
 const sideQuestsQuery = `*[_type == "sideQuest" && defined(slug.current)] | order(order asc, name asc){${sideQuestFields}}`;
@@ -33,6 +34,10 @@ function clean(quest: SideQuest): SideQuest {
   };
 }
 
+// When Sanity is set up but a read fails, the local copy can’t prove a quest hasn’t since been made
+// confidential in Studio, so it is served without its story: metadata only, never stale private text.
+const withoutStory = (quest: SideQuest): SideQuest => ({ ...quest, intro: [], sections: [] });
+
 // Side quests are edited in Sanity Studio. If Sanity has none or can't be reached,
 // the copies in src/content/sidequests.ts are used instead.
 export async function getSideQuests(): Promise<SideQuest[]> {
@@ -41,7 +46,8 @@ export async function getSideQuests(): Promise<SideQuest[]> {
       const quests = await sanityClient.fetch<SideQuest[]>(sideQuestsQuery, {}, fetchOptions);
       if (quests.length > 0) return quests.map(clean);
     } catch (error) {
-      console.error("Unable to load side quests from Sanity; using the local copies.", error);
+      console.error("Unable to load side quests from Sanity; using the local copies without stories.", error);
+      return localSideQuests.map(withoutStory);
     }
   }
   return localSideQuests;
@@ -59,7 +65,9 @@ export async function getSideQuest(slug: string): Promise<SideQuest | undefined>
       // Sanity is up and manages side quests: a missing slug really is missing (e.g. deleted in Studio).
       if (total > 0) return undefined;
     } catch (error) {
-      console.error(`Unable to load side quest "${slug}" from Sanity; using the local copy.`, error);
+      console.error(`Unable to load side quest "${slug}" from Sanity; using the local copy without its story.`, error);
+      const local = getLocalSideQuest(slug);
+      return local && withoutStory(local);
     }
   }
   return getLocalSideQuest(slug);
