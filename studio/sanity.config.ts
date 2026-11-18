@@ -26,6 +26,11 @@ export default defineConfig({
               .id("portfolio")
               .child(S.document().schemaType("portfolio").documentId("portfolio")),
             S.documentTypeListItem("post").title("Posts"),
+            S.listItem()
+              .title("Side Quests")
+              .id("sideQuests")
+              .schemaType("sideQuest")
+              .child(S.documentTypeList("sideQuest").title("Side Quests").defaultOrdering([{ field: "order", direction: "asc" }])),
           ]),
     }),
     visionTool(),

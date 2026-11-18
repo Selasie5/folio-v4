@@ -4,30 +4,34 @@ import { motion } from "framer-motion";
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 import type { PortfolioContent } from "@/content/types";
 import { listVariants } from "@/components/animations";
-import CertificationBadge from "@/components/core/CertificationBadge";
+import SideQuests from "@/components/core/SideQuests";
+import type { SideQuest } from "@/content/sidequests";
 import ContactLinksList from "@/components/core/ContactItem";
 import Experience from "@/components/core/Experience";
 import TechStackCard from "@/components/core/TechStackCard";
 import ThemeToggle from "@/components/core/ThemeToggle";
 import Biography from "@/components/core/Biography";
 import Writing from "@/components/core/Writing";
+import MoreLink from "@/components/core/MoreLink";
 import type { Post } from "@/content/devto";
+
+// How many roles the home page shows before linking to /experience.
+const EXPERIENCE_PREVIEW_COUNT = 4;
 
 interface HomeContentProps {
   content: PortfolioContent;
   posts?: Post[];
+  sideQuests?: SideQuest[];
 }
 
-export default function HomeContent({ content, posts = [] }: HomeContentProps) {
+export default function HomeContent({ content, posts = [], sideQuests = [] }: HomeContentProps) {
   const {
     profile,
     experiences = [],
-    certifications = [],
     techStack = [],
     contacts = [],
   } = content || {};
 
-  const safeCertifications = certifications ?? [];
   const safeTechStack = techStack ?? [];
   const safeContacts = contacts ?? [];
   const safeBio = profile?.bio ?? [];
@@ -77,22 +81,17 @@ export default function HomeContent({ content, posts = [] }: HomeContentProps) {
 
       {(experiences ?? []).length > 0 && (
         <section className="mt-14 w-full sm:mt-16" aria-labelledby="experience-heading">
-          <h2 id="experience-heading" className="text-lg text-black dark:text-neutral-100 mono">Work Experience</h2>
-          <div className="mt-5"><Experience experiences={experiences ?? []} /></div>
+          <div className="flex items-center justify-between gap-4">
+            <h2 id="experience-heading" className="text-lg text-black dark:text-neutral-100 mono">Work Experience</h2>
+            {(experiences ?? []).length > EXPERIENCE_PREVIEW_COUNT && <MoreLink href="/experience" label="View all" />}
+          </div>
+          <div className="mt-5"><Experience experiences={(experiences ?? []).slice(0, EXPERIENCE_PREVIEW_COUNT)} all={experiences ?? []} /></div>
         </section>
       )}
 
       <Writing posts={posts} />
 
-
-      {safeCertifications.length > 0 && (
-        <section className="mt-14 w-full sm:mt-16">
-          <h2 className="text-black dark:text-neutral-100 text-lg mono">Certifications</h2>
-          <div className="mt-5 grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
-            {safeCertifications.map((certification) => <CertificationBadge key={certification.title} {...certification} />)}
-          </div>
-        </section>
-      )}
+      <SideQuests quests={sideQuests} />
 
       {safeTechStack.length > 0 && (
         <section className="mt-14 w-full sm:mt-16">

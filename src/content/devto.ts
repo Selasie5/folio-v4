@@ -2,7 +2,7 @@ const DEVTO_USERNAME = "selasie5";
 const DEVTO_API = "https://dev.to/api";
 
 export interface Post {
-  id: number;
+  id: number | string;
   slug: string;
   title: string;
   description: string;
@@ -11,6 +11,8 @@ export interface Post {
   publishedAt: string;
   readingTimeMinutes: number;
   tags: string[];
+  /** Where the article was first published. */
+  source?: "devto" | "medium";
 }
 
 export interface PostWithBody extends Post {
@@ -18,7 +20,7 @@ export interface PostWithBody extends Post {
 }
 
 interface DevtoArticle {
-  id: number;
+  id: number | string;
   slug: string;
   title: string;
   description: string;
@@ -64,6 +66,7 @@ function toPost(article: DevtoArticle): Post {
     publishedAt: article.published_at,
     readingTimeMinutes: article.reading_time_minutes,
     tags,
+    source: "devto",
   };
 }
 

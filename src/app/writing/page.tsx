@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { PostList } from "@/components/core/Writing";
+import PillLink from "@/components/layout/PillLink";
 import { getPosts } from "@/sanity/fetchPosts";
 
 export const metadata: Metadata = {
@@ -13,14 +13,14 @@ export default async function WritingPage() {
 
   return (
     <main className="flex w-full flex-col items-start">
-      <Link
-        href="/"
-        className="font-mono text-xs text-gray-500 transition-colors hover:text-black dark:text-neutral-400 dark:hover:text-white"
-      >
-        ← Home
-      </Link>
-      <h1 className="mt-8 text-lg text-black dark:text-neutral-100 mono">Writing</h1>
-      <div className="mt-5 w-full">
+      <PillLink href="/" label="Back home" caret="left" />
+      <header className="mt-8">
+        <h1 className="text-2xl leading-tight text-black dark:text-neutral-100 mono">Writing</h1>
+        <p className="mt-3 max-w-[52ch] text-sm leading-6 text-gray-500 dark:text-neutral-400">
+          Notes on frontend engineering, JavaScript and the systems behind the products I build.
+        </p>
+      </header>
+      <div className="mt-8 w-full">
         {posts.length > 0 ? (
           <PostList posts={posts} />
         ) : (

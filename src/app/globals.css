@@ -237,3 +237,22 @@ body {
 .article-body td { border: 1px solid #e5e5e5; padding: 0.4em 0.7em; text-align: left; }
 .dark .article-body th,
 .dark .article-body td { border-color: #333; }
+
+/* Lists where hovering (or keyboard-focusing) one row fades and softly blurs the others.
+   Styles target each row's content, because animated <li>s carry inline opacity. */
+.focus-list > li > * {
+  transition: opacity 250ms ease, filter 250ms ease;
+}
+@media (hover: hover) {
+  .focus-list:hover > li:not(:hover) > * {
+    opacity: 0.3;
+    filter: blur(1.5px);
+  }
+}
+.focus-list:has(:focus-visible) > li:not(:has(:focus-visible)) > * {
+  opacity: 0.3;
+  filter: blur(1.5px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .focus-list > li > * { transition: none; }
+}

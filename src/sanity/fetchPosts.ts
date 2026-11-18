@@ -2,8 +2,9 @@ import { getDevtoPost, getDevtoPosts, type Post, type PostWithBody } from "@/con
 import { sanityClient } from "./client";
 
 const postFields = `
-  "id": devtoId,
+  "id": _id,
   "slug": slug.current,
+  "source": coalesce(source, "devto"),
   title,
   "description": coalesce(description, ""),
   url,

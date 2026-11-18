@@ -1,7 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
-// One document per dev.to article. Created and refreshed by `npm run cms:sync-posts`;
-// re-running the sync overwrites these fields with what is on dev.to.
+// One document per published article, imported from dev.to (`npm run cms:sync-posts`)
+// or Medium (`npm run cms:sync-medium`). Re-running a sync overwrites these fields with the source.
 export const post = defineType({
   name: "post",
   title: "Post",
@@ -20,10 +20,17 @@ export const post = defineType({
     defineField({ name: "tags", title: "Tags", type: "array", of: [defineArrayMember({ type: "string" })] }),
     defineField({ name: "coverImage", title: "Cover image URL", type: "url" }),
     defineField({ name: "readingTimeMinutes", title: "Reading time (minutes)", type: "number" }),
-    defineField({ name: "url", title: "dev.to URL", type: "url", validation: (Rule) => Rule.required() }),
+    defineField({
+      name: "source",
+      title: "Source",
+      type: "string",
+      options: { list: [{ title: "dev.to", value: "devto" }, { title: "Medium", value: "medium" }] },
+      initialValue: "devto",
+    }),
+    defineField({ name: "url", title: "Original URL", type: "url", validation: (Rule) => Rule.required() }),
     defineField({ name: "devtoId", title: "dev.to ID", type: "number", readOnly: true }),
-    defineField({ name: "bodyHtml", title: "Body (HTML from dev.to)", type: "text", rows: 12, readOnly: true }),
+    defineField({ name: "bodyHtml", title: "Body (HTML from the source)", type: "text", rows: 12, readOnly: true }),
   ],
   orderings: [{ title: "Newest first", name: "publishedAtDesc", by: [{ field: "publishedAt", direction: "desc" }] }],
-  preview: { select: { title: "title", subtitle: "publishedAt" } },
+  preview: { select: { title: "title", subtitle: "source" } },
 });

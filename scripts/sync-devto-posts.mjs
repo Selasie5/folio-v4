@@ -38,6 +38,7 @@ function toDocument(article) {
   const document = {
     _id: `post-devto-${article.id}`,
     _type: "post",
+    source: "devto",
     title: article.title,
     slug: { _type: "slug", current: article.slug },
     publishedAt: article.published_at,
