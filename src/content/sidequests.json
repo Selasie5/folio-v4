@@ -425,5 +425,43 @@
         ]
       }
     ]
+  },
+  {
+    "slug": "clipzy",
+    "name": "Clipzy ML Engine",
+    "tagline": "An AI engine that learns a video’s cinematic style and applies it to new footage",
+    "status": "Shipped",
+    "period": "2026",
+    "role": "Software Engineer",
+    "link": {
+      "label": "Read the docs",
+      "href": "https://personal-30a7f38f.mintlify.app/introduction"
+    },
+    "intro": [
+      "Making one video feel like another, with the same pacing, the same colour, cuts that land on the beat, takes an editor hours. Clipzy ML Engine does it automatically. You upload a video, and it analyses the footage, ==extracts its cinematic style as a reusable “Style DNA”==, and renders a styled output video."
+    ],
+    "sections": [
+      {
+        "heading": "Style DNA",
+        "paragraphs": [
+          "At the heart of Clipzy is the Style DNA: a structured JSON description of how a video feels. It captures the pacing, colour, transitions and audio character of the footage, ==down to how often it cuts and where the beats fall==.",
+          "Because it’s just data, a style can be reused. You can extract the Style DNA from a template video and ==apply it to completely different footage==, or let Clipzy infer a style automatically."
+        ]
+      },
+      {
+        "heading": "Six stages, one pipeline",
+        "paragraphs": [
+          "Every video goes through six stages. Video analysis finds the shots with PySceneDetect, describes what’s on screen with CLIP visual embeddings, and analyses the colour grading. Audio analysis detects tempo and beats with Librosa and transcribes speech with Whisper.",
+          "Motion analysis uses ==OpenCV’s Farneback optical flow to track camera movement and object motion== across the whole video. Those three analyses feed style extraction, which produces the Style DNA. Style application then maps that style onto the footage, and rendering produces the final, optimised MP4."
+        ]
+      },
+      {
+        "heading": "Built to run at scale",
+        "paragraphs": [
+          "Video processing is slow, so nothing happens while you wait on a request. ==Uploading a video creates a job that’s queued in Redis==, and background workers pull jobs off the queue and run them through the pipeline. Workers can also run distributed on Modal.",
+          "You can poll a job for its status and progress, or register a webhook and ==get a notification the moment it finishes or fails==. It accepts MP4, MOV, AVI, MKV and WebM, and the whole thing is exposed as a REST API built with FastAPI, documented on Mintlify."
+        ]
+      }
+    ]
   }
 ]
