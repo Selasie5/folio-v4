@@ -31,6 +31,31 @@ function AlbumArt({ track, size }: { track: Track; size: "lg" | "sm" }) {
   );
 }
 
+/** A one-line Spotify status for the header: icon (or playing bars), then the song and artist. */
+export function NowPlayingStatus({ nowPlaying, playedLabel }: { nowPlaying: NowPlaying; playedLabel?: string }) {
+  const { track, isPlaying } = nowPlaying;
+  const when = isPlaying ? "Now playing on Spotify" : `Last played on Spotify${playedLabel ? ` · ${playedLabel}` : ""}`;
+  return (
+    <a
+      href={track.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={`${when}: ${track.title} by ${track.artists}`}
+      className="group mt-1 flex min-w-0 max-w-full items-center gap-1.5 text-xs leading-5 text-gray-500 transition-colors hover:text-black dark:text-neutral-400 dark:hover:text-white"
+    >
+      <span className="sr-only">{when}: </span>
+      <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center text-[#1DB954]">
+        {isPlaying ? <PlayingBars /> : <SpotifyIcon className="h-3.5 w-3.5" />}
+      </span>
+      <span className="truncate">
+        <span className="text-gray-700 group-hover:text-black dark:text-neutral-200 dark:group-hover:text-white">{track.title}</span>
+        <span aria-hidden> · </span>
+        {track.artists}
+      </span>
+    </a>
+  );
+}
+
 /** The current or most recently played track. */
 export function NowPlayingCard({ nowPlaying, playedLabel }: { nowPlaying: NowPlaying; playedLabel?: string }) {
   const { track, isPlaying } = nowPlaying;
