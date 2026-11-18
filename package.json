@@ -14,7 +14,7 @@
     "cms:seed-videos": "node scripts/seed-videos.mjs",
     "cms:build": "npm --prefix studio run build",
     "cms:deploy": "npm --prefix studio run deploy",
-    "test:unlock-limit": "node --no-warnings scripts/test-unlock-rate-limit.mjs"
+    "test:unlock-limit": "node --experimental-strip-types --no-warnings scripts/test-unlock-rate-limit.mjs"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

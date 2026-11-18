@@ -32,7 +32,15 @@ export async function unlockSideQuest(slug: string, code: string): Promise<Unloc
     return { ok: false, error: `Too many attempts. Try again in ${wait} minute${wait === 1 ? "" : "s"}.` };
   }
 
-  const story = await checkAccessCode(slug, code);
+  let story;
+  try {
+    story = await checkAccessCode(slug, code);
+  } catch (error) {
+    // Sanity couldn't check the code: that's not a wrong guess, so don't charge for it.
+    console.error("Unable to check an access code.", error);
+    refundAttempt(key, reservation.window);
+    return { ok: false, error: "Couldn’t check the code right now. Try again in a moment." };
+  }
   if (!story) {
     // Also slow down each wrong guess.
     await sleep(800);

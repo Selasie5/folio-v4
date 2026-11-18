@@ -74,6 +74,7 @@ function toPost(article: DevtoArticle): Post {
 export async function getDevtoPosts(): Promise<Post[]> {
   const articles = await devtoFetch<DevtoArticle[]>(`/articles/latest?username=${DEVTO_USERNAME}&per_page=1000`);
   return (Array.isArray(articles) ? articles : [])
+    .filter((article): article is DevtoArticle => Boolean(article && article.slug && article.title))
     .map(toPost)
     .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
 }

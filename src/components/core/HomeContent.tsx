@@ -33,8 +33,8 @@ export default function HomeContent({ content, posts = [], sideQuests = [], vide
   } = content || {};
 
   // Let's Connect is a single line: GitHub and email only, taken from the contact links in Sanity.
-  const githubHref = (contacts ?? []).find((contact) => contact.label === "github")?.href;
-  const mailHref = (contacts ?? []).find((contact) => contact.label === "mail")?.href;
+  const githubHref = (contacts ?? []).find((contact) => contact.label?.trim().toLowerCase() === "github")?.href;
+  const mailHref = (contacts ?? []).find((contact) => contact.label?.trim().toLowerCase() === "mail")?.href;
   const safeBio = profile?.bio ?? [];
 
   return (

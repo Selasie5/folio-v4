@@ -95,7 +95,7 @@ export const sideQuest = defineType({
           const count = Array.isArray(intro) ? intro.length : 0;
           // This document is public: a confidential quest's story belongs in its Confidential content document.
           if (context.document?.confidential) {
-            return count === 0 ? true : "Confidential side quests can't have public text. Move it to Confidential content and empty this field.";
+            return count === 0 ? true : "Confidential side quests can't have public text. Don't clear it by hand: turn Confidential off, publish, then run node scripts/seed-confidential.mjs <slug> --apply --confirm-freeze, which moves the story to Confidential content and clears this field in one step.";
           }
           return count > 0 ? true : "Add at least one paragraph";
         }),
@@ -109,7 +109,7 @@ export const sideQuest = defineType({
       validation: (Rule) =>
         Rule.custom((sections, context) =>
           context.document?.confidential && Array.isArray(sections) && sections.length > 0
-            ? "Confidential side quests can't have public sections. Move them to Confidential content and empty this field."
+            ? "Confidential side quests can't have public sections. Don't clear them by hand: turn Confidential off, publish, then run node scripts/seed-confidential.mjs <slug> --apply --confirm-freeze, which moves the story to Confidential content and clears this field in one step."
             : true,
         ),
     }),

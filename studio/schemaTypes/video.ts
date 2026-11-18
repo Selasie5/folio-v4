@@ -12,7 +12,15 @@ export const video = defineType({
       type: "string",
       description: "The part after youtu.be/ or watch?v=, e.g. OP6JHa21We8",
       validation: (Rule) =>
-        Rule.required().custom((id) => (/^[A-Za-z0-9_-]{11}$/.test(id ?? "") ? true : "Use the 11-character YouTube video ID")),
+        Rule.required().custom(async (id, context) => {
+          if (!/^[A-Za-z0-9_-]{11}$/.test(id ?? "")) return "Use the 11-character YouTube video ID";
+          // One entry per video: reject an ID another video document already uses.
+          const self = String(context.document?._id ?? "").replace(/^drafts\./, "");
+          const others = await context
+            .getClient({ apiVersion: "2026-09-20" })
+            .fetch(`count(*[_type == "video" && youtubeId == $id && !(_id in [$self, "drafts." + $self])])`, { id, self });
+          return others > 0 ? "This video is already in the library" : true;
+        }),
     }),
     defineField({ name: "title", title: "Title", type: "string", validation: (Rule) => Rule.required() }),
     defineField({ name: "channel", title: "Channel", type: "string" }),
@@ -23,7 +31,12 @@ export const video = defineType({
       rows: 3,
       description: "One or two sentences shown on the card.",
     }),
-    defineField({ name: "durationSeconds", title: "Duration (seconds)", type: "number" }),
+    defineField({
+      name: "durationSeconds",
+      title: "Duration (seconds)",
+      type: "number",
+      validation: (Rule) => Rule.integer().positive(),
+    }),
     defineField({
       name: "order",
       title: "Order",

@@ -57,7 +57,10 @@ export function reserveAttempt(visitor: string, now = Date.now()): Reservation {
  */
 export function refundAttempt(visitor: string, window: number) {
   const entry = attempts.get(visitor);
-  if (entry && entry.resetAt === window && entry.count > 0) entry.count -= 1;
+  if (entry && entry.resetAt === window && entry.count > 0) {
+    entry.count -= 1;
+    if (entry.count === 0) attempts.delete(visitor);
+  }
 }
 
 /** For tests only. */

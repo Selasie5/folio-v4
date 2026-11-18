@@ -107,6 +107,12 @@ async function main() {
       console.log(`side quest | exists, keep | ${quest.name}`);
       continue;
     }
+    // The seed marks this quest confidential but the published one isn't yet: writing the seed's empty
+    // story would delete it before seed-confidential.mjs can move it to the private document.
+    assert(
+      !(quest.confidential && !current.confidential),
+      `"${quest.name}" is confidential in the seed but not in Sanity. Run node scripts/seed-confidential.mjs ${quest.slug.current} --apply --confirm-freeze first, so its story is moved, not deleted.`,
+    );
     const fields = CONTENT_FIELDS.filter((field) => quest[field] !== undefined)
       .filter((field) => !(current.confidential && (field === "intro" || field === "sections")))
       .filter((field) => stableJson(current[field] ?? null) !== stableJson(quest[field]));

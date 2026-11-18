@@ -39,17 +39,28 @@ async function main() {
 
   const documents = videos.map(toDocument);
   assert.equal(new Set(documents.map(({ _id }) => _id)).size, documents.length, "Duplicate videos in videos.json");
-  const existing = new Set(await client.fetch(`*[_type == "video"]._id`));
-  for (const document of documents) console.log(`${existing.has(document._id) ? "exists, keep" : "create"} | ${document.title}`);
+  const saved0 = await client.fetch(`*[_type == "video" && !(_id in path("drafts.**"))]{ _id, youtubeId }`);
+  const existing = new Set(saved0.map(({ _id }) => _id));
+  // A video added in Studio has a random ID: recognise it by its YouTube ID instead of duplicating it.
+  const byYoutubeId = new Map(saved0.map(({ _id, youtubeId }) => [youtubeId, _id]));
+  const toCreate = documents.filter((document) => {
+    const owner = byYoutubeId.get(document.youtubeId);
+    if (owner && owner !== document._id) {
+      console.log(`exists as ${owner}, keep | ${document.title}`);
+      return false;
+    }
+    console.log(`${existing.has(document._id) ? "exists, keep" : "create"} | ${document.title}`);
+    return true;
+  });
   if (!apply) return;
 
   let transaction = client.transaction();
-  for (const document of documents) transaction = transaction.createIfNotExists(document);
+  for (const document of toCreate) transaction = transaction.createIfNotExists(document);
   await transaction.commit({ visibility: "sync" });
 
-  const saved = await client.fetch(`*[_type == "video" && _id in $ids]`, { ids: documents.map(({ _id }) => _id) });
-  assert.equal(saved.length, documents.length, "Not every video was saved");
-  for (const document of documents) {
+  const saved = await client.fetch(`*[_type == "video" && _id in $ids]`, { ids: toCreate.map(({ _id }) => _id) });
+  assert.equal(saved.length, toCreate.length, "Not every video was saved");
+  for (const document of toCreate) {
     if (existing.has(document._id)) continue;
     const { _rev, _createdAt, _updatedAt, ...fields } = saved.find(({ _id }) => _id === document._id);
     assert.deepEqual(fields, document, `Saved fields differ for ${document._id}`);

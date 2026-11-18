@@ -18,7 +18,7 @@ export const youtubeThumbnail = (id: string) => `https://i.ytimg.com/vi/${id}/hq
 
 /** 37:05 or 1:41:20 */
 export function formatDuration(totalSeconds?: number) {
-  if (!totalSeconds) return null;
+  if (!totalSeconds || !Number.isFinite(totalSeconds) || totalSeconds <= 0) return null;
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = String(Math.floor(totalSeconds % 60)).padStart(2, "0");

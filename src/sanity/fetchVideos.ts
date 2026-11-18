@@ -1,7 +1,7 @@
 import { videos as localVideos, type Video } from "@/content/videos";
 import { sanityClient } from "./client";
 
-const videosQuery = `*[_type == "video" && defined(youtubeId) && !(_id in path("drafts.**"))] | order(order asc){
+const videosQuery = `*[_type == "video" && defined(youtubeId) && defined(title) && !(_id in path("drafts.**"))] | order(order asc){
   youtubeId,
   title,
   channel,
