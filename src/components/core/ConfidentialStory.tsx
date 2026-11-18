@@ -89,6 +89,8 @@ export default function ConfidentialStory({ slug, name, contactHref }: Confident
             exit={reduceMotion ? { opacity: 0 } : { opacity: 0, filter: "blur(12px)" }}
             transition={{ duration: 0.35 }}
             className="relative overflow-hidden rounded-xl"
+            // Unambiguous marker that the page is serving the locked state (checked by seed-confidential --site).
+            data-confidential-locked=""
           >
             <LockedPreview />
             <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-white/30 via-white/60 to-white/90 dark:from-[#111111]/30 dark:via-[#111111]/60 dark:to-[#111111]/90">

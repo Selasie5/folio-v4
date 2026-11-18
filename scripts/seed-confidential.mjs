@@ -132,21 +132,32 @@ async function main() {
       .replace(/\\u([0-9a-f]{4})/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
       .replace(/\\(["\\/])/g, "$1")
       .replace(/<!-- -->/g, "");
-  // Probe with several story fragments (first paragraph, every heading), stripped of highlight marks.
-  const probes = [intro[0], ...sections.map((section) => section.heading)]
+  // Probe every paragraph and heading. Highlight marks (==…==) split text into separate elements and
+  // separate strings in the page data, so probes are cut at those boundaries and never span one.
+  const fragments = [...intro, ...sections.flatMap((section) => [section.heading, ...section.paragraphs])]
     .filter(Boolean)
-    .map((text) => text.replace(/==/g, "").slice(0, 60));
+    .flatMap((text) => text.split("=="))
+    .map((part) => part.replace(/\s+/g, " ").trim())
+    .filter((part) => part.length >= 12)
+    .map((part) => part.slice(0, 60));
+  assert(fragments.length > 0, "No story fragments to check for; refusing to confirm privacy.");
   for (let attempt = 1; attempt <= 6; attempt += 1) {
     const response = await fetch(url, { headers: { "Cache-Control": "no-cache" }, redirect: "manual" });
-    const page = normalise(await response.text());
-    const locked = page.includes("This story is confidential");
-    const leaked = probes.filter((probe) => page.includes(probe));
-    if (response.status === 200 && locked && leaked.length === 0) {
-      console.log(`Confirmed on the live site: ${url} serves the locked page and none of the story.`);
+    const contentType = response.headers.get("content-type") ?? "";
+    const raw = await response.text();
+    // Fail closed: anything other than a successful HTML page can't confirm privacy.
+    const readable = response.status === 200 && contentType.includes("text/html") && raw.length > 0;
+    // Search both the visible text (tags stripped) and the full page including serialized data.
+    const page = normalise(raw).replace(/\s+/g, " ");
+    const visible = page.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+    const locked = /data-confidential-locked/.test(raw);
+    const leaked = fragments.filter((fragment) => page.includes(fragment) || visible.includes(fragment));
+    if (readable && locked && leaked.length === 0) {
+      console.log(`Confirmed on the live site: ${url} serves the locked page and none of the ${fragments.length} story fragments.`);
       return;
     }
     console.log(
-      `Not confirmed yet (attempt ${attempt}): status ${response.status}, locked ${locked}, story fragments found ${leaked.length}. Waiting…`,
+      `Not confirmed yet (attempt ${attempt}): status ${response.status}, html ${contentType.includes("text/html")}, locked ${locked}, story fragments found ${leaked.length}/${fragments.length}. Waiting…`,
     );
     await new Promise((resolve) => setTimeout(resolve, 15_000));
   }
