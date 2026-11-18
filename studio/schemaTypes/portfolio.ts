@@ -6,12 +6,37 @@ export const portfolio = defineType({
   type: "document",
   groups: [
     { name: "profile", title: "Profile", default: true },
+    { name: "organizations", title: "Organizations" },
     { name: "projects", title: "Projects" },
     { name: "experience", title: "Experience" },
     { name: "credentials", title: "Credentials" },
     { name: "contact", title: "Contact" },
   ],
   fields: [
+    defineField({
+      name: "organizationsHeading",
+      title: "Organizations heading",
+      type: "string",
+      group: "organizations",
+      initialValue: "Organizations I’ve worked with",
+    }),
+    defineField({
+      name: "organizations",
+      title: "Organization logos",
+      description: "Add and reorder the organizations shown on the homepage. Until configured, this section uses the existing work experience logos plus Forge Studios and Blackhorse. An empty list hides the section.",
+      type: "array",
+      group: "organizations",
+      of: [defineArrayMember({
+        name: "organization",
+        type: "object",
+        fields: [
+          defineField({ name: "name", title: "Organization name", type: "string", validation: (Rule) => Rule.required() }),
+          defineField({ name: "logo", title: "Logo", type: "image", validation: (Rule) => Rule.required() }),
+          defineField({ name: "url", title: "Website (optional)", type: "url", validation: (Rule) => Rule.uri({ scheme: ["http", "https"] }) }),
+        ],
+        preview: { select: { title: "name", subtitle: "url", media: "logo" } },
+      })],
+    }),
     defineField({
       name: "profile",
       title: "Profile",
@@ -30,6 +55,28 @@ export const portfolio = defineType({
           validation: (Rule) => Rule.required().min(1),
         }),
         defineField({ name: "quote", title: "Quote", type: "text", rows: 3 }),
+        defineField({
+          name: "bioLinks",
+          title: "Biography links",
+          description: "Link text must match the biography exactly. Leave the brand empty for a simple underlined link.",
+          type: "array",
+          of: [defineArrayMember({
+            name: "biographyLink",
+            type: "object",
+            fields: [
+              defineField({ name: "label", title: "Link text", type: "string", validation: (Rule) => Rule.required() }),
+              defineField({ name: "href", title: "Destination", type: "url", validation: (Rule) => Rule.required().uri({ scheme: ["https", "http", "mailto"] }) }),
+              defineField({ name: "brand", title: "Brand animation", type: "string", options: { list: [
+                { title: "Forge Studios", value: "forge" },
+                { title: "Blackhorse", value: "blackhorse" },
+                { title: "Quotient", value: "quotient" },
+                { title: "Fides", value: "fides" },
+                { title: "Voya", value: "voya" },
+              ] } }),
+            ],
+            preview: { select: { title: "label", subtitle: "href" } },
+          })],
+        }),
         defineField({ name: "quoteSource", title: "Quote source", type: "string" }),
       ],
     }),
@@ -131,7 +178,7 @@ export const portfolio = defineType({
             defineField({
               name: "href",
               title: "URL or email link",
-              type: "string",
+              type: "url",
               validation: (Rule) => Rule.required().uri({ scheme: ["http", "https", "mailto"] }),
             }),
           ],

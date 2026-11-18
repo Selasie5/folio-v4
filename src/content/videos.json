@@ -1,0 +1,135 @@
+[
+  {
+    "youtubeId": "Ie41Rctzqmo",
+    "title": "pov: another day of showing up",
+    "channel": "Michael Dadzie",
+    "durationSeconds": 181,
+    "description": "Building solo is cool, building together hits different."
+  },
+  {
+    "youtubeId": "yXkJ85hvC5k",
+    "title": "Design Engineering Night 10: Don’t ask AI to design for you with Alex Barashkov",
+    "channel": "Granola",
+    "durationSeconds": 1148,
+    "description": "Alex Barashkov, CEO of Pixel Point, on why you shouldn’t ask AI to design for you."
+  },
+  {
+    "youtubeId": "OP6JHa21We8",
+    "title": "Beginner's Guide to Mobile App System Design (+ Tips for Interviews!)",
+    "channel": "Philipp Lackner",
+    "durationSeconds": 2221,
+    "description": "What mobile app system design involves, which parts to think through, and tips for system design interviews."
+  },
+  {
+    "youtubeId": "aBX1Lewhtco",
+    "title": "Getting Structured Data Out of Documents Nobody Agreed on a Format For | W. Balogun | SysConf 2026",
+    "channel": "SysDsgn Institute",
+    "durationSeconds": 1403,
+    "description": "Wahab Balogun on extracting data from images, emails and PDFs, and converging it all into one structured format."
+  },
+  {
+    "youtubeId": "zSjWsarHfF4",
+    "title": "Trading at Scale | Building a Resilient Trading Engine Under Extreme Load | SysConf 2026",
+    "channel": "SysDsgn Institute",
+    "durationSeconds": 1996,
+    "description": "Audrey Ezeonyedika on the architecture behind the Hisa trading platform, and keeping a trading engine resilient under extreme load."
+  },
+  {
+    "youtubeId": "31GUkCBD-Uc",
+    "title": "Building Closed-Loop Evals for a Multimodal Agent at Scale — Soumya Gupta & Jai Chopra, Uber",
+    "channel": "AI Engineer",
+    "durationSeconds": 1298,
+    "description": "How Uber built closed-loop evals for its food enhancement agent, which edits food photos to better present dishes."
+  },
+  {
+    "youtubeId": "x6WqD4qHxSc",
+    "title": "Scaling Slack and GitHub with Maude Lemaire",
+    "channel": "The Pragmatic Engineer",
+    "durationSeconds": 4769,
+    "description": "What is involved in scaling up large, popular products at places like Slack and GitHub?"
+  },
+  {
+    "youtubeId": "mQu0zN4IvSI",
+    "title": "Software engineering at Google & CS education with Titus Winters",
+    "channel": "The Pragmatic Engineer",
+    "durationSeconds": 6077,
+    "description": "An engineer who helped create today’s software engineering curriculum now says to burn down almost all of it. What’s the cause of this contradiction?"
+  },
+  {
+    "youtubeId": "MDUYSMJmi8A",
+    "title": "Uber’s AI infra, from the inside",
+    "channel": "The Pragmatic Engineer",
+    "durationSeconds": 5657,
+    "description": "What do developer tools look like inside of Uber, today? They are very different from what you would see at most places."
+  },
+  {
+    "youtubeId": "UlXpOGIpITM",
+    "title": "Kubernetes and retiring at the top with Kelsey Hightower",
+    "channel": "The Pragmatic Engineer",
+    "durationSeconds": 10331,
+    "description": "Kelsey Hightower on going from a self-taught technician installing DSL modems to one of Google’s Distinguished Engineers."
+  },
+  {
+    "youtubeId": "3jjRNVfm3V4",
+    "title": "Scaling Uber with Thuan Pham (Uber’s first CTO)",
+    "channel": "The Pragmatic Engineer",
+    "durationSeconds": 5974,
+    "description": "Thuan Pham was Uber's first and longest-serving CTO, and today he’s the CTO of Faire, a B2B wholesale platform."
+  },
+  {
+    "youtubeId": "sAp9RjO79cU",
+    "title": "Netflix’s Engineering Culture",
+    "channel": "The Pragmatic Engineer",
+    "durationSeconds": 3574,
+    "description": "What it’s like to work as a software engineer inside Netflix, recorded at Netflix’s headquarters."
+  },
+  {
+    "youtubeId": "urVf2oNqtXU",
+    "title": "Code security for software engineers",
+    "channel": "The Pragmatic Engineer",
+    "durationSeconds": 4058,
+    "description": "What software engineers should know about writing secure code, with Johannes Dahse, VP of Code Security at Sonar."
+  },
+  {
+    "youtubeId": "P9-kg-6C-hY",
+    "title": "Meta Senior Staff Eng (IC7): His Top Two Career Learnings | Dwayne Reeves",
+    "channel": "Ryan Peterman",
+    "durationSeconds": 437,
+    "description": "Dwayne Reeves is a Senior Staff Engineer (IC7) at Meta who is the Tech Lead of the most used programming language (Hack) at the company."
+  },
+  {
+    "youtubeId": "sMllOlxVgD0",
+    "title": "Brian Kernighan: Inside Bell Labs, The Best Programmer, Why C Won",
+    "channel": "Ryan Peterman",
+    "durationSeconds": 5318,
+    "description": "Brian Kernighan, co-author of the original C book, on Bell Labs, the best programmer he knew, and why C won."
+  },
+  {
+    "youtubeId": "u3GjIXP9N0s",
+    "title": "AWS Distinguished Eng: Learning From 3000 Incidents And How Engineering Is Changing | Marc Brooker",
+    "channel": "Ryan Peterman",
+    "durationSeconds": 4291,
+    "description": "In this episode, I talked to Marc Brooker, a distinguished engineer at AWS who started there as a new grad and rose through the ranks."
+  },
+  {
+    "youtubeId": "RMo04pSSiao",
+    "title": "OpenAI & Meta Distinguished Eng (IC9): The Psychology Behind Tech Career Peaks | Philip Su",
+    "channel": "Ryan Peterman",
+    "durationSeconds": 2661,
+    "description": "Philip Su grew quickly to a Distinguished Engineer at Facebook and OpenAI."
+  },
+  {
+    "youtubeId": "v2JxdjTi_1I",
+    "title": "OpenAI & Meta Distinguished Engineer (IC9): Working With Zuck, Carmack & Career Growth | Philip Su",
+    "channel": "Ryan Peterman",
+    "durationSeconds": 4840,
+    "description": "Philip Su grew to Distinguished Engineer (IC9) at Meta and OpenAI."
+  },
+  {
+    "youtubeId": "OzlK68kcuHc",
+    "title": "Meta Senior Staff Eng (IC7): Zuck Stories, Rapid Career Growth, Code Machine Archetype",
+    "channel": "Ryan Peterman",
+    "durationSeconds": 5182,
+    "description": "Michael Novati got promoted to Senior Staff (IC7) Eng at Facebook by the age of 27."
+  }
+]

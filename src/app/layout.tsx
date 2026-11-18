@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import "./globals.css";
-import BackgroundSoundController from "@/components/core/BackgroundSoundController";
 import Footer from "@/components/layout/Footer";
 
 
@@ -20,8 +19,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`antialiased py-5 md:pX-20 md:py-10  md:max-w-7xl mx-auto` }>
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `try { document.documentElement.classList.toggle('dark', localStorage.getItem('portfolio-theme') !== 'light'); } catch {}` }} />
+      </head>
+      <body className="mx-auto w-full max-w-[648px] px-6 py-10 antialiased sm:pt-14 sm:pb-12">
         {/* <BackgroundSoundController/> */}
         {children}
         <Footer/>

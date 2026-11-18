@@ -1,0 +1,23 @@
+{
+  "source": "Profile (1).pdf",
+  "experiences": [
+    { "role": "Software Engineer", "company": "Appsquare Technologies", "period": "Jul 2026 – Present", "sourcePage": 1 },
+    { "role": "Chief Technology Officer", "company": "Forge Studios", "period": "Jan 2026 – Present", "sourcePage": 2 },
+    { "role": "Co-Founder & Software Engineer", "company": "Forge Studios", "period": "Jun 2025 – Present", "sourcePage": 2 },
+    { "role": "Software Engineer (Frontend)", "company": "BlackHorse Mobility Limited", "period": "Nov 2025 – Present", "sourcePage": 2 },
+    { "role": "Software Engineer", "company": "Polymorph Labs", "period": "Mar 2025 – Jul 2026", "sourcePage": 2 },
+    { "role": "Software Engineer", "company": "Dimax Digital", "period": "Nov 2025 – Jun 2026", "sourcePage": 3 },
+    { "role": "Web Developer", "company": "Dimax Digital", "period": "Jan 2025 – Oct 2025", "sourcePage": 3 },
+    { "role": "Founder", "company": "Integrion", "period": "Jan 2025 – Apr 2026", "sourcePage": 4 },
+    { "role": "Lead Frontend Engineer", "company": "Integrion", "period": "Jan 2025 – Apr 2026", "sourcePage": 4 },
+    { "role": "Software Engineer", "company": "turntabl", "period": "Jun 2025 – Sep 2025", "sourcePage": 4 },
+    { "role": "Software Engineering Fellow", "company": "Headstarter AI", "period": "Jul 2024 – Sep 2024", "sourcePage": 4 },
+    { "role": "Product Engineering Lead", "company": "AfroVivo", "period": "May 2024 – Sep 2024", "sourcePage": 4 },
+    { "role": "Software Engineer", "company": "AfroVivo", "period": "Apr 2024 – Sep 2024", "sourcePage": 4 },
+    { "role": "Project Manager Team Lead", "company": "Forge (Formerly Amplifica LLC)", "period": "Jan 2024 – Jun 2024", "sourcePage": 5 },
+    { "role": "Frontend Web Developer", "company": "LeadMonger", "period": "Apr 2023 – May 2024", "sourcePage": 5 },
+    { "role": "Associate Software Developer", "company": "HalloVera", "period": "Nov 2023 – Apr 2024", "sourcePage": 5 },
+    { "role": "Frontend Engineer Trainee", "company": "Andela", "period": "Aug 2023 – Sep 2023", "sourcePage": 5 },
+    { "role": "UI/UX Designer", "company": "alx_africa / Uptech Syndicate", "period": "Jun 2023 – Aug 2023", "sourcePage": 6 }
+  ]
+}

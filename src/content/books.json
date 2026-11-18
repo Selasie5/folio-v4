@@ -1,0 +1,8 @@
+[
+  { "slug": "designing-data-intensive-applications", "title": "Designing Data-Intensive Applications", "author": "Martin Kleppmann", "year": 2017, "cover": "/books/designing-data-intensive-applications.jpg" },
+  { "slug": "the-great-ceo-within", "title": "The Great CEO Within", "author": "Matt Mochary", "year": 2019, "cover": "/books/the-great-ceo-within.jpg" },
+  { "slug": "the-psychology-of-money", "title": "The Psychology of Money", "author": "Morgan Housel", "year": 2020, "cover": "/books/the-psychology-of-money.jpg" },
+  { "slug": "mastering-api-architecture", "title": "Mastering API Architecture", "author": "James Gough, Daniel Bryant & Matthew Auburn", "year": 2022, "cover": "/books/mastering-api-architecture.jpg" },
+  { "slug": "ai-engineering", "title": "AI Engineering", "author": "Chip Huyen", "year": 2024, "cover": "/books/ai-engineering.jpg" },
+  { "slug": "bloomberg-by-bloomberg", "title": "Bloomberg by Bloomberg", "author": "Michael Bloomberg", "year": 2019, "cover": "/books/bloomberg-by-bloomberg.jpg" }
+]

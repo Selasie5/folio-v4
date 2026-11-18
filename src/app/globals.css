@@ -24,6 +24,18 @@
 }
 
 
+html {
+  color-scheme: light;
+  background: #ffffff;
+  color: #171717;
+}
+
+html.dark {
+  color-scheme: dark;
+  background: #111111;
+  color: #f5f5f5;
+}
+
 body {
   font-family: 'General Sans', sans-serif;
 }
@@ -40,4 +52,270 @@ body {
 
 .soria {
   font-family: 'Soria', sans-serif;
+}
+
+.bio-brand-link,
+.bio-text-link {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+
+.bio-brand-link {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+  color: inherit;
+  transition: color 150ms ease-out;
+}
+
+.bio-brand-forge { --brand-color: #0457f3; --brand-badge-color: #0457f3; }
+.bio-brand-blackhorse { --brand-color: #0878a9; --brand-badge-color: #5dcbfe; --brand-icon-color: #0a1020; }
+.bio-brand-quotient { --brand-color: #4b5320; --brand-badge-color: #4b5320; }
+.bio-brand-fides { --brand-color: #4d7c0f; --brand-badge-color: #bef264; --brand-icon-color: #26320b; }
+.bio-brand-voya { --brand-color: #c3460f; --brand-badge-color: #e85412; }
+
+.dark .bio-brand-forge { --brand-color: #6395ff; }
+.dark .bio-brand-blackhorse { --brand-color: #5dcbfe; }
+.dark .bio-brand-quotient { --brand-color: #a4b16b; }
+.dark .bio-brand-fides { --brand-color: #bef264; }
+.dark .bio-brand-voya { --brand-color: #e85412; }
+
+.bio-brand-link:is(:hover, :focus-visible) {
+  color: var(--brand-color);
+  text-decoration-color: currentColor;
+}
+
+.bio-brand-link:focus-visible,
+.bio-text-link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.bio-text-link:hover {
+  text-decoration-thickness: 2px;
+}
+
+.bio-brand-icon-slot {
+  display: inline-block;
+  position: relative;
+  align-self: center;
+  width: 0;
+  height: 0.9em;
+  overflow: hidden;
+  transition: width 150ms ease-out;
+}
+
+.bio-brand-icon {
+  display: block;
+  width: 0.9em;
+  height: 0.9em;
+  padding: 2px;
+  border-radius: 2px;
+  background-color: var(--brand-badge-color);
+  opacity: 0;
+  transform: translateX(0.8em);
+  transition: transform 150ms ease-out, opacity 150ms ease-out;
+}
+
+.bio-brand-icon::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: var(--brand-icon-color, #ffffff);
+  -webkit-mask: var(--brand-icon) center / contain no-repeat;
+  mask: var(--brand-icon) center / contain no-repeat;
+}
+
+.bio-brand-link:is(:hover, :focus-visible) .bio-brand-icon-slot {
+  width: 1.2em;
+}
+
+.bio-brand-link:is(:hover, :focus-visible) .bio-brand-icon {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (hover: none) {
+  .bio-brand-link { color: var(--brand-color); }
+  .bio-brand-icon-slot { width: 1.2em; }
+  .bio-brand-icon { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bio-brand-link,
+  .bio-brand-icon-slot,
+  .bio-brand-icon { transition: none; }
+}
+
+/* dev.to article bodies (rendered HTML from the dev.to API) */
+.article-body {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #404040;
+  overflow-wrap: break-word;
+}
+.dark .article-body { color: #d4d4d4; }
+.article-body > * + * { margin-top: 1.25em; }
+.article-body h1,
+.article-body h2,
+.article-body h3,
+.article-body h4 {
+  color: #000;
+  font-family: 'PPEditorialItalic', serif;
+  line-height: 1.3;
+  margin-top: 2em;
+}
+.dark .article-body h1,
+.dark .article-body h2,
+.dark .article-body h3,
+.dark .article-body h4 { color: #f5f5f5; }
+.article-body h1 { font-size: 1.6em; }
+.article-body h2 { font-size: 1.4em; }
+.article-body h3 { font-size: 1.2em; }
+.article-body h4 { font-size: 1.05em; }
+/* dev.to puts an empty anchor inside each heading */
+.article-body h1 > a[name]:empty,
+.article-body h2 > a[name]:empty,
+.article-body h3 > a[name]:empty,
+.article-body h4 > a[name]:empty { display: none; }
+.article-body a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-underline-offset: 4px;
+}
+.article-body strong { color: #000; font-weight: 600; }
+.dark .article-body strong { color: #fff; }
+.article-body ul { list-style: disc; padding-left: 1.4em; }
+.article-body ol { list-style: decimal; padding-left: 1.4em; }
+.article-body li + li,
+.article-body li > ul,
+.article-body li > ol { margin-top: 0.4em; }
+.article-body blockquote {
+  border-left: 2px solid #e5e5e5;
+  padding-left: 1em;
+  color: #737373;
+}
+.dark .article-body blockquote { border-color: #404040; color: #a3a3a3; }
+.article-body hr { border: 0; border-top: 1px dotted #d1d5db; margin: 2.5em 0; }
+.dark .article-body hr { border-top-color: #404040; }
+.article-body img,
+.article-body video,
+.article-body iframe {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.article-body iframe { width: 100%; aspect-ratio: 16 / 9; }
+.article-body :not(pre) > code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+  background: #f3f4f6;
+  border-radius: 4px;
+  padding: 0.15em 0.35em;
+}
+.dark .article-body :not(pre) > code { background: #262626; }
+.article-body pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  background: #f7f7f7;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  padding: 1em;
+  overflow-x: auto;
+}
+.dark .article-body pre { background: #181818; border-color: #262626; }
+/* Hide dev.to's copy-code button panel */
+.article-body .highlight__panel { display: none; }
+.article-body table { width: 100%; border-collapse: collapse; font-size: 0.9em; display: block; overflow-x: auto; }
+.article-body th,
+.article-body td { border: 1px solid #e5e5e5; padding: 0.4em 0.7em; text-align: left; }
+.dark .article-body th,
+.dark .article-body td { border-color: #333; }
+
+/* Lists where hovering (or keyboard-focusing) one row fades and softly blurs the others.
+   Styles target each row's content, because animated <li>s carry inline opacity. */
+.focus-list > li > * {
+  transition: opacity 250ms ease, filter 250ms ease;
+}
+@media (hover: hover) {
+  .focus-list:hover > li:not(:hover):not(:has(:focus-visible)) > * {
+    opacity: 0.3;
+    filter: blur(1.5px);
+  }
+}
+.focus-list:has(:focus-visible) > li:not(:has(:focus-visible)) > * {
+  opacity: 0.3;
+  filter: blur(1.5px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .focus-list > li > * { transition: none; }
+}
+
+/* Pages with the floating section indicator: leave room below the content so the pill
+   never covers the last line or the article footer link. */
+main:has(> [data-section-indicator]) {
+  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+}
+
+/* Highlighter marks in side quest stories: a soft marker stroke behind key phrases, like a
+   highlighter pen in a book. On browsers with scroll-driven animations it sweeps in as you read. */
+.story-highlight {
+  /* Clear the browser's built-in bright-yellow <mark> background; only the marker stroke shows. */
+  background-color: transparent;
+  color: inherit;
+  padding: 0 0.12em;
+  margin: 0 -0.04em;
+  border-radius: 0.2em;
+  background-image: linear-gradient(104deg, rgba(253, 224, 71, 0) 0.6%, rgba(253, 224, 71, 0.55) 2.4%, rgba(253, 216, 71, 0.4) 96%, rgba(253, 224, 71, 0) 99%);
+  background-repeat: no-repeat;
+  background-size: 100% 62%;
+  background-position: 0 88%;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.dark .story-highlight {
+  color: #fff;
+  background-image: linear-gradient(104deg, rgba(250, 204, 21, 0) 0.6%, rgba(250, 204, 21, 0.28) 2.4%, rgba(250, 204, 21, 0.2) 96%, rgba(250, 204, 21, 0) 99%);
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .story-highlight {
+      animation: story-highlight-sweep linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 35%;
+    }
+  }
+}
+@keyframes story-highlight-sweep {
+  from {
+    background-size: 0% 62%;
+  }
+  to {
+    background-size: 100% 62%;
+  }
+}
+
+/* Spotify "now playing" bars. */
+.spotify-bars > span {
+  width: 3px;
+  border-radius: 1px;
+  background: currentColor;
+  animation: spotify-bounce 0.9s ease-in-out infinite;
+}
+.spotify-bars > span:nth-child(1) { height: 60%; animation-delay: -0.2s; }
+.spotify-bars > span:nth-child(2) { height: 100%; animation-delay: -0.5s; }
+.spotify-bars > span:nth-child(3) { height: 40%; animation-delay: -0.8s; }
+@keyframes spotify-bounce {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+}
+.spotify-bars > span { transform-origin: bottom; }
+@media (prefers-reduced-motion: reduce) {
+  .spotify-bars > span { animation: none; }
 }
