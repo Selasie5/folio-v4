@@ -18,7 +18,10 @@ interface UnlockModalProps {
   slug: string;
   name: string;
   onClose: () => void;
-  onUnlocked: (content: { intro: string[]; sections: SideQuestSection[] }) => void;
+  /** The current page session; changes whenever the page is re-locked. */
+  getSession: () => number;
+  /** Called with the story and the session the code was sent in. */
+  onUnlocked: (content: { intro: string[]; sections: SideQuestSection[] }, sentInSession: number) => void;
 }
 
 function LockIcon({ unlocked, reduceMotion }: { unlocked: boolean; reduceMotion: boolean | null }) {
@@ -47,7 +50,7 @@ function Spinner() {
   );
 }
 
-export default function UnlockModal({ open, slug, name, onClose, onUnlocked }: UnlockModalProps) {
+export default function UnlockModal({ open, slug, name, onClose, getSession, onUnlocked }: UnlockModalProps) {
   const reduceMotion = useReducedMotion();
   const [chars, setChars] = useState<string[]>(EMPTY);
   const [phase, setPhase] = useState<Phase>("entering");
@@ -113,13 +116,18 @@ export default function UnlockModal({ open, slug, name, onClose, onUnlocked }: U
 
   const submit = useCallback(
     async (code: string) => {
+      // Capture the session this code is sent in; a re-lock while it's in flight voids the result.
+      const sentInSession = getSession();
       setPhase("checking");
       setError(null);
       const result = await unlockSideQuest(slug, code).catch(() => ({ ok: false as const, error: "Something went wrong. Try again." }));
+      if (sentInSession !== getSession()) return;
       if (result.ok) {
         setPhase("success");
-        // Let the lock swing open before the modal leaves.
-        setTimeout(() => onUnlocked({ intro: result.intro, sections: result.sections }), reduceMotion ? 150 : 750);
+        // Let the lock swing open before the modal leaves; re-check the session before revealing.
+        setTimeout(() => {
+          if (sentInSession === getSession()) onUnlocked({ intro: result.intro, sections: result.sections }, sentInSession);
+        }, reduceMotion ? 150 : 750);
         return;
       }
       setPhase("entering");
@@ -128,7 +136,7 @@ export default function UnlockModal({ open, slug, name, onClose, onUnlocked }: U
       if (!reduceMotion) void shake.start({ x: [0, -10, 10, -7, 7, -3, 0], transition: { duration: 0.45 } });
       setTimeout(() => focusBox(0), 30);
     },
-    [slug, onUnlocked, reduceMotion, shake],
+    [slug, onUnlocked, getSession, reduceMotion, shake],
   );
 
   const update = (next: string[]) => {

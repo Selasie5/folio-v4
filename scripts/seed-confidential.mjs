@@ -2,7 +2,8 @@
 // into a private "confidential.sideQuest-<slug>" document (hidden from public API reads),
 // generates an access code, and marks the public document confidential with a teaser.
 //
-// Usage: node scripts/seed-confidential.mjs <slug> ["Public teaser text"] [--apply]
+// Usage: node scripts/seed-confidential.mjs <slug> ["Public teaser text"] [--apply] [--site=https://example.com]
+// With --site, the live page is also fetched after the change to confirm the story is gone.
 // Preview by default. Never prints the access code; read it in Studio → Confidential content.
 import assert from "node:assert/strict";
 import { randomBytes } from "node:crypto";
@@ -15,7 +16,8 @@ import nextEnv from "@next/env";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 nextEnv.loadEnvConfig(root);
-const args = process.argv.slice(2).filter((arg) => arg !== "--apply");
+const args = process.argv.slice(2).filter((arg) => !arg.startsWith("--"));
+const site = process.argv.find((arg) => arg.startsWith("--site="))?.slice("--site=".length).replace(/\/$/, "");
 const apply = process.argv.includes("--apply");
 const [slug, teaserArg] = args;
 assert(slug, "Usage: node scripts/seed-confidential.mjs <slug> [\"Public teaser\"] [--apply]");
@@ -100,7 +102,25 @@ async function main() {
   const leaked = await anonymous.fetch(`count(*[$paragraph in intro])`, { paragraph: intro[0] });
   assert.equal(leaked, 0, "Story text is still publicly readable somewhere");
   console.log("Verified in Sanity: story moved to the private document, removed from the public one, and hidden from public reads.");
-  console.log("Note: a deployed site may keep serving its cached copy of the page for up to 60 seconds; check the live page after that.");
+  if (!site) {
+    console.log(
+      "Not yet confirmed on the live site: a deployed site can keep serving its cached page, and Next.js may serve it once more while it regenerates. Re-run with --site=<url> (or check the page yourself) before treating it as private.",
+    );
+    return;
+  }
+  // The first request can still get the cached page while it triggers a rebuild; check a fresh one.
+  const url = `${site}/sidequests/${slug}`;
+  const probe = intro[0].slice(0, 80);
+  for (let attempt = 1; attempt <= 6; attempt += 1) {
+    const html = await (await fetch(url, { headers: { "Cache-Control": "no-cache" } })).text();
+    if (!html.includes(probe)) {
+      console.log(`Confirmed on the live site: ${url} no longer contains the story.`);
+      return;
+    }
+    console.log(`Live page still has the story (attempt ${attempt}); waiting for it to regenerate…`);
+    await new Promise((resolve) => setTimeout(resolve, 15_000));
+  }
+  throw new Error(`${url} still serves the story. Redeploy or revalidate the page, then check again.`);
 }
 
 main().catch((error) => {

@@ -8,7 +8,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createClient } from "@sanity/client";
 import nextEnv from "@next/env";
-import { addGuardedWrites, explainWriteError, fetchTargets } from "./lib/guarded-write.mjs";
+import { addGuardedWrites, assertUniqueSlugs, explainWriteError, fetchTargets } from "./lib/guarded-write.mjs";
 
 const MEDIUM_USERNAME = "selasisepenu5";
 const WORDS_PER_MINUTE = 238;
@@ -114,6 +114,7 @@ async function main() {
     .catch((error) => {
       throw explainWriteError(error);
     });
+  await assertUniqueSlugs(client, documents.map(({ slug }) => slug.current));
 
   const saved = await client.fetch(`*[_id in $ids]{_id, "slug": slug.current, bodyHtml}`, { ids: documents.map(({ _id }) => _id) });
   for (const document of documents) {

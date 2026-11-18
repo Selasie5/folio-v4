@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 import { setTimeout as sleep } from "node:timers/promises";
 import { createClient } from "@sanity/client";
 import nextEnv from "@next/env";
-import { addGuardedWrites, explainWriteError, fetchTargets } from "./lib/guarded-write.mjs";
+import { addGuardedWrites, assertUniqueSlugs, explainWriteError, fetchTargets } from "./lib/guarded-write.mjs";
 
 const DEVTO_USERNAME = "selasie5";
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -94,6 +94,7 @@ async function main() {
     .catch((error) => {
       throw explainWriteError(error);
     });
+  await assertUniqueSlugs(client, documents.map(({ slug }) => slug.current));
 
   const ids = documents.map(({ _id }) => _id);
   const saved = await client.fetch(`*[_id in $ids]{ _id, "slug": slug.current, bodyHtml }`, { ids });

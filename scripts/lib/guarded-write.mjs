@@ -43,3 +43,23 @@ export function explainWriteError(error) {
   }
   return error;
 }
+
+/**
+ * After a sync: make sure no two published posts ended up with the same slug. The pre-write check
+ * can't stop two syncs that run at the same moment (revision guards protect IDs, not slugs), so
+ * this catches that case loudly instead of letting one URL silently shadow another.
+ */
+export async function assertUniqueSlugs(client, slugs) {
+  const rows = await client.fetch(
+    `*[_type == "post" && slug.current in $slugs && !(_id in path("drafts.**")) && !(_id in path("versions.**"))]{ _id, "slug": slug.current }`,
+    { slugs },
+  );
+  const bySlug = new Map();
+  for (const { _id, slug } of rows) bySlug.set(slug, [...(bySlug.get(slug) ?? []), _id]);
+  const duplicates = [...bySlug].filter(([, ids]) => ids.length > 1);
+  if (duplicates.length) {
+    throw new Error(
+      `Duplicate post slugs after the sync (fix in Studio): ${duplicates.map(([slug, ids]) => `${slug} → ${ids.join(", ")}`).join("; ")}`,
+    );
+  }
+}
