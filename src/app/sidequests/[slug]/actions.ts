@@ -10,10 +10,10 @@ export type UnlockResult =
   | { ok: true; intro: string[]; sections: SideQuestSection[] }
   | { ok: false; error: string };
 
-async function visitorKey(slug: string) {
+// One counter per visitor across every side quest, so trying many slugs doesn’t buy extra guesses.
+async function visitorKey() {
   const list = await headers();
-  const ip = list.get("x-forwarded-for")?.split(",")[0]?.trim() || list.get("x-real-ip") || "unknown";
-  return `${ip}:${slug}`;
+  return list.get("x-forwarded-for")?.split(",")[0]?.trim() || list.get("x-real-ip") || "unknown";
 }
 
 /**
@@ -25,7 +25,7 @@ export async function unlockSideQuest(slug: string, code: string): Promise<Unloc
   if (typeof code !== "string" || !code.trim() || code.length > 64) return { ok: false, error: "Enter the access code you were given." };
 
   // Reserve this attempt before the code is checked; refuse once the limit is reached.
-  const key = await visitorKey(slug);
+  const key = await visitorKey();
   const wait = reserveAttempt(key);
   if (wait > 0) {
     return { ok: false, error: `Too many attempts. Try again in ${wait} minute${wait === 1 ? "" : "s"}.` };
