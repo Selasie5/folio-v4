@@ -1,4 +1,7 @@
-import type { PortfolioContent } from "./types";
+import type { ExperienceContent, PortfolioContent } from "./types";
+import experienceUpdates from "./experience-updates.json";
+
+type ExperienceUpdate = Omit<ExperienceContent, "logo"> & { insertAt?: number };
 import { organizationsHeading, organizationsFromExperiences } from "./organizations";
 import { biography, biographyLinks } from "./biography";
 
@@ -189,8 +192,24 @@ const basePortfolioContent: PortfolioContent = {
   ],
 };
 
+// The same updates scripts/update-experience.mjs writes to Sanity, so the fallback stays in step.
+function applyExperienceUpdates(experiences: ExperienceContent[]): ExperienceContent[] {
+  const result = [...experiences];
+  for (const { insertAt, company, role, period, achievements, techStack } of experienceUpdates.experiences as ExperienceUpdate[]) {
+    const index = result.findIndex((entry) => entry.company === company);
+    const fields = { company, role, period, achievements, techStack };
+    if (index >= 0) result[index] = { ...result[index], ...fields };
+    else result.splice(Math.min(insertAt ?? result.length, result.length), 0, { logo: "/assets/project.png", ...fields });
+  }
+  return result;
+}
+
+const experiences = applyExperienceUpdates(basePortfolioContent.experiences);
+
 export const fallbackPortfolioContent: PortfolioContent = {
   ...basePortfolioContent,
+  techStack: experienceUpdates.techStack,
+  experiences,
   organizationsHeading,
-  organizations: organizationsFromExperiences(basePortfolioContent.experiences),
+  organizations: organizationsFromExperiences(experiences),
 };
