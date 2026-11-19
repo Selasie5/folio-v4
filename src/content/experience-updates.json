@@ -1,0 +1,50 @@
+{
+  "source": "LinkedIn export Profile (1).pdf (2026-11-18) and BlackHorse consumer app history",
+  "techStack": [
+    "TypeScript", "JavaScript", "Java", "PHP", "SQL", "Shell",
+    "React", "Next.js", "TanStack Query", "Tailwind CSS", "Framer Motion",
+    "Node.js", "Express", "Laravel", "Spring Boot",
+    "PostgreSQL", "MySQL", "MongoDB", "GraphQL", "Strapi",
+    "Docker", "Nginx", "Linux", "AWS", "GitHub Actions", "GitHub",
+    "Vite", "Vitest", "PostHog", "Figma"
+  ],
+  "experiences": [
+    {
+      "company": "Appsquare Technologies",
+      "role": "Senior Software Engineer",
+      "period": "Jul 2026 – Present",
+      "insertAt": 0,
+      "achievements": [
+        "Removed a single point of failure that could take down the core banking app for any user with an expired session: led a full-codebase audit, fixed session-refresh crash bugs across most of its microservices, and resolved silent data-correctness bugs in live account and guarantor data.",
+        "Designed and validated an S3-style object storage service in Node.js and Express with HMAC-SHA256 pre-signed URLs, email-based IAM and path-traversal protection, backed by a route and security test suite (20/20 passing) covering auth, signed-URL expiry and access control.",
+        "Automated staging releases with a GitHub Actions CI/CD pipeline: SSH/SCP deployment, environment-secret management and a hard typecheck gate, so broken builds never reach staging.",
+        "Directing the migration of the ecosystem’s JavaScript applications to TypeScript and Tailwind CSS, reducing runtime errors and standardizing styling conventions across teams.",
+        "Set technical and UX direction across a multi-app fintech product suite: leading redesign thinking for the core banking application and owning frontend engineering and design for its other core components.",
+        "Own maintenance and new endpoint development on the Node.js backend serving the fintech ecosystem, keeping changes within business rules and integrating correctly with the company’s Java microservices."
+      ],
+      "techStack": [
+        "TypeScript", "JavaScript", "React", "Tailwind CSS", "Node.js", "Express",
+        "Java", "SQL", "GitHub Actions", "Nginx", "Linux", "Shell", "Figma"
+      ]
+    },
+    {
+      "company": "BlackHorse Mobility Limited",
+      "role": "Software Engineer (Frontend)",
+      "period": "Nov 2025 – Present",
+      "achievements": [
+        "Built the consumer app’s core rental journey: vehicle search and detail, Paystack checkout, driver-licence verification gating self-drive bookings, an active-rental view with live countdown, extensions and balance payments, and a delivery-day inspection flow with photo evidence.",
+        "Built influencer and affiliate attribution for the consumer app without backend changes: server-counted short links per platform, a click-to-paid-booking funnel in PostHog by affiliate and platform, and automated weekly partner reports through Google Apps Script and Resend.",
+        "Built operational alerting across the full 31-code ops catalogue: payment, verification, delivery and return failures in the app are raised to PostHog and land in a de-duplicated Google Sheets ops log with sequential IDs, independent of analytics consent.",
+        "Set up consent-first product analytics with PostHog, so nothing optional is captured until a visitor opts in.",
+        "Led frontend engineering for the corporate app and owned UI design for the new marketing website, shaping features from concept through implementation and partnering with marketing on lead generation and accurate analytics tracking.",
+        "Drove major semantic and architectural refactors across core frontend codebases, adding linting and code-quality checks that prevent regressions, and strengthened the team’s testing culture through QA before each release.",
+        "Balanced feature delivery with on-call responsibility for resolving critical production issues in the consumer app.",
+        "Mentored an engineering intern in React fundamentals and performance optimization, building her practical understanding of the framework while ensuring quality delivery."
+      ],
+      "techStack": [
+        "TypeScript", "React", "TanStack Query", "TanStack Start", "Tailwind CSS", "Vite", "Vitest",
+        "PostHog", "Sentry", "Paystack", "Google Apps Script", "Resend", "Biome", "Figma"
+      ]
+    }
+  ]
+}
