@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { DraftRemainder, DraftTag } from "@/components/core/DraftPost";
 import PageTopBar from "@/components/layout/PageTopBar";
 import SectionIndicator from "@/components/layout/SectionIndicator";
 import { formatPostDate } from "@/content/devto";
@@ -17,9 +18,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   if (!post) return { title: "Post not found | Selasie Sepenu" };
 
   return {
-    title: `${post.title} | Selasie Sepenu`,
+    title: `${post.draft ? "Draft: " : ""}${post.title} | Selasie Sepenu`,
     description: post.description,
-    alternates: { canonical: post.url },
+    // A draft has no original URL yet and shouldn't be indexed until it's published.
+    ...(post.draft ? { robots: { index: false, follow: true } } : { alternates: { canonical: post.url } }),
     openGraph: { title: post.title, description: post.description, images: post.coverImage ? [post.coverImage] : [] },
   };
 }
@@ -37,6 +39,7 @@ export default async function PostPage({ params }: { params: Params }) {
         <header>
           <h1 className="text-2xl leading-tight text-black dark:text-neutral-100 mono">{post.title}</h1>
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-gray-500 dark:text-neutral-400">
+            {post.draft && <DraftTag />}
             <time dateTime={post.publishedAt}>{formatPostDate(post.publishedAt)}</time>
             <span aria-hidden>·</span>
             <span>{post.readingTimeMinutes} min read</span>
@@ -53,18 +56,23 @@ export default async function PostPage({ params }: { params: Params }) {
           <img src={post.coverImage} alt="" className="mt-8 w-full rounded-lg border border-gray-100 dark:border-neutral-800" />
         )}
 
+        {/* For a draft, bodyHtml holds only the public opening (see draftPreview). */}
         <div className="article-body mt-8" dangerouslySetInnerHTML={{ __html: post.bodyHtml }} />
 
-        <footer className="mt-12 border-t border-dotted border-gray-300 pt-6 dark:border-neutral-700">
-          <a
-            href={post.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-gray-500 transition-colors hover:text-black dark:text-neutral-400 dark:hover:text-white"
-          >
-            Read and comment on {post.source === "medium" ? "Medium" : "dev.to"} ↗
-          </a>
-        </footer>
+        {post.draft ? (
+          <DraftRemainder />
+        ) : (
+          <footer className="mt-12 border-t border-dotted border-gray-300 pt-6 dark:border-neutral-700">
+            <a
+              href={post.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-gray-500 transition-colors hover:text-black dark:text-neutral-400 dark:hover:text-white"
+            >
+              Read and comment on {post.source === "medium" ? "Medium" : "dev.to"} ↗
+            </a>
+          </footer>
+        )}
       </article>
     </main>
   );

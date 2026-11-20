@@ -13,6 +13,8 @@ export interface Post {
   tags: string[];
   /** Where the article was first published. */
   source?: "devto" | "medium";
+  /** Unpublished: listed with a Draft tag, and only its opening is shown. */
+  draft?: boolean;
 }
 
 export interface PostWithBody extends Post {

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DraftTag } from "@/components/core/DraftPost";
 import MoreLink from "@/components/core/MoreLink";
 import { formatPostDate, type Post } from "@/content/devto";
 
@@ -11,8 +12,9 @@ export function PostList({ posts }: { posts: Post[] }) {
             href={`/writing/${post.slug}`}
             className="grid gap-2 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-6"
           >
-            <h3 className="text-sm leading-5 text-black dark:text-white">
+            <h3 className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm leading-5 text-black dark:text-white">
               {post.title}
+              {post.draft && <DraftTag />}
             </h3>
             <div className="flex items-center text-xs leading-5 text-gray-500 dark:text-neutral-400 sm:justify-end">
               <time dateTime={post.publishedAt} className="whitespace-nowrap">
