@@ -24,13 +24,15 @@ export const portfolioQuery = `*[_type == "portfolio" && _id == "portfolio"][0]{
     category,
     featured
   },
-  "experiences": experiences[]{
-    role,
-    company,
-    "logo": coalesce(logo.asset->url, "/assets/project.png"),
-    period,
-    achievements,
-    techStack
+  // Confidential roles are emptied here, inside Sanity, so their details never reach the site at all.
+  "experiences": experiences[]{..., "hidden": confidential == true || _key in $confidentialExperienceKeys}[]{
+    "confidential": hidden,
+    "role": select(hidden => "", role),
+    "company": select(hidden => "", company),
+    "logo": select(hidden => "", coalesce(logo.asset->url, "/assets/project.png")),
+    "period": select(hidden => "", period),
+    "achievements": select(hidden => [], achievements),
+    "techStack": select(hidden => [], techStack)
   },
   "certifications": certifications[]{
     title,

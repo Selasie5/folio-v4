@@ -9,24 +9,7 @@
     "Vite", "Vitest", "PostHog", "Figma"
   ],
   "experiences": [
-    {
-      "company": "Appsquare Technologies",
-      "role": "Senior Software Engineer",
-      "period": "Jul 2026 – Present",
-      "insertAt": 0,
-      "achievements": [
-        "Removed a single point of failure that could take down the core banking app for any user with an expired session: led a full-codebase audit, fixed session-refresh crash bugs across most of its microservices, and resolved silent data-correctness bugs in live account and guarantor data.",
-        "Designed and validated an S3-style object storage service in Node.js and Express with HMAC-SHA256 pre-signed URLs, email-based IAM and path-traversal protection, backed by a route and security test suite (20/20 passing) covering auth, signed-URL expiry and access control.",
-        "Automated staging releases with a GitHub Actions CI/CD pipeline: SSH/SCP deployment, environment-secret management and a hard typecheck gate, so broken builds never reach staging.",
-        "Directing the migration of the ecosystem’s JavaScript applications to TypeScript and Tailwind CSS, reducing runtime errors and standardizing styling conventions across teams.",
-        "Set technical and UX direction across a multi-app fintech product suite: leading redesign thinking for the core banking application and owning frontend engineering and design for its other core components.",
-        "Own maintenance and new endpoint development on the Node.js backend serving the fintech ecosystem, keeping changes within business rules and integrating correctly with the company’s Java microservices."
-      ],
-      "techStack": [
-        "TypeScript", "JavaScript", "React", "Tailwind CSS", "Node.js", "Express",
-        "Java", "SQL", "GitHub Actions", "Nginx", "Linux", "Shell", "Figma"
-      ]
-    },
+    { "confidential": true, "key": "9a92fdd44823c824", "insertAt": 0 },
     {
       "company": "BlackHorse Mobility Limited",
       "role": "Software Engineer (Frontend)",

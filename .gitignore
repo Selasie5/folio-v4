@@ -44,3 +44,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Real details of confidential roles; keep out of the public repo.
+scripts/data/confidential-experiences.json

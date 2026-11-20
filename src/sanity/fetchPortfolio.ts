@@ -5,6 +5,7 @@ import { organizationsHeading, organizationsFromExperiences, normalizeOrganizati
 import { sanityClient } from "./client";
 import { isSanityConfigured } from "./env";
 import { portfolioQuery } from "./queries";
+import { CONFIDENTIAL_EXPERIENCE_KEYS, redactConfidential } from "@/content/experience";
 
 export async function getPortfolioContent(): Promise<PortfolioContent> {
   if (!isSanityConfigured || !sanityClient) {
@@ -14,7 +15,7 @@ export async function getPortfolioContent(): Promise<PortfolioContent> {
   try {
     const content = await sanityClient.fetch<Partial<PortfolioContent> | null>(
       portfolioQuery,
-      {},
+      { confidentialExperienceKeys: CONFIDENTIAL_EXPERIENCE_KEYS },
       process.env.NODE_ENV === "production" ? { next: { revalidate: 60 } } : { cache: "no-store" },
     );
 
@@ -22,7 +23,8 @@ export async function getPortfolioContent(): Promise<PortfolioContent> {
       return fallbackPortfolioContent;
     }
 
-    const experiences = content.experiences?.length ? content.experiences : fallbackPortfolioContent.experiences;
+    // Redact again here as a second guard in case the query is ever edited.
+    const experiences = redactConfidential(content.experiences?.length ? content.experiences : fallbackPortfolioContent.experiences);
 
     return {
       organizationsHeading: content.organizationsHeading ?? organizationsHeading,
