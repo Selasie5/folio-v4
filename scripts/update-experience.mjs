@@ -1,6 +1,6 @@
 // Applies src/content/experience-updates.json to the portfolio in Sanity: adds or updates the listed
 // roles (role, period, highlights and tech stack are replaced, the logo is kept) and replaces the
-// overall tech stack. Preview by default; pass --apply to write.
+// overall tech stack. Confidential placeholders scrub the matching role. Preview by default; pass --apply to write.
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync, mkdtempSync } from "node:fs";
@@ -13,6 +13,10 @@ import nextEnv from "@next/env";
 const root = fileURLToPath(new URL("../", import.meta.url));
 nextEnv.loadEnvConfig(root);
 const updates = JSON.parse(readFileSync(path.join(root, "src/content/experience-updates.json"), "utf8"));
+// Confidential roles appear in experience-updates.json only as { confidential, key } placeholders. The saved
+// entry with that _key is overwritten with neutral placeholder text and flagged confidential, because the
+// dataset is publicly readable. Their real details are never written to Sanity.
+const SCRUBBED = { confidential: true, company: "Confidential", role: "Confidential role", period: "Confidential", achievements: [], techStack: [] };
 const apply = process.argv.includes("--apply");
 
 function normalizeCompany(company) {
@@ -36,6 +40,14 @@ function plan(document) {
   const entries = [...(document.experiences ?? [])];
   const changes = [];
   for (const update of updates.experiences) {
+    if (update.confidential) {
+      const index = entries.findIndex(({ _key }) => _key === update.key);
+      assert(index >= 0, `No saved role with _key ${update.key} to mark confidential`);
+      const { logo: _logo, ...saved } = entries[index];
+      entries[index] = { ...saved, ...SCRUBBED };
+      changes.push(`scrub  | ${update.key} → confidential placeholder (details and logo removed)`);
+      continue;
+    }
     assert(update.company && update.role && update.period, "Every update needs a company, role and period");
     const fields = { company: update.company, role: update.role, period: update.period, achievements: update.achievements, techStack: update.techStack };
     const saved = findEntry(update, entries);

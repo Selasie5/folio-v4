@@ -34,6 +34,8 @@ export interface ExperienceContent {
   period: string;
   achievements: string[];
   techStack: string[];
+  /** Confidential roles arrive with every other field emptied; only the fact that a role exists is shown. */
+  confidential?: boolean;
 }
 
 export interface CertificationContent {

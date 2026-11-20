@@ -129,6 +129,13 @@ export const portfolio = defineType({
             defineField({ name: "logo", title: "Company logo", type: "image", options: { hotspot: true } }),
             defineField({ name: "achievements", title: "Achievements", type: "array", of: [defineArrayMember({ type: "text", rows: 3 })] }),
             defineField({ name: "techStack", title: "Technology stack", type: "array", of: [defineArrayMember({ type: "string" })] }),
+            defineField({
+              name: "confidential",
+              title: "Confidential",
+              description: "Show this role on the site only as a blurred placeholder. Its details are never sent to the site. Note: this dataset is publicly readable, so the text saved here is still visible through Sanity's API.",
+              type: "boolean",
+              initialValue: false,
+            }),
           ],
           preview: { select: { title: "role", subtitle: "company", media: "logo" } },
         }),

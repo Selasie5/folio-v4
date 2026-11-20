@@ -1,9 +1,12 @@
 import type { ExperienceContent, PortfolioContent } from "./types";
 import experienceUpdates from "./experience-updates.json";
 
-type ExperienceUpdate = Omit<ExperienceContent, "logo"> & { insertAt?: number };
+// A confidential update is only a placeholder: { "confidential": true, "insertAt": n }. Its details
+// live in scripts/data/confidential-experiences.json, which the site never imports.
+type ExperienceUpdate = (Omit<ExperienceContent, "logo"> & { insertAt?: number }) | { confidential: true; insertAt?: number };
 import { organizationsHeading, organizationsFromExperiences } from "./organizations";
 import { biography, biographyLinks } from "./biography";
+import { redactedExperience } from "./experience";
 
 const basePortfolioContent: PortfolioContent = {
   profile: {
@@ -195,7 +198,12 @@ const basePortfolioContent: PortfolioContent = {
 // The same updates scripts/update-experience.mjs writes to Sanity, so the fallback stays in step.
 function applyExperienceUpdates(experiences: ExperienceContent[]): ExperienceContent[] {
   const result = [...experiences];
-  for (const { insertAt, company, role, period, achievements, techStack } of experienceUpdates.experiences as ExperienceUpdate[]) {
+  for (const update of experienceUpdates.experiences as ExperienceUpdate[]) {
+    if ("confidential" in update && update.confidential) {
+      result.splice(Math.min(update.insertAt ?? result.length, result.length), 0, redactedExperience());
+      continue;
+    }
+    const { insertAt, company, role, period, achievements, techStack } = update as Exclude<ExperienceUpdate, { confidential: true }>;
     const index = result.findIndex((entry) => entry.company === company);
     const fields = { company, role, period, achievements, techStack };
     if (index >= 0) result[index] = { ...result[index], ...fields };
