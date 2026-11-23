@@ -303,7 +303,7 @@ main:has(> [data-section-indicator]) {
 
 /* Inspect mode: outline every annotated element while it is on (see components/inspect). */
 html[data-inspecting] [data-inspect] {
-  outline: 1px dashed rgba(59, 130, 246, 0.55);
+  outline: 1px dashed rgba(115, 115, 115, 0.6);
   outline-offset: 3px;
   cursor: help;
 }

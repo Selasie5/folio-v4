@@ -230,17 +230,17 @@ export default function InspectMode() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={fade}
-            className="pointer-events-auto flex items-center gap-3 rounded-full border border-blue-500/30 bg-white/90 py-1.5 pl-3 pr-1.5 text-xs text-gray-700 shadow-sm backdrop-blur dark:bg-neutral-900/90 dark:text-neutral-300"
+            className="pointer-events-auto flex items-center gap-3 rounded-full border border-gray-300 bg-white/90 py-1.5 pl-3 pr-1.5 text-xs text-gray-700 shadow-sm backdrop-blur dark:border-neutral-700 dark:bg-neutral-900/90 dark:text-neutral-300"
           >
             <span className="flex items-center gap-2">
-              <span aria-hidden className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500 motion-reduce:animate-none" />
+              <span aria-hidden className="h-1.5 w-1.5 animate-pulse rounded-full bg-black motion-reduce:animate-none dark:bg-white" />
               Inspect mode
               <span className="hidden text-gray-400 dark:text-neutral-500 sm:inline">· hover, tab or click a highlight</span>
             </span>
             <button
               type="button"
               onClick={exit}
-              className="rounded-full px-2 py-0.5 text-gray-500 hover:bg-gray-100 hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white"
+              className="rounded-full px-2 py-0.5 text-gray-500 hover:bg-gray-100 hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 dark:focus-visible:ring-neutral-500 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white"
             >
               Esc
             </button>
@@ -251,9 +251,9 @@ export default function InspectMode() {
 
       {active && measured && (
         <div aria-hidden className="pointer-events-none fixed inset-0 z-[55]">
-          <div className="absolute bg-orange-400/15" style={measured.margin} />
-          <div className="absolute bg-emerald-400/15 ring-1 ring-blue-500" style={measured.border} />
-          <div className="absolute bg-sky-400/20" style={measured.content} />
+          <div className="absolute bg-neutral-500/10" style={measured.margin} />
+          <div className="absolute bg-neutral-500/10 ring-1 ring-black dark:ring-white" style={measured.border} />
+          <div className="absolute bg-neutral-500/15" style={measured.content} />
         </div>
       )}
 
@@ -277,7 +277,7 @@ export default function InspectMode() {
                 {note.name}
                 <span className="text-gray-400 dark:text-neutral-500"> /&gt;</span>
               </p>
-              {pinned && <span className="text-[10px] uppercase tracking-wide text-blue-500">Pinned</span>}
+              {pinned && <span className="text-[10px] uppercase tracking-wide text-black dark:text-white">Pinned</span>}
             </div>
             <p className="mt-2 text-xs leading-5 text-gray-600 dark:text-neutral-300">{note.note}</p>
             <dl className="mt-3 grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 border-t border-dotted border-gray-300 pt-3 text-[11px] leading-4 dark:border-neutral-700">
