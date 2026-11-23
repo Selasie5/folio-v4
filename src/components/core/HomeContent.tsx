@@ -10,6 +10,8 @@ import Experience from "@/components/core/Experience";
 import ThemeToggle from "@/components/core/ThemeToggle";
 import Biography from "@/components/core/Biography";
 import Writing from "@/components/core/Writing";
+import IncidentNotes from "@/components/incidents/IncidentList";
+import { incidents } from "@/content/incidents";
 import MoreLink from "@/components/core/MoreLink";
 import VideoLibrary from "@/components/core/VideoLibrary";
 import Bookshelf from "@/components/core/Bookshelf";
@@ -102,6 +104,8 @@ export default function HomeContent({ content, posts = [], sideQuests = [], vide
       )}
 
       <Writing posts={posts} />
+
+      <IncidentNotes incidents={incidents} />
 
       <SideQuests quests={sideQuests} />
 
