@@ -51,7 +51,7 @@ function Highlighted({ text, indices }: { text: string; indices: number[] }) {
     <>
       {[...text].map((char, index) =>
         marked.has(index) ? (
-          <span key={index} className="text-black underline decoration-blue-500/70 decoration-2 underline-offset-[3px] dark:text-white">
+          <span key={index} className="text-black underline decoration-current decoration-1 underline-offset-[3px] dark:text-white">
             {char}
           </span>
         ) : (
