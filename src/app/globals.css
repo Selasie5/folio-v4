@@ -329,3 +329,112 @@ html[data-inspecting] [data-inspect]:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .spotify-bars > span { animation: none; }
 }
+
+/* ------------------------------------------------------------------------------------------------
+   Wireframe mode (hidden; see components/wireframe). One layer, keyed on html[data-wireframe],
+   restyles the same markup as a greyscale wireframe on grid paper: no fills, no radii, no shadows,
+   dashed boxes around the structure, images as crossed placeholders. Scoped to the page's own
+   <main> and <footer>, so overlays like the command palette keep their normal look.
+   ------------------------------------------------------------------------------------------------ */
+html[data-wireframe] {
+  --wf-ink: #404040;
+  --wf-line: rgba(115, 115, 115, 0.55);
+  --wf-grid: rgba(115, 115, 115, 0.12);
+  --wf-cross: linear-gradient(to top right, transparent calc(50% - 0.5px), var(--wf-line) 50%, transparent calc(50% + 0.5px)),
+    linear-gradient(to top left, transparent calc(50% - 0.5px), var(--wf-line) 50%, transparent calc(50% + 0.5px));
+}
+html.dark[data-wireframe] {
+  --wf-ink: #d4d4d4;
+  --wf-line: rgba(163, 163, 163, 0.5);
+  --wf-grid: rgba(163, 163, 163, 0.1);
+}
+html[data-wireframe] body {
+  background-image: linear-gradient(var(--wf-grid) 1px, transparent 1px), linear-gradient(90deg, var(--wf-grid) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+html[data-wireframe] :is(body > main, body > footer),
+html[data-wireframe] :is(body > main, body > footer) :is(*, *::before, *::after) {
+  color: var(--wf-ink) !important;
+  background-color: transparent !important;
+  border-color: var(--wf-line) !important;
+  text-decoration-color: var(--wf-line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important;
+  font-style: normal !important;
+  letter-spacing: 0 !important;
+}
+/* Dashed boxes around the structural pieces. */
+html[data-wireframe] :is(body > main, body > footer) :is(section, header, article, ul, ol, li, dl, a, button, h1, h2, h3, img, [style*="background-image"]) {
+  outline: 1px dashed var(--wf-line);
+  outline-offset: -1px;
+}
+/* Images become the classic crossed placeholder; the box keeps its size. */
+html[data-wireframe] :is(body > main, body > footer) img {
+  object-position: -99999px 0;
+  background-image: var(--wf-cross) !important;
+}
+html[data-wireframe] :is(body > main, body > footer) [style*="background-image"] {
+  background-image: var(--wf-cross) !important;
+}
+/* Annotate the markup: each section names itself, headings show their level. */
+html[data-wireframe] body > main section {
+  position: relative;
+}
+html[data-wireframe] body > main section::before {
+  content: "<section>";
+  position: absolute;
+  top: -1.1rem;
+  left: 0;
+  font-size: 10px;
+  line-height: 1;
+  color: var(--wf-line) !important;
+  pointer-events: none;
+}
+html[data-wireframe] body > main section[aria-labelledby]::before {
+  content: "<section#" attr(aria-labelledby) ">";
+}
+html[data-wireframe] body > main :is(h1, h2, h3)::after {
+  font-size: 10px;
+  color: var(--wf-line) !important;
+  margin-left: 0.6em;
+  vertical-align: middle;
+}
+html[data-wireframe] body > main h1::after { content: "h1"; }
+html[data-wireframe] body > main h2::after { content: "h2"; }
+html[data-wireframe] body > main h3::after { content: "h3"; }
+
+/* The avatar trigger: holding the pointer on it fills a ring over three seconds. */
+@property --wf-charge {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+[data-wireframe-trigger] {
+  position: relative;
+}
+[data-wireframe-trigger]::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  padding: 1.5px;
+  border-radius: 12px;
+  color: #737373;
+  background: conic-gradient(currentColor var(--wf-charge), transparent 0);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease-out;
+}
+[data-wireframe-trigger][data-wireframe-charging]::after {
+  opacity: 1;
+  animation: wf-charge 3s linear forwards;
+}
+@keyframes wf-charge {
+  to { --wf-charge: 360deg; }
+}

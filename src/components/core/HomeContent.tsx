@@ -56,6 +56,7 @@ export default function HomeContent({ content, posts = [], sideQuests = [], vide
             whileInView="visible"
             custom={0}
             viewport={{ once: true }}
+            data-wireframe-trigger
             className="h-16 w-16 shrink-0 rounded-lg bg-gray-300 dark:bg-neutral-800 bg-cover bg-top"
             style={{ backgroundImage: `url(${profile?.image || "/seps-anime.png"})` }}
           />
