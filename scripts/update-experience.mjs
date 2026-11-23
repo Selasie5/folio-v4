@@ -26,8 +26,13 @@ function normalizeCompany(company) {
 const keyFor = ({ company, role, period }) =>
   createHash("sha256").update(`${company}|${role}|${period.split(" – ")[0]}`).digest("hex").slice(0, 16);
 
-/** The saved entry an update is for: same company and role, else the only entry for that company. */
+/** The saved entry an update is for: the given _key, else same company and role, else the only entry for that company. */
 function findEntry(update, entries) {
+  // A key also finds a role whose details were scrubbed while it was confidential.
+  if (update.key) {
+    const byKey = entries.find(({ _key }) => _key === update.key);
+    if (byKey) return byKey;
+  }
   const sameCompany = entries.filter((entry) => normalizeCompany(entry.company) === normalizeCompany(update.company));
   const sameRole = sameCompany.filter((entry) => entry.role?.trim().toLowerCase() === update.role.trim().toLowerCase());
   if (sameRole.length > 1) throw new Error(`More than one saved "${update.company} | ${update.role}"; fix it in Studio first.`);
@@ -52,8 +57,9 @@ function plan(document) {
     const fields = { company: update.company, role: update.role, period: update.period, achievements: update.achievements, techStack: update.techStack };
     const saved = findEntry(update, entries);
     if (saved) {
-      entries[entries.indexOf(saved)] = { ...saved, ...fields };
-      changes.push(`update | ${update.company} | ${saved.role} → ${update.role} | ${update.achievements.length} highlights, ${update.techStack.length} tech`);
+      // Writing real details makes the role public again, so clear any confidential flag.
+      entries[entries.indexOf(saved)] = { ...saved, ...fields, confidential: false };
+      changes.push(`update | ${update.company} | ${saved.role} → ${update.role} | ${update.achievements.length} highlights, ${update.techStack.length} tech${saved.confidential ? " | no longer confidential" : ""}`);
     } else {
       const entry = { _type: "experience", _key: keyFor(update), ...fields };
       entries.splice(Math.min(update.insertAt ?? entries.length, entries.length), 0, entry);

@@ -9,7 +9,26 @@
     "Vite", "Vitest", "PostHog", "Figma"
   ],
   "experiences": [
-    { "confidential": true, "key": "9a92fdd44823c824", "insertAt": 0 },
+    {
+      "key": "9a92fdd44823c824",
+      "company": "Appsquare Technologies",
+      "role": "Senior Software Engineer",
+      "period": "Jul 2026 – Present",
+      "insertAt": 0,
+      "achievements": [
+        "Restored a down client-portal backend during a production-critical outage: traced browser “CORS errors” to a crashed Node.js service behind Nginx and a database host that had gone offline, rebuilt its MySQL database on the application server, brought the service back under PM2 and verified cross-origin access end to end.",
+        "Found and fixed a latent schema bug while restoring tenant data: phone columns too narrow for international numbers were silently blocking a tenant from syncing because the resolver swallowed the database error.",
+        "Removed a single point of failure that could take down the core banking app for any user with an expired session: led a full-codebase audit, fixed session-refresh crash bugs across most of its microservices, and resolved silent data-correctness bugs in live account and guarantor data.",
+        "Build and maintain APIs across a Java/Spring Boot microservice platform and its Node.js services, and resolve integration issues between them: traced staging 404s to API-gateway routing and realigned service routes, and wired payroll screens to the live cashier API in place of a never-built service.",
+        "Designed and validated an S3-style object storage service in Node.js and Express with HMAC-SHA256 pre-signed URLs, email-based IAM and path-traversal protection, backed by a route and security test suite (20/20 passing) covering auth, signed-URL expiry and access control.",
+        "Automated staging releases with a GitHub Actions CI/CD pipeline: SSH/SCP deployment, environment-secret management and a hard typecheck gate, so broken builds never reach staging.",
+        "Directing the migration of the ecosystem’s JavaScript applications to TypeScript and Tailwind CSS, and setting technical and UX direction across a multi-app fintech product suite."
+      ],
+      "techStack": [
+        "TypeScript", "JavaScript", "React", "Tailwind CSS", "Node.js", "Express",
+        "Java", "Spring Boot", "MySQL", "SQL", "PM2", "GitHub Actions", "Nginx", "Linux", "Shell", "Figma"
+      ]
+    },
     {
       "company": "BlackHorse Mobility Limited",
       "role": "Software Engineer (Frontend)",
