@@ -8,6 +8,7 @@ import SideQuests from "@/components/core/SideQuests";
 import type { SideQuest } from "@/content/sidequests";
 import Experience from "@/components/core/Experience";
 import ThemeToggle from "@/components/core/ThemeToggle";
+import CommandPaletteTrigger from "@/components/palette/CommandPaletteTrigger";
 import Biography from "@/components/core/Biography";
 import Writing from "@/components/core/Writing";
 import MoreLink from "@/components/core/MoreLink";
@@ -66,7 +67,10 @@ export default function HomeContent({ content, posts = [], sideQuests = [], vide
             </motion.p>
           </div>
         </div>
-        <ThemeToggle />
+        <div className="flex shrink-0 items-center">
+          <CommandPaletteTrigger />
+          <ThemeToggle />
+        </div>
       </section>
 
       <section className="mt-12 flex w-full flex-col items-start sm:mt-16">
