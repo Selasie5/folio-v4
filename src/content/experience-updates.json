@@ -16,13 +16,12 @@
       "period": "Jul 2026 – Present",
       "insertAt": 0,
       "achievements": [
-        "Restored a down client-portal backend during a production-critical outage: traced browser “CORS errors” to a crashed Node.js service behind Nginx and a database host that had gone offline, rebuilt its MySQL database on the application server, brought the service back under PM2 and verified cross-origin access end to end.",
-        "Found and fixed a latent schema bug while restoring tenant data: phone columns too narrow for international numbers were silently blocking a tenant from syncing because the resolver swallowed the database error.",
-        "Removed a single point of failure that could take down the core banking app for any user with an expired session: led a full-codebase audit, fixed session-refresh crash bugs across most of its microservices, and resolved silent data-correctness bugs in live account and guarantor data.",
-        "Build and maintain APIs across a Java/Spring Boot microservice platform and its Node.js services, and resolve integration issues between them: traced staging 404s to API-gateway routing and realigned service routes, and wired payroll screens to the live cashier API in place of a never-built service.",
-        "Designed and validated an S3-style object storage service in Node.js and Express with HMAC-SHA256 pre-signed URLs, email-based IAM and path-traversal protection, backed by a route and security test suite (20/20 passing) covering auth, signed-URL expiry and access control.",
-        "Automated staging releases with a GitHub Actions CI/CD pipeline: SSH/SCP deployment, environment-secret management and a hard typecheck gate, so broken builds never reach staging.",
-        "Directing the migration of the ecosystem’s JavaScript applications to TypeScript and Tailwind CSS, and setting technical and UX direction across a multi-app fintech product suite."
+        "Led incident response for a critical outage of the client portal: traced misleading browser errors to a failed backend service and an unavailable database, restored service on new infrastructure, and fixed the data-model defects that surfaced during recovery.",
+        "Led a reliability audit of the core banking platform, eliminating a class of session-handling failures across its microservices and correcting data-integrity issues in live customer records.",
+        "Design and build APIs across a Java/Spring Boot microservice architecture and its Node.js services, and own the integration between them, from API-gateway routing to the contracts the frontend applications depend on.",
+        "Designed and shipped a secure, S3-compatible object storage service with signed-URL access, identity-based permissions and automated security testing.",
+        "Built the CI/CD pipeline for staging releases with GitHub Actions, with managed secrets and type-safety gates so broken builds never ship.",
+        "Drive frontend platform direction across a multi-app fintech suite: leading the migration to TypeScript and Tailwind CSS and setting technical and UX direction for the core banking product."
       ],
       "techStack": [
         "TypeScript", "JavaScript", "React", "Tailwind CSS", "Node.js", "Express",
