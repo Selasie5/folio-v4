@@ -45,7 +45,7 @@ export default function HomeContent({ content, posts = [], sideQuests = [], vide
 
   return (
     <main className="flex w-full flex-col items-start">
-      <section className="flex w-full items-center justify-between gap-4">
+      <section data-inspect="profile-header" className="flex w-full items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3 sm:gap-5">
           <motion.div
             initial="hidden"
@@ -70,7 +70,7 @@ export default function HomeContent({ content, posts = [], sideQuests = [], vide
       </section>
 
       <section className="mt-12 flex w-full flex-col items-start sm:mt-16">
-        <motion.div initial="hidden" variants={listVariants} whileInView="visible" custom={3} viewport={{ once: true }} className="space-y-4 text-sm leading-6 text-gray-500 dark:text-white">
+        <motion.div initial="hidden" variants={listVariants} whileInView="visible" custom={3} viewport={{ once: true }} data-inspect="biography" className="space-y-4 text-sm leading-6 text-gray-500 dark:text-white">
           <Biography paragraphs={safeBio} links={profile?.bioLinks} />
         </motion.div>
         {profile?.quote && (
@@ -85,7 +85,7 @@ export default function HomeContent({ content, posts = [], sideQuests = [], vide
           </motion.p>
         )}
         {listening?.nowPlaying && (
-          <motion.div initial="hidden" variants={listVariants} whileInView="visible" custom={4} viewport={{ once: true }} className="mt-6 w-full min-w-0">
+          <motion.div initial="hidden" variants={listVariants} whileInView="visible" custom={4} viewport={{ once: true }} data-inspect="now-playing" className="mt-6 w-full min-w-0">
             <NowPlayingLine nowPlaying={listening.nowPlaying} playedLabel={listening.playedLabel} />
           </motion.div>
         )}

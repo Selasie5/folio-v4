@@ -5,7 +5,7 @@ import { formatPostDate, type Post } from "@/content/devto";
 
 export function PostList({ posts }: { posts: Post[] }) {
   return (
-    <ul className="focus-list w-full divide-y divide-dotted divide-gray-300 border-y border-dotted border-gray-300 dark:divide-neutral-700 dark:border-neutral-700">
+    <ul data-inspect="writing-list" className="focus-list w-full divide-y divide-dotted divide-gray-300 border-y border-dotted border-gray-300 dark:divide-neutral-700 dark:border-neutral-700">
       {posts.map((post) => (
         <li key={post.id}>
           <Link

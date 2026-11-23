@@ -301,6 +301,16 @@ main:has(> [data-section-indicator]) {
   }
 }
 
+/* Inspect mode: outline every annotated element while it is on (see components/inspect). */
+html[data-inspecting] [data-inspect] {
+  outline: 1px dashed rgba(59, 130, 246, 0.55);
+  outline-offset: 3px;
+  cursor: help;
+}
+html[data-inspecting] [data-inspect]:focus-visible {
+  outline-style: solid;
+}
+
 /* Spotify "now playing" bars. */
 .spotify-bars > span {
   width: 3px;

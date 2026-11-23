@@ -9,7 +9,7 @@ export const SIDE_QUEST_PREVIEW_COUNT = 3;
 
 export function SideQuestList({ quests }: { quests: SideQuest[] }) {
   return (
-    <ul className="focus-list w-full divide-y divide-dotted divide-gray-300 border-y border-dotted border-gray-300 dark:divide-neutral-700 dark:border-neutral-700">
+    <ul data-inspect="side-quests" className="focus-list w-full divide-y divide-dotted divide-gray-300 border-y border-dotted border-gray-300 dark:divide-neutral-700 dark:border-neutral-700">
       {quests.map((quest) => (
         <li key={quest.slug}>
           <Link href={`/sidequests/${quest.slug}`} className="grid gap-2 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start sm:gap-6">
