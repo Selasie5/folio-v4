@@ -11,7 +11,7 @@ const slugify = (value: string) =>
  * Sanity `_key`s of roles to show as confidential, so they stay hidden even before the
  * "Confidential" box is ticked in Studio. Keys are opaque, so this file names no company.
  */
-export const CONFIDENTIAL_EXPERIENCE_KEYS = ["9a92fdd44823c824"];
+export const CONFIDENTIAL_EXPERIENCE_KEYS: string[] = [];
 
 /** The only shape a confidential role ever has outside Sanity: every detail emptied. */
 export const redactedExperience = (): ExperienceContent => ({
