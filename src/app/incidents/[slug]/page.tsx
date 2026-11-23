@@ -49,11 +49,12 @@ export default async function IncidentPage({ params }: { params: Params }) {
         </header>
 
         {/* The postmortem at a glance, before the story. */}
-        <dl className="mt-8 grid gap-x-6 gap-y-4 rounded-xl border border-dotted border-gray-300 p-4 sm:grid-cols-2 dark:border-neutral-700">
+        {/* Set out as lines, in the same dotted rows as the site's lists. */}
+        <dl className="mt-8 w-full divide-y divide-dotted divide-gray-300 border-y border-dotted border-gray-300 dark:divide-neutral-700 dark:border-neutral-700">
           {facts.map(({ label, value }) => (
-            <div key={label}>
-              <dt className="text-[11px] uppercase leading-5 tracking-wide text-gray-400 dark:text-neutral-500">{label}</dt>
-              <dd className="mt-1 text-[13px] leading-[22px] text-gray-700 dark:text-neutral-200">{value}</dd>
+            <div key={label} className="grid gap-1 py-4 sm:grid-cols-[120px_minmax(0,1fr)] sm:gap-6">
+              <dt className="text-xs leading-[22px] text-gray-500 dark:text-neutral-400">{label}</dt>
+              <dd className="text-sm leading-[22px] text-gray-700 dark:text-neutral-200">{value}</dd>
             </div>
           ))}
         </dl>
