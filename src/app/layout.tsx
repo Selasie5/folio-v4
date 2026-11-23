@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import "./globals.css";
 import Footer from "@/components/layout/Footer";
+import CommandPaletteData from "@/components/palette/CommandPaletteData";
 
 
 
@@ -27,6 +28,7 @@ export default function RootLayout({
         {/* <BackgroundSoundController/> */}
         {children}
         <Footer/>
+        <CommandPaletteData />
       </body>
     </html>
   );
