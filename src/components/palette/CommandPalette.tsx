@@ -253,7 +253,7 @@ export default function CommandPalette({ entries, email, github }: { entries: Pa
                 placeholder="Search or run a command…"
                 spellCheck={false}
                 autoComplete="off"
-                className="h-14 w-full bg-transparent text-[15px] text-black outline-none placeholder:text-gray-400 dark:text-white dark:placeholder:text-neutral-500"
+                className="h-12 w-full bg-transparent text-sm text-black outline-none placeholder:text-gray-400 dark:text-white dark:placeholder:text-neutral-500"
               />
               <kbd className="shrink-0 rounded border border-gray-200 px-1.5 font-sans text-[10px] leading-5 text-gray-400 dark:border-neutral-700 dark:text-neutral-500">esc</kbd>
             </div>
@@ -261,7 +261,7 @@ export default function CommandPalette({ entries, email, github }: { entries: Pa
             <ul ref={listRef} id="palette-listbox" role="listbox" aria-label="Results" className="max-h-[min(60vh,420px)] overflow-y-auto overscroll-contain p-2">
               {results.groups.map((group) => (
                 <li key={group.name} role="presentation" className="pb-1">
-                  <p role="presentation" className="px-3 pb-1 pt-2 text-[11px] uppercase tracking-wide text-gray-400 dark:text-neutral-500">
+                  <p role="presentation" className="px-3 pb-1 pt-2 text-[10px] uppercase tracking-wide text-gray-400 dark:text-neutral-500">
                     {group.name}
                   </p>
                   <ul role="presentation">
@@ -279,7 +279,7 @@ export default function CommandPalette({ entries, email, github }: { entries: Pa
                           aria-selected={selected}
                           onMouseMove={() => !selected && setActive(index)}
                           onClick={() => runCommand(command)}
-                          className={`relative flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-2.5 text-sm ${
+                          className={`relative flex cursor-pointer items-center justify-between gap-4 rounded-lg px-3 py-2 text-[13px] ${
                             selected ? "text-black dark:text-white" : "text-gray-600 dark:text-neutral-300"
                           }`}
                         >
@@ -295,7 +295,7 @@ export default function CommandPalette({ entries, email, github }: { entries: Pa
                           <span className="relative min-w-0 truncate">
                             {label === command.label ? <Highlighted text={label} indices={labelIndices} /> : label}
                           </span>
-                          <span className="relative flex shrink-0 items-center gap-1.5 text-xs text-gray-400 dark:text-neutral-500">
+                          <span className="relative flex shrink-0 items-center gap-1.5 text-[11px] text-gray-400 dark:text-neutral-500">
                             {command.hint && <span className="hidden max-w-[180px] truncate sm:inline">{command.hint}</span>}
                             {command.external && <ArrowTopRightOnSquareIcon aria-hidden className="h-3.5 w-3.5" />}
                           </span>
@@ -306,13 +306,13 @@ export default function CommandPalette({ entries, email, github }: { entries: Pa
                 </li>
               ))}
               {results.flat.length === 0 && (
-                <li role="presentation" className="px-3 py-10 text-center text-sm text-gray-500 dark:text-neutral-400">
+                <li role="presentation" className="px-3 py-10 text-center text-[13px] text-gray-500 dark:text-neutral-400">
                   Nothing matches “{query}”.
                 </li>
               )}
             </ul>
 
-            <div aria-hidden className="flex items-center gap-4 border-t border-gray-100 px-4 py-2.5 text-[11px] text-gray-400 dark:border-neutral-800 dark:text-neutral-500">
+            <div aria-hidden className="flex items-center gap-4 border-t border-gray-100 px-4 py-2 text-[10px] text-gray-400 dark:border-neutral-800 dark:text-neutral-500">
               <span><kbd className="font-sans">↑↓</kbd> move</span>
               <span><kbd className="font-sans">↵</kbd> open</span>
               <span><kbd className="font-sans">esc</kbd> close</span>
