@@ -5,16 +5,6 @@ import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { useId, useRef, useState } from "react";
 import { PHASES, formatOffset, type EvidenceLine, type IncidentPhase, type IncidentStep } from "@/content/incidents";
 
-// One hue per phase, so the rail reads as a story at a glance: red → amber → violet → green → blue.
-const PHASE_STYLE: Record<IncidentPhase, { dot: string; text: string; ring: string; bar: string }> = {
-  symptom: { dot: "bg-rose-500", text: "text-rose-600 dark:text-rose-400", ring: "ring-rose-500/25", bar: "border-rose-400/70" },
-  investigate: { dot: "bg-amber-500", text: "text-amber-600 dark:text-amber-400", ring: "ring-amber-500/25", bar: "border-amber-400/70" },
-  cause: { dot: "bg-violet-500", text: "text-violet-600 dark:text-violet-400", ring: "ring-violet-500/25", bar: "border-violet-400/70" },
-  fix: { dot: "bg-emerald-500", text: "text-emerald-600 dark:text-emerald-400", ring: "ring-emerald-500/25", bar: "border-emerald-400/70" },
-  verify: { dot: "bg-sky-500", text: "text-sky-600 dark:text-sky-400", ring: "ring-sky-500/25", bar: "border-sky-400/70" },
-  followup: { dot: "bg-gray-400 dark:bg-neutral-500", text: "text-gray-500 dark:text-neutral-400", ring: "ring-gray-400/25", bar: "border-gray-400/70" },
-};
-
 const EASE = [0.2, 0, 0, 1] as const;
 
 function Terminal({ lines }: { lines: EvidenceLine[] }) {
@@ -27,8 +17,8 @@ function Terminal({ lines }: { lines: EvidenceLine[] }) {
       </div>
       <pre className="overflow-x-auto px-3 py-2.5 font-mono">
         {lines.map((line, index) => (
-          <div key={index} className={line.kind === "hl" ? "text-amber-300" : line.kind === "cmd" ? "text-neutral-100" : "text-neutral-400"}>
-            {line.kind === "cmd" && <span aria-hidden className="select-none text-emerald-400">$ </span>}
+          <div key={index} className={line.kind === "hl" ? "text-white" : line.kind === "cmd" ? "text-neutral-300" : "text-neutral-500"}>
+            {line.kind === "cmd" && <span aria-hidden className="select-none text-neutral-600">$ </span>}
             {line.text}
           </div>
         ))}
@@ -39,7 +29,6 @@ function Terminal({ lines }: { lines: EvidenceLine[] }) {
 
 function Step({ step, open, onToggle, dimmed }: { step: IncidentStep; open: boolean; onToggle: () => void; dimmed: boolean }) {
   const reduceMotion = useReducedMotion();
-  const style = PHASE_STYLE[step.phase];
   const evidenceId = useId();
 
   return (
@@ -47,7 +36,7 @@ function Step({ step, open, onToggle, dimmed }: { step: IncidentStep; open: bool
       {/* The dot lights up as the reader reaches it. */}
       <motion.span
         aria-hidden
-        className={`absolute left-[3px] top-[5px] h-[11px] w-[11px] rounded-full ring-4 ${style.ring} ${style.dot}`}
+        className="absolute left-[3.5px] top-[6px] h-[9px] w-[9px] rounded-full bg-black ring-4 ring-white dark:bg-white dark:ring-[#111111]"
         initial={reduceMotion ? false : { scale: 0.4, opacity: 0.3 }}
         whileInView={{ scale: 1, opacity: 1 }}
         viewport={{ once: true, margin: "0px 0px -40% 0px" }}
@@ -56,13 +45,13 @@ function Step({ step, open, onToggle, dimmed }: { step: IncidentStep; open: bool
 
       <div className="flex flex-wrap items-baseline gap-x-2 text-[11px] uppercase leading-5 tracking-wide">
         <span className="font-mono normal-case text-gray-400 dark:text-neutral-500">{formatOffset(step.at)}</span>
-        <span className={style.text}>{PHASES[step.phase].label}</span>
+        <span className="text-gray-500 dark:text-neutral-400">{PHASES[step.phase].label}</span>
       </div>
       <h3 className="mt-1 text-base leading-6 text-black dark:text-neutral-100 mono">{step.title}</h3>
       <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-neutral-300">{step.body}</p>
 
       {step.insight && (
-        <p className={`mt-3 border-l-2 ${style.bar} pl-3 text-[13px] leading-[22px] text-gray-700 dark:text-neutral-200`}>
+        <p className="mt-3 border-l-2 border-gray-300 pl-3 text-[13px] leading-[22px] text-gray-700 dark:border-neutral-600 dark:text-neutral-200">
           <span className="mr-1.5 text-[10px] uppercase tracking-wide text-gray-400 dark:text-neutral-500">Lesson</span>
           {step.insight}
         </p>
@@ -75,7 +64,7 @@ function Step({ step, open, onToggle, dimmed }: { step: IncidentStep; open: bool
             onClick={onToggle}
             aria-expanded={open}
             aria-controls={evidenceId}
-            className="group inline-flex items-center gap-0.5 rounded text-xs text-gray-500 transition-colors hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-neutral-400 dark:hover:text-white"
+            className="group inline-flex items-center gap-0.5 rounded text-xs text-gray-500 transition-colors hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 dark:focus-visible:ring-neutral-500 dark:text-neutral-400 dark:hover:text-white"
           >
             <ChevronRightIcon aria-hidden className={`h-4 w-4 transition-transform duration-200 motion-reduce:transition-none ${open ? "rotate-90" : ""}`} />
             {open ? "Hide evidence" : "Show evidence"}
@@ -104,8 +93,8 @@ function Step({ step, open, onToggle, dimmed }: { step: IncidentStep; open: bool
 }
 
 /**
- * The incident as a vertical timeline. The rail fills as you scroll, each phase has its own colour,
- * the legend can spotlight one phase, and every step's evidence (terminal output) folds open.
+ * The incident as a vertical timeline. The rail fills in as you scroll, the legend can
+ * spotlight one phase, and every step's evidence (terminal output) folds open.
  */
 export default function IncidentTimeline({ steps }: { steps: IncidentStep[] }) {
   const reduceMotion = useReducedMotion();
@@ -137,13 +126,12 @@ export default function IncidentTimeline({ steps }: { steps: IncidentStep[] }) {
               type="button"
               aria-pressed={spotlight === phase}
               onClick={() => setSpotlight((current) => (current === phase ? null : phase))}
-              className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] leading-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+              className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] leading-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 dark:focus-visible:ring-neutral-500 ${
                 spotlight === phase
                   ? "border-gray-400 bg-gray-100 text-black dark:border-neutral-500 dark:bg-neutral-800 dark:text-white"
                   : "border-gray-200 text-gray-600 hover:border-gray-300 hover:text-black dark:border-neutral-800 dark:text-neutral-400 dark:hover:border-neutral-600 dark:hover:text-white"
               }`}
             >
-              <span aria-hidden className={`h-1.5 w-1.5 rounded-full ${PHASE_STYLE[phase].dot}`} />
               {PHASES[phase].label}
             </button>
           ))}
@@ -152,7 +140,7 @@ export default function IncidentTimeline({ steps }: { steps: IncidentStep[] }) {
           <button
             type="button"
             onClick={() => setOpen(allOpen ? new Set() : new Set(withEvidence))}
-            className="rounded text-xs text-gray-500 underline decoration-dotted underline-offset-4 transition-colors hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-neutral-400 dark:hover:text-white"
+            className="rounded text-xs text-gray-500 underline decoration-dotted underline-offset-4 transition-colors hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 dark:focus-visible:ring-neutral-500 dark:text-neutral-400 dark:hover:text-white"
           >
             {allOpen ? "Collapse all evidence" : "Expand all evidence"}
           </button>
@@ -164,7 +152,7 @@ export default function IncidentTimeline({ steps }: { steps: IncidentStep[] }) {
         <span aria-hidden className="absolute bottom-2 left-2 top-2 w-px bg-gray-200 dark:bg-neutral-800" />
         <motion.span
           aria-hidden
-          className="absolute bottom-2 left-2 top-2 w-px origin-top bg-gradient-to-b from-rose-500 via-violet-500 to-sky-500"
+          className="absolute bottom-2 left-2 top-2 w-px origin-top bg-gray-500 dark:bg-neutral-400"
           style={{ scaleY: reduceMotion ? 1 : smooth }}
         />
         {steps.map((step, index) => (
