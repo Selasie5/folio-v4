@@ -14,7 +14,7 @@ export default function Experience({ experiences = [], all }: ExperienceProps) {
   const fullList = all ?? items;
 
   return (
-    <ul className="focus-list w-full divide-y divide-dotted divide-gray-300 border-y border-dotted border-gray-300 dark:divide-neutral-700 dark:border-neutral-700">
+    <ul data-inspect="experience-list" className="focus-list w-full divide-y divide-dotted divide-gray-300 border-y border-dotted border-gray-300 dark:divide-neutral-700 dark:border-neutral-700">
       {items.map((experience, index) =>
         experience.confidential ? (
           <li key={`confidential-${index}`}>
@@ -46,7 +46,7 @@ export default function Experience({ experiences = [], all }: ExperienceProps) {
  */
 function ConfidentialRow() {
   return (
-    <div className="relative py-4">
+    <div data-inspect="confidential-role" className="relative py-4">
       <span className="sr-only">Confidential role</span>
       <div
         aria-hidden

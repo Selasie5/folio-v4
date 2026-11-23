@@ -38,6 +38,7 @@ export default function ThemeToggle() {
     <button
       type="button"
       role="switch"
+      data-inspect="theme-toggle"
       aria-label="Dark mode"
       aria-checked={dark}
       onClick={toggleTheme}
